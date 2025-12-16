@@ -1,11 +1,11 @@
-import { describe, expect, it } from "vitest";
-import { buildGenericRequest } from "./generic";
+import { describe, expect, it } from 'vitest'
+import { buildGenericRequest } from './generic'
 
 describe('generic', () => {
   it('should build a request with default options', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000'),
-      'Hello, world!'
+      'Hello, world!',
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/json')
@@ -17,7 +17,7 @@ describe('generic', () => {
   it('should build a request with properties syntax', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000/#$title=title'),
-      'Hello, world!'
+      'Hello, world!',
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/json')
@@ -30,7 +30,7 @@ describe('generic', () => {
   it('should build a request with plaintext template', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000/#template=plaintext'),
-      'Hello, world!'
+      'Hello, world!',
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('text/plain')
@@ -40,7 +40,7 @@ describe('generic', () => {
   it('should build a request with custom method', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000/#method=PUT'),
-      'Hello, world!'
+      'Hello, world!',
     )
     expect(request.method).toBe('PUT')
     expect(request.headers.get('Content-Type')).toBe('application/json')
@@ -52,7 +52,7 @@ describe('generic', () => {
   it('should build a request with custom content type', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000/#template=plaintext&@Content-Type=application/xml'),
-      '<xml>Hello, world!</xml>'
+      '<xml>Hello, world!</xml>',
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/xml')
@@ -62,7 +62,7 @@ describe('generic', () => {
   it('should build a request with custom headers', async () => {
     const request = buildGenericRequest(
       new URL('generic://localhost:3000/#@X-Custom-Header=custom-value'),
-      'Hello, world!'
+      'Hello, world!',
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('X-Custom-Header')).toBe('custom-value')
