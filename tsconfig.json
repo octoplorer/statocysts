@@ -4,12 +4,17 @@
     "lib": [
       "es2023",
       "DOM",
+      "DOM.Iterable",
       "DOM.AsyncIterable"
     ],
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "paths": {
+      "#/*": ["./src/*"]
+    },
     "resolveJsonModule": true,
+    "types": ["node"],
     "strict": true,
     "noUnusedLocals": true,
     "declaration": true,
