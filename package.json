@@ -5,6 +5,14 @@
   "packageManager": "pnpm@10.25.0",
   "description": "Notification library for JavaScript",
   "license": "MIT",
+  "homepage": "https://github.com/octoplorer/statocysts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoplorer/statocysts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/octoplorer/statocysts/issues"
+  },
   "keywords": [
     "notification",
     "shoutrrr"
