@@ -26,9 +26,7 @@ export interface DefineProviderOptions<ServiceParams> {
   createRequest: (this: DefineProviderContext<ServiceParams>, params: ServiceParams) => Request
 }
 
-export const DEFAULT_PROVIDER_OPTIONS = {
-  extractor: (url: URL): unknown => Object.fromEntries(url.searchParams.entries()),
-}
+export const DEFAULT_EXTRACTOR = (url: URL): unknown => Object.fromEntries(url.searchParams.entries())
 
 export function defineProvider<
   const Protocol extends string,
@@ -37,7 +35,7 @@ export function defineProvider<
   protocol: Protocol,
   createOptions: DefineProviderOptions<ServiceParams>,
 ): ServiceProvider<Protocol, ServiceParams> {
-  const createOpt = defu(createOptions, DEFAULT_PROVIDER_OPTIONS) as Required<DefineProviderOptions<ServiceParams>>
+  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<ServiceParams>>
   const send: ServiceProvider<Protocol, ServiceParams>['send'] = async <R, T extends ResponseType>(
     protocolUrl: string,
     message: string,
