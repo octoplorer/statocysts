@@ -52,6 +52,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
+    "defu": "^6.1.4",
     "ofetch": "^1.5.1",
     "zod": "^4.2.1"
   },

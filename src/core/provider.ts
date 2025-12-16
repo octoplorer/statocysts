@@ -1,4 +1,5 @@
 import type { FetchOptions, MappedResponseType, ResponseType } from 'ofetch'
+import defu from 'defu'
 import { ofetch } from 'ofetch'
 
 export interface ServiceProvider<
@@ -25,6 +26,10 @@ export interface DefineProviderOptions<ServiceParams> {
   createRequest: (this: DefineProviderContext<ServiceParams>, params: ServiceParams) => Request
 }
 
+export const DEFAULT_PROVIDER_OPTIONS = {
+  extractor: (url: URL) => Object.fromEntries(url.searchParams.entries()),
+}
+
 export function defineProvider<
   const Protocol extends string,
   ServiceParams,
@@ -32,6 +37,7 @@ export function defineProvider<
   protocol: Protocol,
   createOptions: DefineProviderOptions<ServiceParams>,
 ): ServiceProvider<Protocol, ServiceParams> {
+  const createOpt = defu(createOptions, DEFAULT_PROVIDER_OPTIONS) as Required<DefineProviderOptions<ServiceParams>>
   const send: ServiceProvider<Protocol, ServiceParams>['send'] = async <R, T extends ResponseType>(
     protocolUrl: string,
     message: string,
@@ -39,10 +45,9 @@ export function defineProvider<
   ): Promise<MappedResponseType<T, R>> => {
     const url = new URL(protocolUrl)
 
-    const data = createOptions.extractor
-      ? createOptions.extractor(url)
-      : Object.fromEntries(url.searchParams.entries())
+    const data = createOpt.extractor(url)
     const params = createOptions.parser(data)
+
     const ctx: DefineProviderContext<ServiceParams> = {
       url,
       params: params instanceof Promise ? await params : params,
