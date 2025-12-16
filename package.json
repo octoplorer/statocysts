@@ -43,6 +43,10 @@
     "release": "bumpp && pnpm publish",
     "prepublishOnly": "pnpm run build"
   },
+  "dependencies": {
+    "ofetch": "^1.5.1",
+    "zod": "^4.2.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.1",
     "@types/node": "^25.0.2",
@@ -52,9 +56,5 @@
     "tsdown": "^0.18.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
-  },
-  "dependencies": {
-    "ofetch": "^1.5.1",
-    "zod": "^4.2.1"
   }
 }
