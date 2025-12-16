@@ -27,7 +27,7 @@ export interface DefineProviderOptions<ServiceParams> {
 }
 
 export const DEFAULT_PROVIDER_OPTIONS = {
-  extractor: (url: URL) => Object.fromEntries(url.searchParams.entries()),
+  extractor: (url: URL): unknown => Object.fromEntries(url.searchParams.entries()),
 }
 
 export function defineProvider<
