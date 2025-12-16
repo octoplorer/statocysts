@@ -1,11 +1,7 @@
 import type { FetchOptions } from 'ofetch'
 import { ofetch } from 'ofetch'
-import { buildGenericRequest, buildSlackRequest } from './services'
+import { buildGenericRequest, buildSlackRequest, SUPPORTED_PROTOCOLS } from './shared'
 import { assert } from './utils/assert'
-
-export type Protocol = 'generic:' | 'slack:'
-
-export const SUPPORTED_PROTOCOLS = ['generic:', 'slack:']
 
 async function send(
   url: string | URL,
@@ -35,3 +31,4 @@ async function send(
 }
 
 export { send }
+export * from './shared'

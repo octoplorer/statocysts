@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['./src/index.ts'],
+  entry: ['./src/index.ts', './src/browser.ts'],
   target: 'es2020',
   clean: true,
   dts: true,
@@ -10,4 +10,5 @@ export default defineConfig({
     '#': fileURLToPath(new URL('./src', import.meta.url)),
   },
   platform: 'neutral',
+  unbundle: true,
 })
