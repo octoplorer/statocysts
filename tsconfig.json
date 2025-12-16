@@ -10,7 +10,11 @@
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "paths": {
+      "#/*": ["./src/*"]
+    },
     "resolveJsonModule": true,
+    "types": ["node"],
     "strict": true,
     "noUnusedLocals": true,
     "declaration": true,

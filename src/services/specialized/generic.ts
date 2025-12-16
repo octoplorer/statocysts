@@ -1,5 +1,5 @@
+import { assert } from '#/utils/assert'
 import { z } from 'zod'
-import { assert } from '../utils/assert'
 
 const genericOptionsSchema = z.object({
   template: z.enum(['json', 'plaintext']).optional().default('json'),

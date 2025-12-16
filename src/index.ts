@@ -1,2 +1,2 @@
 export * from './sender'
-export * from './service'
+export * from './services'

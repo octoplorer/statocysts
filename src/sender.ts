@@ -1,6 +1,6 @@
 
 import { ofetch } from 'ofetch'
-import { buildGenericRequest } from './service'
+import { buildGenericRequest } from './services'
 import { assert } from './utils/assert'
 
 export type Protocol = 'generic:'
