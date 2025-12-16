@@ -4,6 +4,7 @@
     "lib": [
       "es2023",
       "DOM",
+      "DOM.Iterable",
       "DOM.AsyncIterable"
     ],
     "moduleDetection": "force",
