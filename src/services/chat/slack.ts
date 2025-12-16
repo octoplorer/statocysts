@@ -1,5 +1,6 @@
 import { assert } from '#/utils/assert'
 import { z } from 'zod'
+import { defineProvider } from '../../core/provider'
 
 const slackOptionsSchema = z.object({
   botname: z.string().optional(),
@@ -140,6 +141,33 @@ function buildWebhookRequest(url: URL, message: string, options: SlackOptions): 
   })
 }
 
+function extractSlackParams(url: URL): unknown {
+  const params = new URLSearchParams(url.search)
+  return Object.fromEntries(params.entries())
+}
+
+function createSlackRequest(this: { url: URL, params: SlackOptions, message: string }): Request {
+  const { url, params: options, message } = this
+  assert(url.protocol === 'slack:', `Unexpected protocol ${url.protocol}`)
+
+  if (isBotApiFormat(url)) {
+    return buildBotApiRequest(url, message, options)
+  }
+
+  if (isWebhookFormat(url)) {
+    return buildWebhookRequest(url, message, options)
+  }
+
+  throw new Error(`Unsupported Slack URL format: ${url.toString()}`)
+}
+
+export const slackProvider = defineProvider('slack:', {
+  extractor: extractSlackParams,
+  parser: data => slackOptionsSchema.parse(data),
+  createRequest: createSlackRequest,
+})
+
+// Keep for backward compatibility
 export function buildSlackRequest(url: URL, message: string): Request {
   assert(url.protocol === 'slack:', `Unexpected protocol ${url.protocol}`)
 
