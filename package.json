@@ -1,13 +1,47 @@
 {
   "name": "statocysts",
+  "type": "module",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "packageManager": "pnpm@10.25.0",
+  "description": "Notification library for JavaScript",
+  "license": "MIT",
+  "keywords": [
+    "notification",
+    "shoutrrr"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.25.0"
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=24.12.0"
+  },
+  "scripts": {
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm run lint --fix",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && pnpm publish",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.7.1",
+    "bumpp": "^10.3.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-format": "^1.1.0",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  }
 }
