@@ -51,11 +51,23 @@ describe('generic', () => {
 
   it('should build a request with custom content type', async () => {
     const request = buildGenericRequest(
-      new URL('generic://localhost:3000/#template=plaintext&contentType=application/xml'),
+      new URL('generic://localhost:3000/#template=plaintext&@Content-Type=application/xml'),
       '<xml>Hello, world!</xml>'
     )
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/xml')
     expect(await request.text()).toBe('<xml>Hello, world!</xml>')
+  })
+
+  it('should build a request with custom headers', async () => {
+    const request = buildGenericRequest(
+      new URL('generic://localhost:3000/#@X-Custom-Header=custom-value'),
+      'Hello, world!'
+    )
+    expect(request.method).toBe('POST')
+    expect(request.headers.get('X-Custom-Header')).toBe('custom-value')
+    expect(await request.json()).toEqual({
+      message: 'Hello, world!',
+    })
   })
 })

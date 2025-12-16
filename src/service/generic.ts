@@ -1,43 +1,47 @@
-import { z } from "zod"
-import { assert } from "../utils/assert"
-
-const dataPropertiesSchema = z.record(
-  z.string().startsWith('$').transform(s => s.slice(1)),
-  z.string()
-)
+import { z } from 'zod'
+import { assert } from '../utils/assert'
 
 const genericOptionsSchema = z.object({
   template: z.enum(['json', 'plaintext']).optional().default('json'),
-  contentType: z.string().optional(),
-  method: z.string().optional().default('POST')
-}).transform((data) => ({
-  ...data,
-  contentType: data.contentType ?? (data.template === 'json' ? 'application/json' : 'text/plain')
-}))
+  method: z.string().optional().default('POST'),
+})
 
 export type GenericOptions = z.infer<typeof genericOptionsSchema>
+
+function isOptionParam(key: string): boolean {
+  return !key.startsWith('@') && !key.startsWith('$')
+}
 
 export function buildGenericRequest(url: URL, message: string): Request {
   assert(url.protocol === 'generic:', `Unexpected protocol ${url.protocol}`)
 
   const params = new URLSearchParams(url.hash.slice(1))
-  const optionsParams = Object.fromEntries(params.entries())
+  const allParamsEntries = Array.from(params.entries())
 
+  const optionsParams = Object.fromEntries(allParamsEntries.filter(([key]) => isOptionParam(key)))
+
+  // extract options (template, contentType, method)
   const options: GenericOptions = genericOptionsSchema.parse(optionsParams)
 
-  // remove options from search params
-  Object.keys(optionsParams).forEach(key => {
-    params.delete(key)
-  })
+  // extract headers (starting with @) first
+  const headers = Object.fromEntries(
+    allParamsEntries.filter(([key]) => key.startsWith('@'))
+      .map(([key, value]) => [key.slice(1), value]),
+  )
 
-  const dataProperties = dataPropertiesSchema.parse(Object.fromEntries(params.entries()))
+  // extract data properties (starting with $)
+  const dataProperties = Object.fromEntries(
+    allParamsEntries.filter(([key]) => key.startsWith('$'))
+      .map(([key, value]) => [key.slice(1), value]),
+  )
 
   const targetUrl = new URL(url.host + url.pathname)
 
   return new Request(targetUrl.toString(), {
     method: options.method,
     headers: {
-      'Content-Type': options.contentType,
+      'Content-Type': options.template === 'json' ? 'application/json' : 'text/plain',
+      ...headers,
     },
     body: options.template === 'json'
       ? JSON.stringify({ ...dataProperties, message })
