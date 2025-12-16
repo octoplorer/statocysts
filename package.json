@@ -1,7 +1,7 @@
 {
   "name": "statocysts",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "pnpm@10.25.0",
   "description": "Notification library for JavaScript",
   "license": "MIT",
