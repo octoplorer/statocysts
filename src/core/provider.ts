@@ -44,7 +44,7 @@ export function defineProvider<
     const url = new URL(protocolUrl)
 
     const data = createOpt.extractor(url)
-    const params = createOptions.parser(data)
+    const params = await createOptions.parser(data)
 
     const ctx: DefineProviderContext<ServiceParams> = {
       url,
