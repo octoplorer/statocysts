@@ -8,13 +8,13 @@ export interface SlackData {
 export interface SlackOptions {
   /**
    * The base URL for webhook services
-   * 
+   *
    * @default `https://hooks.slack.com/services`
    */
   hookBaseUrl: string
   /**
    * The base URL for bot API services
-   * 
+   *
    * @default `https://slack.com/api`
    */
   botApiBaseUrl: string
@@ -28,35 +28,40 @@ export const slackProvider = defineProvider('slack:', {
     } as SlackData
   },
   defaultOptions: {
-    hookBaseUrl: 'https://hooks.slack.com/services',
-    botApiBaseUrl: 'https://slack.com/api',
+    hookBaseUrl: 'https://hooks.slack.com/',
+    botApiBaseUrl: 'https://slack.com/',
   } as SlackOptions,
   createRequest(_, options) {
     const { type } = this.data
+    let url: URL
+    const headers = new Headers([
+      ['Content-Type', 'application/json'],
+    ])
+    const body: Record<string, string> = {
+      text: this.message,
+    }
     if (type === 'bot') {
-      const { username: channel, password: token } = this.url
-      const url = new URL('/chat.postMessage', options.botApiBaseUrl)
-      return new Request(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          channel,
-          text: this.message,
-        }),
+      const { username: channel, password: token, searchParams } = this.url
+      url = new URL('/api/chat.postMessage', options.botApiBaseUrl)
+      searchParams.forEach((value, key) => {
+        url.searchParams.set(key, value)
+      })
+
+      headers.set('Authorization', `Bearer ${token}`)
+
+      body.channel = channel
+    } else {
+      const { searchParams } = this.url
+      url = new URL(`/services/${this.url.pathname}`, options.hookBaseUrl)
+      searchParams.forEach((value, key) => {
+        url.searchParams.set(key, value)
       })
     }
-    const hookUrl = new URL(this.url.pathname, options.hookBaseUrl)
-    return new Request(hookUrl, {
+
+    return new Request(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: this.message,
-      }),
+      headers,
+      body: JSON.stringify(body),
     })
   },
 })
