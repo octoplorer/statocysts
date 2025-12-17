@@ -7,12 +7,11 @@ describe('defineProvider', () => {
       extractor() {
         return { foo: "bar" }
       },
-      parser: (data) => data as { foo: string },
-      createRequest(params) {
+      createRequest() {
         return new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
-            ...params,
+            ...this.data,
             message: this.message
           }),
         })
@@ -35,12 +34,11 @@ describe('defineProvider', () => {
       extractor() {
         return { foo: "bar" }
       },
-      parser: async (data) => data as { foo: string },
-      createRequest(params) {
+      createRequest() {
         return new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
-            ...params,
+            ...this.data,
             message: this.message
           }),
         })
@@ -61,7 +59,6 @@ describe('defineProvider', () => {
   it('should throw an error if the protocol is not supported', async () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      parser: () => ({}),
       createRequest: () => new Request('https://example.com', { method: 'POST' }),
     })
 

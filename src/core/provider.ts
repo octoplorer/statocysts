@@ -1,41 +1,35 @@
 import { assert } from '#/utils/assert'
 import defu from 'defu'
 
-export interface ServiceProvider<
-  Protocol extends string,
-  ServiceParams,
-> {
+export interface ServiceProvider<Protocol extends string, Data = unknown> {
   readonly protocol: Protocol
-  $infer: ServiceParams
+  $infer: Data
   buildRequest: (url: string, message: string) => Promise<Request>
 }
 
-export interface DefineProviderContext<
-  ServiceParams,
-> {
+export interface DefineProviderContext<Data = unknown> {
   url: URL
-  params: ServiceParams
   message: string
+  data: Data
 }
 
-export interface DefineProviderOptions<ServiceParams> {
-  extractor?: (url: URL) => unknown
-  parser: (data: unknown) => Promise<ServiceParams> | ServiceParams
-  createRequest: (this: DefineProviderContext<ServiceParams>, params: ServiceParams) => Request
+export interface DefineProviderOptions<Data = unknown> {
+  extractor?: (url: URL) => Data
+  createRequest: (this: DefineProviderContext<Data>) => Request
 }
 
 export const DEFAULT_EXTRACTOR = (url: URL): unknown => Object.fromEntries(url.searchParams.entries())
 
 export function defineProvider<
   const Protocol extends string,
-  ServiceParams,
+  Data = unknown,
 >(
   protocol: Protocol,
-  createOptions: DefineProviderOptions<ServiceParams>,
-): ServiceProvider<Protocol, ServiceParams> {
-  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<ServiceParams>>
+  createOptions: DefineProviderOptions<Data>,
+): ServiceProvider<Protocol, Data> {
+  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<Data>>
 
-  const send: ServiceProvider<Protocol, ServiceParams>['buildRequest'] = async (
+  const send: ServiceProvider<Protocol>['buildRequest'] = async (
     protocolUrl: string,
     message: string,
   ): Promise<Request> => {
@@ -44,21 +38,20 @@ export function defineProvider<
     assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)
 
     const data = createOpt.extractor(url)
-    const params = createOptions.parser(data)
 
-    const ctx: DefineProviderContext<ServiceParams> = {
+    const ctx: DefineProviderContext<Data> = {
+      data,
       url,
-      params: params instanceof Promise ? await params : params,
       message,
     }
 
-    return createOptions.createRequest.call(ctx, ctx.params)
+    return createOptions.createRequest.call(ctx)
   }
   return {
     get protocol() {
       return protocol
     },
     buildRequest: send,
-    $infer: {} as ServiceParams,
+    $infer: {} as Data,
   }
 }
