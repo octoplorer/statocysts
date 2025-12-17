@@ -1,3 +1,4 @@
+import { assert } from '#/utils/assert'
 import defu from 'defu'
 
 export interface ServiceProvider<
@@ -39,6 +40,8 @@ export function defineProvider<
     message: string,
   ): Promise<Request> => {
     const url = new URL(protocolUrl)
+
+    assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)
 
     const data = createOpt.extractor(url)
     const params = createOptions.parser(data)

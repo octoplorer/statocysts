@@ -57,4 +57,14 @@ describe('defineProvider', () => {
       message: "Hello, world!",
     })
   })
+
+  it('should throw an error if the protocol is not supported', async () => {
+    const testProvider = defineProvider('test:', {
+      extractor: () => ({}),
+      parser: () => ({}),
+      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+    })
+
+    await expect(testProvider.send('http://aaa?foo=bar', "Hello, world!")).rejects.toThrow('Unexpected protocol "http:"')
+  })
 })
