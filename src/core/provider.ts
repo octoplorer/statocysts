@@ -7,7 +7,7 @@ export interface ServiceProvider<
 > {
   readonly protocol: Protocol
   $infer: ServiceParams
-  send: (url: string, message: string) => Promise<Request>
+  buildRequest: (url: string, message: string) => Promise<Request>
 }
 
 export interface DefineProviderContext<
@@ -35,7 +35,7 @@ export function defineProvider<
 ): ServiceProvider<Protocol, ServiceParams> {
   const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<ServiceParams>>
 
-  const send: ServiceProvider<Protocol, ServiceParams>['send'] = async (
+  const send: ServiceProvider<Protocol, ServiceParams>['buildRequest'] = async (
     protocolUrl: string,
     message: string,
   ): Promise<Request> => {
@@ -58,7 +58,7 @@ export function defineProvider<
     get protocol() {
       return protocol
     },
-    send,
+    buildRequest: send,
     $infer: {} as ServiceParams,
   }
 }

@@ -1,16 +1,15 @@
 import type { FetchOptions } from 'ofetch'
-import type { ServiceProvider } from './core/provider'
-import { genericProvider, slackProvider } from './shared'
+import { ofetch } from 'ofetch'
+import { jsonProvider } from './shared'
 import { assert } from './utils/assert'
 
-export type Protocol = 'generic:' | 'slack:'
+export type Protocol = 'json:'
 
-export const SUPPORTED_PROTOCOLS = ['generic:', 'slack:'] as const
+export const SUPPORTED_PROTOCOLS = ['json:'] as const
 
-const providers: Record<string, ServiceProvider<string, unknown>> = {
-  'generic:': genericProvider,
-  'slack:': slackProvider,
-}
+const providers = {
+  'json:': jsonProvider,
+} as const
 
 async function send(
   url: string | URL,
@@ -28,8 +27,10 @@ async function send(
     throw new Error(`Unsupported protocol ${_url.protocol}`)
   }
 
-  await provider.send(_url.toString(), message, options)
+  const request = await provider.buildRequest(_url.toString(), message)
+  await ofetch(request, options)
 }
 
-export { send }
 export * from './shared'
+export { send }
+

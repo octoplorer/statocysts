@@ -21,7 +21,7 @@ describe('defineProvider', () => {
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = await testProvider.send('test://aaa?foo=bar', "Hello, world!")
+    const request = await testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({
@@ -49,7 +49,7 @@ describe('defineProvider', () => {
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = await testProvider.send('test://aaa?foo=bar', "Hello, world!")
+    const request = await testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({
@@ -65,6 +65,6 @@ describe('defineProvider', () => {
       createRequest: () => new Request('https://example.com', { method: 'POST' }),
     })
 
-    await expect(testProvider.send('http://aaa?foo=bar', "Hello, world!")).rejects.toThrow('Unexpected protocol "http:"')
+    await expect(testProvider.buildRequest('http://aaa?foo=bar', "Hello, world!")).rejects.toThrow('Unexpected protocol "http:"')
   })
 })
