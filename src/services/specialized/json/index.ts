@@ -1,9 +1,6 @@
 import { defineProvider } from '#/core/provider'
 
 export const jsonProvider = defineProvider('json:', {
-  extractor: (url) => {
-    return Object.fromEntries(url.searchParams.entries()) as Record<string, string>
-  },
   createRequest() {
     const url = new URL(this.url)
 
