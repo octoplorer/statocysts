@@ -103,7 +103,7 @@ async function sendNotifications(urls: string[], message: string): Promise<void>
 
 async function main(): Promise<void> {
   const argv = await yargs(hideBin(process.argv))
-    .scriptName('statocysts')
+    .scriptName('stato')
     .usage('$0 -u <url> [-m <message> | -f <file>]')
     .option('url', {
       alias: 'u',
