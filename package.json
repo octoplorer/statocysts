@@ -54,6 +54,7 @@
   "dependencies": {
     "defu": "^6.1.4",
     "ofetch": "^1.5.1",
+    "ufo": "^1.6.1",
     "zod": "^4.2.1"
   },
   "devDependencies": {
