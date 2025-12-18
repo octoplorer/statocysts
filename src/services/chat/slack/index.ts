@@ -1,5 +1,6 @@
 import { defineProvider } from '#/core/provider'
 import { assert } from '#/utils/assert'
+import { withoutLeadingSlash } from 'ufo'
 
 export interface SlackData {
   type: 'bot' | 'webhook'
@@ -23,6 +24,14 @@ export interface SlackOptions {
 export const slackProvider = defineProvider('slack:', {
   extractor: (url) => {
     assert(url.hostname === 'bot' || url.hostname === 'webhook', `Invalid slack URL: ${url.toString()}`)
+    if (url.hostname === 'bot') {
+      assert(url.username, 'Channel ID is required')
+      assert(url.password, 'Bot token is required')
+    }
+    else {
+      const pathParts = url.pathname.split('/').filter(Boolean)
+      assert(pathParts.length === 3, 'Webhook URL is invalid')
+    }
     return {
       type: url.hostname,
     } as SlackData
@@ -50,9 +59,10 @@ export const slackProvider = defineProvider('slack:', {
       headers.set('Authorization', `Bearer ${token}`)
 
       body.channel = channel
-    } else {
+    }
+    else {
       const { searchParams } = this.url
-      url = new URL(`/services${this.url.pathname}`, options.hookBaseUrl)
+      url = new URL(`/services/${withoutLeadingSlash(this.url.pathname)}`, options.hookBaseUrl)
       searchParams.forEach((value, key) => {
         url.searchParams.set(key, value)
       })
