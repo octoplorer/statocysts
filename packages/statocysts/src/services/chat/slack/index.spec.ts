@@ -1,12 +1,30 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { slack } from '.'
+import { httpTransport } from '#/core/transports/http'
+
+// Mock httpTransport
+vi.mock('#/core/transports/http', () => ({
+  httpTransport: {
+    send: vi.fn(),
+  },
+}))
 
 describe('slack bot API', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('should build a request with bot API token', async () => {
-    const req = slack.buildRequest(
+    vi.mocked(httpTransport.send).mockResolvedValue(undefined)
+
+    await slack.send(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       { title: 'Hello, world!' },
     )
+
+    expect(httpTransport.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    const req = callArgs.request
     expect(req.method).toBe('POST')
     expect(req.url).toBe('https://slack.com/api/chat.postMessage')
     expect(req.headers.get('Authorization')).toBe('Bearer xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX')
@@ -18,32 +36,47 @@ describe('slack bot API', async () => {
   })
 
   it('should throw an error if the bot API URL is invalid', async () => {
-    expect(() => slack.buildRequest(
+    await expect(slack.send(
       'slack://:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       { title: 'Hello, world!' },
-    )).toThrow('Channel ID is required')
+    )).rejects.toThrow('Channel ID is required')
 
-    expect(() => slack.buildRequest(
+    await expect(slack.send(
       'slack://CHANNELID:@bot',
       { title: 'Hello, world!' },
-    )).toThrow('Bot token is required')
+    )).rejects.toThrow('Bot token is required')
   })
 
   it('should pass all original search params to the request', async () => {
-    const req = slack.buildRequest(
+    vi.mocked(httpTransport.send).mockResolvedValue(undefined)
+
+    await slack.send(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot?foo=bar&baz=qux',
       { title: 'Hello, world!' },
     )
+
+    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    const req = callArgs.request
     expect(req.url).toBe('https://slack.com/api/chat.postMessage?foo=bar&baz=qux')
   })
 })
 
 describe('slack webhook', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('should build a request with webhook service', async () => {
-    const req = slack.buildRequest(
+    vi.mocked(httpTransport.send).mockResolvedValue(undefined)
+
+    await slack.send(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
       { title: 'Hello, world!' },
     )
+
+    expect(httpTransport.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    const req = callArgs.request
     expect(req.method).toBe('POST')
     expect(req.url).toBe('https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX')
     expect(req.headers.get('Content-Type')).toBe('application/json')
@@ -53,17 +86,22 @@ describe('slack webhook', () => {
   })
 
   it('should throw an error if the webhook URL is invalid', async () => {
-    expect(() => slack.buildRequest(
+    await expect(slack.send(
       'slack://webhook/T00000000/B00000000',
       { title: 'Hello, world!' },
-    )).toThrow('Webhook URL is invalid')
+    )).rejects.toThrow('Webhook URL is invalid')
   })
 
   it('should pass all original search params to the request', async () => {
-    const req = slack.buildRequest(
+    vi.mocked(httpTransport.send).mockResolvedValue(undefined)
+
+    await slack.send(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux',
       { title: 'Hello, world!' },
     )
+
+    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    const req = callArgs.request
     expect(req.url).toBe('https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux')
   })
 })

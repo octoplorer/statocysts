@@ -1,4 +1,6 @@
+import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
+import { httpTransport } from '#/core/transports/http'
 import { assert } from '#/utils/assert'
 import { withoutLeadingSlash } from 'ufo'
 
@@ -47,7 +49,7 @@ export const slack = defineProvider('slack:', {
     hookBaseUrl: 'https://hooks.slack.com/',
     botApiBaseUrl: 'https://slack.com/',
   } as SlackOptions,
-  createRequest(_, options) {
+  async send(_, options) {
     const { type } = this.data
     let url: URL
     const headers = new Headers([
@@ -75,10 +77,18 @@ export const slack = defineProvider('slack:', {
       })
     }
 
-    return new Request(url, {
+    const request = new Request(url, {
       method: 'POST',
       headers,
       body: JSON.stringify(options.body ?? body),
+    })
+
+    // Extract FetchOptions from options if it's a combined type
+    const fetchOptions: FetchOptions | undefined = options as FetchOptions
+
+    await httpTransport.send({
+      request,
+      fetchOptions,
     })
   },
 })

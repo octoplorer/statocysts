@@ -1,13 +1,7 @@
-import { ofetch } from 'ofetch'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineProvider } from './provider'
 
 import { buildSenderRegistry } from './sender'
-
-// Mock ofetch
-vi.mock('ofetch', () => ({
-  ofetch: vi.fn(),
-}))
 
 describe('buildSenderRegistry', () => {
   beforeEach(() => {
@@ -17,7 +11,9 @@ describe('buildSenderRegistry', () => {
   it('should create a sender registry with resolveProvider method', () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        // Mock send implementation
+      },
     })
 
     const registry = buildSenderRegistry([testProvider])
@@ -29,7 +25,9 @@ describe('buildSenderRegistry', () => {
   it('should resolve provider by protocol from string URL', () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        // Mock send implementation
+      },
     })
 
     const registry = buildSenderRegistry([testProvider])
@@ -41,7 +39,9 @@ describe('buildSenderRegistry', () => {
   it('should resolve provider by protocol from URL object', () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        // Mock send implementation
+      },
     })
 
     const registry = buildSenderRegistry([testProvider])
@@ -53,7 +53,9 @@ describe('buildSenderRegistry', () => {
   it('should return undefined for unsupported protocol', () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        // Mock send implementation
+      },
     })
 
     const registry = buildSenderRegistry([testProvider])
@@ -65,7 +67,9 @@ describe('buildSenderRegistry', () => {
   it('should return undefined for URL without protocol', () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        // Mock send implementation
+      },
     })
 
     const registry = buildSenderRegistry([testProvider])
@@ -79,47 +83,48 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should create a sender that sends messages to all registered URLs', async () => {
+    const sendMock = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock()
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider])
     const sender = registry(['test://example.com', 'test://another.com'])
 
     await sender.send('Hello, world!')
 
-    expect(ofetch).toHaveBeenCalledTimes(2)
-    expect(vi.mocked(ofetch).mock.calls[0][0]).toBeInstanceOf(Request)
-    expect(vi.mocked(ofetch).mock.calls[1][0]).toBeInstanceOf(Request)
+    expect(sendMock).toHaveBeenCalledTimes(2)
   })
 
   it('should filter out URLs without matching providers', async () => {
+    const sendMock = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock()
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider])
     const sender = registry(['test://example.com', 'http://unsupported.com'])
 
     await sender.send('Hello, world!')
 
-    // Should only call ofetch once for the supported protocol
-    expect(ofetch).toHaveBeenCalledTimes(1)
+    // Should only call send once for the supported protocol
+    expect(sendMock).toHaveBeenCalledTimes(1)
   })
 
-  it('should pass FetchOptions to ofetch', async () => {
+  it('should pass FetchOptions to provider send', async () => {
+    const sendMock = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send(ctx, options) {
+        await sendMock(ctx.url, ctx.message, options)
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider])
     const sender = registry(['test://example.com'])
@@ -127,60 +132,71 @@ describe('buildSenderRegistry', () => {
     const options = { headers: { 'X-Custom': 'value' } }
     await sender.send('Hello, world!', options)
 
-    expect(ofetch).toHaveBeenCalledTimes(1)
-    expect(vi.mocked(ofetch).mock.calls[0][1]).toEqual(options)
+    expect(sendMock).toHaveBeenCalledTimes(1)
+    expect(sendMock).toHaveBeenCalledWith(
+      new URL('test://example.com'),
+      { title: 'Hello, world!' },
+      options,
+    )
   })
 
   it('should handle multiple providers with different protocols', async () => {
+    const sendMock1 = vi.fn().mockResolvedValue(undefined)
+    const sendMock2 = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock1()
+      },
     })
 
     const httpProvider = defineProvider('http:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock2()
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider, httpProvider])
     const sender = registry(['test://example.com', 'http://another.com'])
 
     await sender.send('Hello, world!')
 
-    expect(ofetch).toHaveBeenCalledTimes(2)
+    expect(sendMock1).toHaveBeenCalledTimes(1)
+    expect(sendMock2).toHaveBeenCalledTimes(1)
   })
 
   it('should handle empty URLs array', async () => {
+    const sendMock = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock()
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider])
     const sender = registry([])
 
     await sender.send('Hello, world!')
 
-    expect(ofetch).not.toHaveBeenCalled()
+    expect(sendMock).not.toHaveBeenCalled()
   })
 
   it('should handle sender with no valid providers', async () => {
+    const sendMock = vi.fn().mockResolvedValue(undefined)
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
-      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+      async send() {
+        await sendMock()
+      },
     })
-
-    vi.mocked(ofetch).mockResolvedValue(undefined)
 
     const registry = buildSenderRegistry([testProvider])
     const sender = registry(['http://unsupported.com', 'https://also-unsupported.com'])
 
     await sender.send('Hello, world!')
 
-    expect(ofetch).not.toHaveBeenCalled()
+    expect(sendMock).not.toHaveBeenCalled()
   })
 })

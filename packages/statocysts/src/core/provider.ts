@@ -9,7 +9,11 @@ export interface ServiceProvider<
   readonly protocol: Protocol
   $infer: Data
   defaultOptions: Options | undefined
-  buildRequest: (url: string, message: { title: string, body?: string }, options?: Options) => Request
+  send: (
+    url: string,
+    message: { title: string, body?: string },
+    options?: Options,
+  ) => Promise<void>
 }
 
 export interface DefineProviderContext<Data = unknown> {
@@ -21,7 +25,11 @@ export interface DefineProviderContext<Data = unknown> {
 export interface DefineProviderOptions<Data = unknown, Options = unknown> {
   defaultOptions?: Options
   extractor?: (url: URL) => Data
-  createRequest: (this: DefineProviderContext<Data>, ctx: DefineProviderContext<Data>, Options: Options) => Request
+  send: (
+    this: DefineProviderContext<Data>,
+    ctx: DefineProviderContext<Data>,
+    options: Options,
+  ) => Promise<void>
 }
 
 export const DEFAULT_EXTRACTOR = (url: URL): unknown => Object.fromEntries(url.searchParams.entries())
@@ -34,13 +42,13 @@ export function defineProvider<
   protocol: Protocol,
   createOptions: DefineProviderOptions<Data, Options>,
 ): ServiceProvider<Protocol, Data, Options> {
-  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<Data>>
+  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<Omit<DefineProviderOptions<Data, Options>, 'send'>>
 
-  const buildRequest: ServiceProvider<Protocol, Data, Options>['buildRequest'] = (
+  const send: ServiceProvider<Protocol, Data, Options>['send'] = async (
     protocolUrl,
     message,
     options,
-  ): Request => {
+  ): Promise<void> => {
     const url = new URL(protocolUrl)
 
     assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)
@@ -55,13 +63,13 @@ export function defineProvider<
 
     const opts = defu(createOptions.defaultOptions ?? {}, options ?? {}) as Options
 
-    return createOptions.createRequest.call(ctx, ctx, opts)
+    await createOptions.send.call(ctx, ctx, opts)
   }
   return {
     get protocol() {
       return protocol
     },
-    buildRequest,
+    send,
     get defaultOptions() {
       return createOptions.defaultOptions
     },

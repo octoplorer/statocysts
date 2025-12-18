@@ -1,8 +1,10 @@
+import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
+import { httpTransport } from '#/core/transports/http'
 import { withProtocol } from 'ufo'
 
 export const json = defineProvider('json:', {
-  createRequest() {
+  async send(_, options) {
     const url = new URL(this.url)
 
     const headers = new Headers([
@@ -39,10 +41,17 @@ export const json = defineProvider('json:', {
 
     const requestUrl = withProtocol(url.toString(), 'https:')
 
-    return new Request(requestUrl, {
+    const request = new Request(requestUrl, {
       method: 'POST',
       body: JSON.stringify(body),
       headers,
+    })
+
+    const fetchOptions: FetchOptions | undefined = options as FetchOptions
+
+    await httpTransport.send({
+      request,
+      fetchOptions,
     })
   },
 })
