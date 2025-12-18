@@ -24,6 +24,8 @@ export interface SlackOptions {
    * NOTICE*: This will override the body of the request. You should known what you are doing.
    */
   body?: Record<string, any>
+
+  fetchOptions?: FetchOptions
 }
 
 export const slack = defineProvider('slack:', {
@@ -82,11 +84,9 @@ export const slack = defineProvider('slack:', {
       body: JSON.stringify(options.body ?? body),
     })
 
-    const fetchOptions: FetchOptions | undefined = options as FetchOptions
-
     return {
       request,
-      fetchOptions,
+      fetchOptions: options.fetchOptions,
     }
   },
 })

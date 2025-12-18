@@ -4,10 +4,10 @@ import defu from 'defu'
 
 export interface ServiceProvider<
   Protocol extends string,
-  T extends Transport<any>,
+  Payload,
   Options = void,
 > {
-  readonly $transport: T
+  readonly $transport: Transport<Payload>
   readonly protocol: Protocol
   defaultOptions: Options | undefined
   send: (url: string, message: { title: string, body?: string }, options?: Options) => Promise<void>
@@ -28,11 +28,15 @@ export interface DefineProviderOptions<Payload, Options> {
   ) => Promise<Payload>
 }
 
-export function defineProvider<const Protocol extends string, Payload, Options>(
+export function defineProvider<const Protocol extends string, TransportPayload, Options = void>(
   protocol: Protocol,
-  createOptions: DefineProviderOptions<Payload, Options>,
-): ServiceProvider<Protocol, Transport<Payload>, Options> {
-  const send: ServiceProvider<Protocol, Transport<Payload>, Options>['send'] = async (protocolUrl, message, options): Promise<void> => {
+  createOptions: DefineProviderOptions<TransportPayload, Options>,
+): ServiceProvider<Protocol, TransportPayload, Options> {
+  const send: ServiceProvider<Protocol, TransportPayload, Options>['send'] = async (
+    protocolUrl,
+    message,
+    options,
+  ): Promise<void> => {
     const url = new URL(protocolUrl)
 
     assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)

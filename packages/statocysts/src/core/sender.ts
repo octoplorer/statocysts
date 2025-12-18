@@ -9,7 +9,7 @@ export type SenderUrl = string | URL
 
 export interface SenderRegistry {
   (urls: SenderUrl[]): Sender
-  resolveProvider: (url: string | URL) => ServiceProvider<string> | undefined
+  resolveProvider: (url: string | URL) => ServiceProvider<string, any, any> | undefined
 }
 
 export function buildSenderRegistry(
@@ -22,7 +22,7 @@ export function buildSenderRegistry(
 
   function resolveProvider(
     url: string | URL,
-  ): ServiceProvider<string> | undefined {
+  ): ServiceProvider<string, any, any> | undefined {
     const _url = typeof url === 'string' ? new URL(url) : url
 
     return providersRegistry.get(_url.protocol)

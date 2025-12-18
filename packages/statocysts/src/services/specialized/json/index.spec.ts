@@ -4,7 +4,7 @@ import { json } from './index'
 
 // Mock httpTransport
 vi.mock('#/core/transports/http', () => ({
-  httpTransport: {
+  http: {
     send: vi.fn(),
   },
 }))

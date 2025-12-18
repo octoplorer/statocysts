@@ -1,10 +1,10 @@
+import { http } from '#/core/transports/http'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { slack } from '.'
-import { http } from '#/core/transports/http'
 
 // Mock httpTransport
 vi.mock('#/core/transports/http', () => ({
-  httpTransport: {
+  http: {
     send: vi.fn(),
   },
 }))

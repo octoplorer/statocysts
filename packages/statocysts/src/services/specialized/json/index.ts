@@ -5,6 +5,7 @@ import { withProtocol } from 'ufo'
 
 export const json = defineProvider('json:', {
   transport: http,
+  defaultOptions: {} as FetchOptions,
   async prepare(_, options) {
     const url = new URL(this.url)
 
@@ -48,11 +49,9 @@ export const json = defineProvider('json:', {
       headers,
     })
 
-    const fetchOptions: FetchOptions | undefined = options as FetchOptions
-
     return {
       request,
-      fetchOptions,
+      fetchOptions: options,
     }
   },
 })
