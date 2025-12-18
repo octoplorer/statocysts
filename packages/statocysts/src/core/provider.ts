@@ -2,6 +2,9 @@ import type { Transport } from './transport'
 import { assert } from '#/utils/assert'
 import defu from 'defu'
 
+// Utility type to infer Payload from Transport
+type InferTransportPayload<T> = T extends Transport<infer P> ? P : never
+
 export interface ServiceProvider<
   Protocol extends string,
   Payload,
@@ -18,21 +21,21 @@ export interface DefineProviderContext {
   message: { title: string, body?: string }
 }
 
-export interface DefineProviderOptions<Payload, Options> {
+export interface DefineProviderOptions<T extends Transport<any>, Options> {
   defaultOptions?: Options
-  transport: Transport<Payload>
+  transport: T
   prepare: (
     this: DefineProviderContext,
     ctx: DefineProviderContext,
     options: Options,
-  ) => Promise<Payload>
+  ) => Promise<InferTransportPayload<T>>
 }
 
-export function defineProvider<const Protocol extends string, TransportPayload, Options = void>(
+export function defineProvider<const Protocol extends string, T extends Transport<any>, Options = void>(
   protocol: Protocol,
-  createOptions: DefineProviderOptions<TransportPayload, Options>,
-): ServiceProvider<Protocol, TransportPayload, Options> {
-  const send: ServiceProvider<Protocol, TransportPayload, Options>['send'] = async (
+  createOptions: DefineProviderOptions<T, Options>,
+): ServiceProvider<Protocol, InferTransportPayload<T>, Options> {
+  const send: ServiceProvider<Protocol, InferTransportPayload<T>, Options>['send'] = async (
     protocolUrl,
     message,
     options,
