@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.2",
-    "@vitest/coverage-v8": "4.0.15",
+    "@vitest/coverage-v8": "4.0.16",
     "tsdown": "^0.18.0",
     "typescript": "catalog:dev",
     "vitest": "^4.0.15"
