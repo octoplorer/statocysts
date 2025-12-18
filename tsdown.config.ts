@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
@@ -6,8 +5,5 @@ export default defineConfig({
   target: 'es2020',
   clean: true,
   dts: true,
-  alias: {
-    '#': fileURLToPath(new URL('./src', import.meta.url)),
-  },
   platform: 'neutral',
 })

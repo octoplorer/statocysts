@@ -15,8 +15,12 @@
   },
   "keywords": [
     "notification",
-    "shoutrrr"
+    "shoutrrr",
+    "apprise"
   ],
+  "imports": {
+    "#/*": "./src/*"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
