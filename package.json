@@ -1,84 +1,19 @@
 {
-  "name": "statocysts",
-  "type": "module",
-  "version": "0.2.1",
-  "packageManager": "pnpm@10.25.0",
-  "description": "Notification library for JavaScript",
+  "name": "@statocysts/monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.26.0",
   "license": "MIT",
-  "homepage": "https://github.com/octoplorer/statocysts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/octoplorer/statocysts.git"
-  },
-  "bugs": {
-    "url": "https://github.com/octoplorer/statocysts/issues"
-  },
-  "keywords": [
-    "notification",
-    "shoutrrr",
-    "apprise"
-  ],
-  "imports": {
-    "#/*": "./src/*"
-  },
-  "exports": {
-    ".": "./src/index.ts",
-    "./browser": "./src/browser.ts",
-    "./package.json": "./package.json"
-  },
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
-  "browser": "./src/browser.ts",
-  "files": [
-    "dist"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
-      },
-      "./browser": {
-        "types": "./dist/browser.d.ts",
-        "import": "./dist/browser.js"
-      },
-      "./package.json": "./package.json"
-    },
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "browser": "./dist/browser.js"
-  },
-  "engines": {
-    "node": ">=24.12.0"
-  },
   "scripts": {
+    "build": "pnpm --filter 'statocysts' run build",
     "lint": "eslint --cache .",
-    "lint:fix": "pnpm run lint --fix",
-    "build": "tsdown",
-    "dev": "tsdown --watch",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit",
-    "release": "bumpp && pnpm publish",
-    "prepublishOnly": "pnpm run build"
-  },
-  "dependencies": {
-    "defu": "^6.1.4",
-    "ofetch": "^1.5.1",
-    "ufo": "^1.6.1",
-    "zod": "^4.2.1"
+    "lint:fix": "eslint --cache . --fix",
+    "release": "bumpp -r --excute=\"pnpm i\""
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.7.1",
-    "@types/node": "^25.0.2",
-    "@vitest/coverage-v8": "4.0.15",
-    "bumpp": "^10.3.2",
-    "eslint": "^9.39.2",
+    "@antfu/eslint-config": "catalog:dev",
+    "bumpp": "catalog:dev",
+    "eslint": "catalog:dev",
     "eslint-plugin-format": "^1.1.0",
-    "tsdown": "^0.18.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
+    "typescript": "catalog:dev"
   }
 }

@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+
+catalogs:
+  dev:
+    '@antfu/eslint-config': ^6.7.1
+    bumpp: ^10.3.2
+    eslint: ^9.39.2
+    typescript: ^5.9.3
