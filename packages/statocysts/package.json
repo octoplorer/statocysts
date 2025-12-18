@@ -2,7 +2,6 @@
   "name": "statocysts",
   "type": "module",
   "version": "0.2.2",
-  "packageManager": "pnpm@10.25.0",
   "description": "Notification library for JavaScript",
   "license": "MIT",
   "homepage": "https://github.com/octoplorer/statocysts",
@@ -22,8 +21,14 @@
     "#/*": "./src/*"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./browser": "./src/browser.ts",
+    ".": {
+      "node": "./dist/index.js",
+      "default": "./src/index.ts"
+    },
+    "./browser": {
+      "node": "./dist/browser.js",
+      "default": "./src/browser.ts"
+    },
     "./package.json": "./package.json"
   },
   "main": "./src/index.ts",
@@ -42,7 +47,7 @@
       },
       "./browser": {
         "types": "./dist/browser.d.ts",
-        "default": "./dist/index.js"
+        "default": "./dist/browser.js"
       },
       "./package.json": "./package.json"
     },

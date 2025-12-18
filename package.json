@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.26.0",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm --filter 'statocysts' run build",
+    "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
     "release": "bumpp -r --excute=\"pnpm i\""

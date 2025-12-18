@@ -1,0 +1,48 @@
+{
+  "name": "@statocysts/cli",
+  "type": "module",
+  "version": "0.2.2",
+  "description": "CLI for statocysts notification library",
+  "license": "MIT",
+  "homepage": "https://github.com/octoplorer/statocysts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoplorer/statocysts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/octoplorer/statocysts/issues"
+  },
+  "keywords": [
+    "notification",
+    "cli",
+    "statocysts"
+  ],
+  "bin": {
+    "stato": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=23"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "statocysts": "workspace:*",
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/yargs": "^17.0.35",
+    "tsdown": "^0.18.0",
+    "typescript": "catalog:dev"
+  }
+}
