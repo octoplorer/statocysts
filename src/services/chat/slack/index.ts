@@ -52,7 +52,7 @@ export const slackProvider = defineProvider('slack:', {
       body.channel = channel
     } else {
       const { searchParams } = this.url
-      url = new URL(`/services/${this.url.pathname}`, options.hookBaseUrl)
+      url = new URL(`/services${this.url.pathname}`, options.hookBaseUrl)
       searchParams.forEach((value, key) => {
         url.searchParams.set(key, value)
       })
