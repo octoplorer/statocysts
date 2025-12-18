@@ -5,16 +5,30 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  build:
+    tsdown:
+      specifier: ^0.18.1
+      version: 0.18.1
+  cli:
+    yargs:
+      specifier: ^18.0.0
+      version: 18.0.0
   dev:
     '@antfu/eslint-config':
       specifier: ^6.7.1
       version: 6.7.1
+    '@vitest/coverage-v8':
+      specifier: 4.0.16
+      version: 4.0.16
     bumpp:
       specifier: ^10.3.2
       version: 10.3.2
     eslint:
       specifier: ^9.39.2
       version: 9.39.2
+    eslint-plugin-format:
+      specifier: ^1.1.0
+      version: 1.1.0
     lint-staged:
       specifier: ^16.2.7
       version: 16.2.7
@@ -24,6 +38,32 @@ catalogs:
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
+    vitest:
+      specifier: ^4.0.16
+      version: 4.0.16
+  lib:
+    add:
+      specifier: ^2.0.6
+      version: 2.0.6
+    defu:
+      specifier: ^6.1.4
+      version: 6.1.4
+    ofetch:
+      specifier: ^1.5.1
+      version: 1.5.1
+    ufo:
+      specifier: ^1.6.1
+      version: 1.6.1
+    zod:
+      specifier: ^4.2.1
+      version: 4.2.1
+  types:
+    '@types/node':
+      specifier: ^25.0.2
+      version: 22.19.3
+    '@types/yargs':
+      specifier: ^17.0.35
+      version: 17.0.35
 
 importers:
 
@@ -39,7 +79,7 @@ importers:
         specifier: catalog:dev
         version: 9.39.2(jiti@2.6.1)
       eslint-plugin-format:
-        specifier: ^1.1.0
+        specifier: catalog:dev
         version: 1.1.0(eslint@9.39.2(jiti@2.6.1))
       lint-staged:
         specifier: catalog:dev
@@ -57,17 +97,17 @@ importers:
         specifier: workspace:*
         version: link:../statocysts
       yargs:
-        specifier: ^18.0.0
+        specifier: catalog:cli
         version: 18.0.0
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: catalog:types
         version: 22.19.3
       '@types/yargs':
-        specifier: ^17.0.35
+        specifier: catalog:types
         version: 17.0.35
       tsdown:
-        specifier: ^0.18.0
+        specifier: catalog:build
         version: 0.18.1(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: catalog:dev
@@ -75,34 +115,37 @@ importers:
 
   packages/statocysts:
     dependencies:
+      add:
+        specifier: catalog:lib
+        version: 2.0.6
       defu:
-        specifier: ^6.1.4
+        specifier: catalog:lib
         version: 6.1.4
       ofetch:
-        specifier: ^1.5.1
+        specifier: catalog:lib
         version: 1.5.1
       ufo:
-        specifier: ^1.6.1
+        specifier: catalog:lib
         version: 1.6.1
       zod:
-        specifier: ^4.2.1
+        specifier: catalog:lib
         version: 4.2.1
     devDependencies:
       '@types/node':
-        specifier: ^25.0.2
-        version: 25.0.2
+        specifier: catalog:types
+        version: 22.19.3
       '@vitest/coverage-v8':
-        specifier: 4.0.16
-        version: 4.0.16(vitest@4.0.16(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2))
+        specifier: catalog:dev
+        version: 4.0.16(vitest@4.0.16(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2))
       tsdown:
-        specifier: ^0.18.0
+        specifier: catalog:build
         version: 0.18.1(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: catalog:dev
         version: 5.9.3
       vitest:
-        specifier: ^4.0.15
-        version: 4.0.16(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2)
+        specifier: catalog:dev
+        version: 4.0.16(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2)
 
 packages:
 
@@ -856,6 +899,9 @@ packages:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  add@2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -2813,6 +2859,7 @@ snapshots:
   '@types/node@25.0.2':
     dependencies:
       undici-types: 7.16.0
+    optional: true
 
   '@types/unist@3.0.3': {}
 
@@ -2913,7 +2960,7 @@ snapshots:
       '@typescript-eslint/types': 8.50.0
       eslint-visitor-keys: 4.2.1
 
-  '@vitest/coverage-v8@4.0.16(vitest@4.0.16(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2))':
+  '@vitest/coverage-v8@4.0.16(vitest@4.0.16(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.16
@@ -2926,7 +2973,7 @@ snapshots:
       obug: 2.1.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2)
+      vitest: 4.0.16(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -2950,6 +2997,14 @@ snapshots:
       chai: 6.2.1
       tinyrainbow: 3.0.3
 
+  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2))':
+    dependencies:
+      '@vitest/spy': 4.0.16
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      vite: 7.3.0(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2)
+
   '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 4.0.16
@@ -2957,6 +3012,7 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 7.3.0(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2)
+    optional: true
 
   '@vitest/pretty-format@4.0.16':
     dependencies:
@@ -3017,6 +3073,8 @@ snapshots:
       acorn: 8.15.0
 
   acorn@8.15.0: {}
+
+  add@2.0.6: {}
 
   ajv@6.12.6:
     dependencies:
@@ -4547,7 +4605,8 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.16.0: {}
+  undici-types@7.16.0:
+    optional: true
 
   unist-util-is@6.0.1:
     dependencies:
@@ -4586,6 +4645,20 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
+  vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2):
+    dependencies:
+      esbuild: 0.27.2
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.53.5
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 22.19.3
+      fsevents: 2.3.3
+      jiti: 2.6.1
+      yaml: 2.8.2
+
   vite@7.3.0(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2):
     dependencies:
       esbuild: 0.27.2
@@ -4599,6 +4672,44 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.6.1
       yaml: 2.8.2
+    optional: true
+
+  vitest@4.0.16(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2):
+    dependencies:
+      '@vitest/expect': 4.0.16
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2))
+      '@vitest/pretty-format': 4.0.16
+      '@vitest/runner': 4.0.16
+      '@vitest/snapshot': 4.0.16
+      '@vitest/spy': 4.0.16
+      '@vitest/utils': 4.0.16
+      es-module-lexer: 1.7.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      std-env: 3.10.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.15
+      tinyrainbow: 3.0.3
+      vite: 7.3.0(@types/node@22.19.3)(jiti@2.6.1)(yaml@2.8.2)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 22.19.3
+    transitivePeerDependencies:
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
 
   vitest@4.0.16(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2):
     dependencies:
@@ -4636,6 +4747,7 @@ snapshots:
       - terser
       - tsx
       - yaml
+    optional: true
 
   vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@2.6.1)):
     dependencies:

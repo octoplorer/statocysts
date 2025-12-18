@@ -2,10 +2,26 @@ packages:
   - packages/*
 
 catalogs:
+  build:
+    tsdown: ^0.18.1
+  cli:
+    yargs: ^18.0.0
   dev:
     '@antfu/eslint-config': ^6.7.1
+    '@vitest/coverage-v8': 4.0.16
     bumpp: ^10.3.2
     eslint: ^9.39.2
+    eslint-plugin-format: ^1.1.0
     lint-staged: ^16.2.7
     simple-git-hooks: ^2.13.1
     typescript: ^5.9.3
+    vitest: ^4.0.16
+  lib:
+    add: ^2.0.6
+    defu: ^6.1.4
+    ofetch: ^1.5.1
+    ufo: ^1.6.1
+    zod: ^4.2.1
+  types:
+    '@types/node': ^25.0.2
+    '@types/yargs': ^17.0.35

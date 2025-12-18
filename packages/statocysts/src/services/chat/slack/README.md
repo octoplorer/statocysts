@@ -1,6 +1,5 @@
 ## URL Scheme Format
 
-
 ### Bot API
 
 ```

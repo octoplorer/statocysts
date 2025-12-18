@@ -13,7 +13,7 @@ pnpm add -g @statocysts/cli
 ## Usage
 
 ```bash
-statocysts -u <url> [-m <message> | -f <file>]
+stato -u <url> [-m <message> | -f <file>]
 ```
 
 ### Options

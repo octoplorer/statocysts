@@ -1,5 +1,6 @@
 {
   "name": "@statocysts/monorepo",
+  "type": "module",
   "private": true,
   "packageManager": "pnpm@10.26.0",
   "license": "MIT",
@@ -14,7 +15,7 @@
     "@antfu/eslint-config": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:dev",
-    "eslint-plugin-format": "^1.1.0",
+    "eslint-plugin-format": "catalog:dev",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
     "typescript": "catalog:dev"

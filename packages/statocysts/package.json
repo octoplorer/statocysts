@@ -69,16 +69,17 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "defu": "^6.1.4",
-    "ofetch": "^1.5.1",
-    "ufo": "^1.6.1",
-    "zod": "^4.2.1"
+    "add": "catalog:lib",
+    "defu": "catalog:lib",
+    "ofetch": "catalog:lib",
+    "ufo": "catalog:lib",
+    "zod": "catalog:lib"
   },
   "devDependencies": {
-    "@types/node": "^25.0.2",
-    "@vitest/coverage-v8": "4.0.16",
-    "tsdown": "^0.18.0",
+    "@types/node": "catalog:types",
+    "@vitest/coverage-v8": "catalog:dev",
+    "tsdown": "catalog:build",
     "typescript": "catalog:dev",
-    "vitest": "^4.0.15"
+    "vitest": "catalog:dev"
   }
 }

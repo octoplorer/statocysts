@@ -37,12 +37,12 @@
   },
   "dependencies": {
     "statocysts": "workspace:*",
-    "yargs": "^18.0.0"
+    "yargs": "catalog:cli"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "@types/yargs": "^17.0.35",
-    "tsdown": "^0.18.0",
+    "@types/node": "catalog:types",
+    "@types/yargs": "catalog:types",
+    "tsdown": "catalog:build",
     "typescript": "catalog:dev"
   }
 }
