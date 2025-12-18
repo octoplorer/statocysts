@@ -25,4 +25,5 @@ export async function send(
   await ofetch(request, options)
 }
 
+export { json, slack }
 export * from './shared'

@@ -1,5 +1,5 @@
+import type { ServiceProvider } from '#/core/provider'
 import type { FetchOptions } from 'ofetch'
-import type { ServiceProvider } from './provider'
 import { ofetch } from 'ofetch'
 
 export interface Sender {
@@ -25,7 +25,7 @@ export function buildSenderRegistry(
     url: string | URL,
   ): ServiceProvider<string> | undefined {
     const _url = typeof url === 'string' ? new URL(url) : url
- 
+
     return providersRegistry.get(_url.protocol)
   }
 
