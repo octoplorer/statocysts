@@ -1,6 +1,5 @@
 import type { ServiceProvider } from '#/core/provider'
 import type { FetchOptions } from 'ofetch'
-import { ofetch } from 'ofetch'
 
 export interface Sender {
   send: (message: string, options?: FetchOptions) => Promise<void>
@@ -10,7 +9,7 @@ export type SenderUrl = string | URL
 
 export interface SenderRegistry {
   (urls: SenderUrl[]): Sender
-  resolveProvider: (url: string | URL) => ServiceProvider<string> | undefined
+  resolveProvider: (url: string | URL) => ServiceProvider<string, any, any> | undefined
 }
 
 export function buildSenderRegistry(
@@ -23,7 +22,7 @@ export function buildSenderRegistry(
 
   function resolveProvider(
     url: string | URL,
-  ): ServiceProvider<string> | undefined {
+  ): ServiceProvider<string, any, any> | undefined {
     const _url = typeof url === 'string' ? new URL(url) : url
 
     return providersRegistry.get(_url.protocol)
@@ -36,16 +35,18 @@ export function buildSenderRegistry(
         return undefined
       }
       return { provider, url }
-    }).filter(p => !!p)
+    }).filter((p): p is { provider: ServiceProvider<string, any, any>, url: SenderUrl } => !!p)
 
     return {
       async send(message: string, options?: FetchOptions) {
         for (const registry of registries) {
-          const request = registry.provider.buildRequest(
+          // Convert message string to { title, body? } format
+          const messageObj = { title: message }
+          await registry.provider.send(
             registry.url.toString(),
-            message,
+            messageObj,
+            options,
           )
-          await ofetch(request, options)
         }
       },
     }

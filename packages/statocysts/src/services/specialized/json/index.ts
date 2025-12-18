@@ -1,8 +1,12 @@
+import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
+import { http } from '#/core/transports/http'
 import { withProtocol } from 'ufo'
 
 export const json = defineProvider('json:', {
-  createRequest() {
+  transport: http,
+  defaultOptions: {} as FetchOptions,
+  async prepare(_, options) {
     const url = new URL(this.url)
 
     const headers = new Headers([
@@ -10,7 +14,11 @@ export const json = defineProvider('json:', {
     ])
 
     const body: Record<string, string> = {
-      message: this.message,
+      title: this.message.title,
+    }
+
+    if (this.message.body) {
+      body.body = this.message.body
     }
 
     Array.from(url.searchParams.entries()).forEach(([key, value]) => {
@@ -35,10 +43,15 @@ export const json = defineProvider('json:', {
 
     const requestUrl = withProtocol(url.toString(), 'https:')
 
-    return new Request(requestUrl, {
+    const request = new Request(requestUrl, {
       method: 'POST',
       body: JSON.stringify(body),
-      headers
+      headers,
     })
+
+    return {
+      request,
+      fetchOptions: options,
+    }
   },
 })
