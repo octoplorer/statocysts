@@ -121,4 +121,12 @@ describe('json provider', () => {
       message: 'Hello, world!',
     })
   })
+
+  it('should override the headers if has same key', async () => {
+    const request = await jsonProvider.buildRequest(
+      'json://api.example.com/webhook?+Authorization=Bearer+token123&+Authorization=Bearer+token456',
+      'Hello, world!',
+    )
+    expect(request.headers.get('Authorization')).toBe('Bearer token456')
+  })
 })

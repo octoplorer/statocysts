@@ -12,13 +12,20 @@ export interface SlackOptions {
    *
    * @default `https://hooks.slack.com/services`
    */
-  hookBaseUrl: string
+  hookBaseUrl?: string
   /**
    * The base URL for bot API services
    *
    * @default `https://slack.com/api`
    */
-  botApiBaseUrl: string
+  botApiBaseUrl?: string
+
+  /**
+   * The body of the request
+   *
+   * NOTICE*: This will override the body of the request. You should known what you are doing.
+   */
+  body?: Record<string, any>
 }
 
 export const slackProvider = defineProvider('slack:', {
@@ -46,7 +53,7 @@ export const slackProvider = defineProvider('slack:', {
     const headers = new Headers([
       ['Content-Type', 'application/json'],
     ])
-    const body: Record<string, string> = {
+    const body: Record<string, any> = {
       text: this.message,
     }
     if (type === 'bot') {
@@ -71,7 +78,7 @@ export const slackProvider = defineProvider('slack:', {
     return new Request(url, {
       method: 'POST',
       headers,
-      body: JSON.stringify(body),
+      body: JSON.stringify(options.body ?? body),
     })
   },
 })

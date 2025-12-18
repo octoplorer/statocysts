@@ -28,6 +28,14 @@ describe('slack bot API', async () => {
       'Hello, world!',
     )).rejects.toThrow('Bot token is required')
   })
+
+  it('should pass all original search params to the request', async () => {
+    const req = await slackProvider.buildRequest(
+      'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot?foo=bar&baz=qux',
+      'Hello, world!',
+    )
+    expect(req.url).toBe('https://slack.com/api/chat.postMessage?foo=bar&baz=qux')
+  })
 })
 
 describe('slack webhook', () => {
@@ -51,4 +59,12 @@ describe('slack webhook', () => {
     )).rejects.toThrow('Webhook URL is invalid')
   })
 
+
+  it('should pass all original search params to the request', async () => {
+    const req = await slackProvider.buildRequest(
+      'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux',
+      'Hello, world!',
+    )
+    expect(req.url).toBe('https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux')
+  })
 })

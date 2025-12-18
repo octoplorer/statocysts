@@ -56,6 +56,15 @@ describe('defineProvider', () => {
     })
   })
 
+  it('should get the default options', async () => {
+    const testProvider = defineProvider('test:', {
+      defaultOptions: { foo: 'bar' },
+      extractor: () => ({}),
+      createRequest: () => new Request('https://example.com', { method: 'POST' }),
+    })
+    expect(testProvider.defaultOptions).toEqual({ foo: 'bar' })
+  })
+
   it('should throw an error if the protocol is not supported', async () => {
     const testProvider = defineProvider('test:', {
       extractor: () => ({}),
