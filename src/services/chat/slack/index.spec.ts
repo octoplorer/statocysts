@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { slackProvider } from '.'
+import { slack } from '.'
 
 describe('slack bot API', async () => {
   it('should build a request with bot API token', async () => {
-    const req = slackProvider.buildRequest(
+    const req = slack.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       'Hello, world!',
     )
@@ -18,19 +18,19 @@ describe('slack bot API', async () => {
   })
 
   it('should throw an error if the bot API URL is invalid', async () => {
-    await expect(slackProvider.buildRequest(
+    await expect(slack.buildRequest(
       'slack://:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       'Hello, world!',
     )).rejects.toThrow('Channel ID is required')
 
-    await expect(slackProvider.buildRequest(
+    await expect(slack.buildRequest(
       'slack://CHANNELID:@bot',
       'Hello, world!',
     )).rejects.toThrow('Bot token is required')
   })
 
   it('should pass all original search params to the request', async () => {
-    const req = slackProvider.buildRequest(
+    const req = slack.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot?foo=bar&baz=qux',
       'Hello, world!',
     )
@@ -40,7 +40,7 @@ describe('slack bot API', async () => {
 
 describe('slack webhook', () => {
   it('should build a request with webhook service', async () => {
-    const req = slackProvider.buildRequest(
+    const req = slack.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
       'Hello, world!',
     )
@@ -53,7 +53,7 @@ describe('slack webhook', () => {
   })
 
   it('should throw an error if the webhook URL is invalid', async () => {
-    await expect(slackProvider.buildRequest(
+    await expect(slack.buildRequest(
       'slack://webhook/T00000000/B00000000',
       'Hello, world!',
     )).rejects.toThrow('Webhook URL is invalid')
@@ -61,7 +61,7 @@ describe('slack webhook', () => {
 
 
   it('should pass all original search params to the request', async () => {
-    const req = slackProvider.buildRequest(
+    const req = slack.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux',
       'Hello, world!',
     )

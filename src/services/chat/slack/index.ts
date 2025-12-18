@@ -28,7 +28,7 @@ export interface SlackOptions {
   body?: Record<string, any>
 }
 
-export const slackProvider = defineProvider('slack:', {
+export const slack = defineProvider('slack:', {
   extractor: (url) => {
     assert(url.hostname === 'bot' || url.hostname === 'webhook', `Invalid slack URL: ${url.toString()}`)
     if (url.hostname === 'bot') {

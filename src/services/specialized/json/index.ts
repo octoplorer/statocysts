@@ -1,7 +1,7 @@
 import { defineProvider } from '#/core/provider'
 import { withProtocol } from 'ufo'
 
-export const jsonProvider = defineProvider('json:', {
+export const json = defineProvider('json:', {
   createRequest() {
     const url = new URL(this.url)
 

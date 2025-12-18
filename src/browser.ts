@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
 import { ofetch } from 'ofetch'
-import { jsonProvider, slackProvider } from './shared'
+import { json, slack } from './shared'
 import { assert } from './utils/assert'
 
 export type Protocol = 'json:' | 'slack:'
@@ -8,8 +8,8 @@ export type Protocol = 'json:' | 'slack:'
 export const SUPPORTED_PROTOCOLS = ['json:', 'slack:'] as const
 
 const providers = {
-  'json:': jsonProvider,
-  'slack:': slackProvider,
+  'json:': json,
+  'slack:': slack,
 } as const
 
 async function send(
