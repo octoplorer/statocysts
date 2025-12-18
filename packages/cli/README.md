@@ -39,31 +39,31 @@ The message content is determined in the following order:
 ### Send to a single URL
 
 ```bash
-statocysts -u "slack://webhook/xxx/yyy/zzz" -m "Hello World"
+stato -u "slack://webhook/xxx/yyy/zzz" -m "Hello World"
 ```
 
 ### Send to multiple URLs
 
 ```bash
-statocysts -u "slack://webhook/xxx/yyy/zzz" -u "json://example.com/api/notify" -m "Hello World"
+stato -u "slack://webhook/xxx/yyy/zzz" -u "json://example.com/api/notify" -m "Hello World"
 ```
 
 ### Read message from file
 
 ```bash
-statocysts -u "slack://webhook/xxx/yyy/zzz" -f message.txt
+stato -u "slack://webhook/xxx/yyy/zzz" -f message.txt
 ```
 
 ### Read message from stdin
 
 ```bash
-echo "Hello World" | statocysts -u "slack://webhook/xxx/yyy/zzz"
+echo "Hello World" | stato -u "slack://webhook/xxx/yyy/zzz"
 ```
 
 ### Use with pipeline
 
 ```bash
-cat deployment.log | statocysts -u "slack://webhook/xxx/yyy/zzz"
+cat deployment.log | stato -u "slack://webhook/xxx/yyy/zzz"
 ```
 
 ## Supported Services
