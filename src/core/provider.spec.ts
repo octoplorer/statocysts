@@ -20,7 +20,7 @@ describe('defineProvider', () => {
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = await testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
+    const request = testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({
@@ -47,7 +47,7 @@ describe('defineProvider', () => {
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = await testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
+    const request = testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({

@@ -9,7 +9,7 @@ export interface ServiceProvider<
   readonly protocol: Protocol
   $infer: Data
   defaultOptions: Options | undefined
-  buildRequest: (url: string, message: string, options?: Options) => Promise<Request>
+  buildRequest: (url: string, message: string, options?: Options) => Request
 }
 
 export interface DefineProviderContext<Data = unknown> {
@@ -36,11 +36,11 @@ export function defineProvider<
 ): ServiceProvider<Protocol, Data, Options> {
   const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<Data>>
 
-  const buildRequest: ServiceProvider<Protocol, Data, Options>['buildRequest'] = async (
+  const buildRequest: ServiceProvider<Protocol, Data, Options>['buildRequest'] = (
     protocolUrl: string,
     message: string,
     options?: Options,
-  ): Promise<Request> => {
+  ): Request => {
     const url = new URL(protocolUrl)
 
     assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)

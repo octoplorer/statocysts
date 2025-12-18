@@ -3,7 +3,7 @@ import { jsonProvider } from './index'
 
 describe('json provider', () => {
   it('should build a basic request without query parameters', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook',
       'Hello, world!',
     )
@@ -16,7 +16,7 @@ describe('json provider', () => {
   })
 
   it('should build a request with headers and body properties', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?+Authorization=Bearer+token123&:title=Alert&:priority=high',
       'Hello, world!',
     )
@@ -32,7 +32,7 @@ describe('json provider', () => {
   })
 
   it('should build a request with multiple headers and properties', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://example.com/api?+Authorization=Bearer+abc&+X-Custom-Header=value&:key1=val1&:key2=val2',
       'Hello, world!',
     )
@@ -49,7 +49,7 @@ describe('json provider', () => {
   })
 
   it('should decode spaces in header values (encoded as +)', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?+Authorization=Bearer+token+with+spaces',
       'Hello, world!',
     )
@@ -57,7 +57,7 @@ describe('json provider', () => {
   })
 
   it('should ignore parameters without prefix', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?normalParam=value&:bodyParam=bodyValue',
       'Hello, world!',
     )
@@ -69,7 +69,7 @@ describe('json provider', () => {
   })
 
   it('should handle URL-encoded values in headers', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?+X-Custom-Header=value%20with%20encoded%20spaces',
       'Hello, world!',
     )
@@ -77,7 +77,7 @@ describe('json provider', () => {
   })
 
   it('should handle URL-encoded values in body properties', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?:title=Alert%20Message&:priority=high',
       'Hello, world!',
     )
@@ -89,7 +89,7 @@ describe('json provider', () => {
   })
 
   it('should handle empty query string', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?',
       'Hello, world!',
     )
@@ -103,7 +103,7 @@ describe('json provider', () => {
   })
 
   it('should handle path with multiple segments', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/v1/webhooks/notifications',
       'Hello, world!',
     )
@@ -111,7 +111,7 @@ describe('json provider', () => {
   })
 
   it('should handle special characters in body property values', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?:title=Special%3A%20chars&:number=123',
       'Hello, world!',
     )
@@ -123,7 +123,7 @@ describe('json provider', () => {
   })
 
   it('should override the headers if has same key', async () => {
-    const request = await jsonProvider.buildRequest(
+    const request = jsonProvider.buildRequest(
       'json://api.example.com/webhook?+Authorization=Bearer+token123&+Authorization=Bearer+token456',
       'Hello, world!',
     )

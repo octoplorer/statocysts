@@ -3,7 +3,7 @@ import { slackProvider } from '.'
 
 describe('slack bot API', async () => {
   it('should build a request with bot API token', async () => {
-    const req = await slackProvider.buildRequest(
+    const req = slackProvider.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       'Hello, world!',
     )
@@ -30,7 +30,7 @@ describe('slack bot API', async () => {
   })
 
   it('should pass all original search params to the request', async () => {
-    const req = await slackProvider.buildRequest(
+    const req = slackProvider.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot?foo=bar&baz=qux',
       'Hello, world!',
     )
@@ -40,7 +40,7 @@ describe('slack bot API', async () => {
 
 describe('slack webhook', () => {
   it('should build a request with webhook service', async () => {
-    const req = await slackProvider.buildRequest(
+    const req = slackProvider.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
       'Hello, world!',
     )
@@ -61,7 +61,7 @@ describe('slack webhook', () => {
 
 
   it('should pass all original search params to the request', async () => {
-    const req = await slackProvider.buildRequest(
+    const req = slackProvider.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux',
       'Hello, world!',
     )
