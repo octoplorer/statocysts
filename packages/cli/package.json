@@ -18,7 +18,7 @@
     "statocysts"
   ],
   "bin": {
-    "statocysts": "./dist/cli.mjs"
+    "stato": "./dist/cli.mjs"
   },
   "files": [
     "dist"
