@@ -1,13 +1,6 @@
+import type { Transport } from './transport'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineProvider } from './provider'
-import { httpTransport } from './transports/http'
-
-// Mock httpTransport
-vi.mock('./transports/http', () => ({
-  httpTransport: {
-    send: vi.fn(),
-  },
-}))
 
 describe('defineProvider', () => {
   beforeEach(() => {
@@ -15,28 +8,31 @@ describe('defineProvider', () => {
   })
 
   it('should parse params', async () => {
+    const mockTransport: Transport<{ request: Request }> = {
+      send: vi.fn().mockResolvedValue(undefined),
+    }
+
     const testProvider = defineProvider('test:', {
-      extractor() {
-        return { foo: 'bar' }
-      },
-      async send() {
+      transport: mockTransport,
+      async prepare() {
+        const foo = this.url.searchParams.get('foo') ?? 'default'
         const request = new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
-            ...this.data,
+            foo,
             title: this.message.title,
             body: this.message.body,
           }),
         })
-        await httpTransport.send({ request })
+        return { request }
       },
     })
 
     expect(testProvider.protocol).toBe('test:')
 
     await testProvider.send('test://aaa?foo=bar', { title: 'Hello, world!', body: 'Hello, world!' })
-    expect(vi.mocked(httpTransport.send)).toHaveBeenCalledTimes(1)
-    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    expect(mockTransport.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(mockTransport.send).mock.calls[0][0]
     expect(callArgs.request.url).toBe('https://example.com/')
     expect(callArgs.request.method).toBe('POST')
     expect(await callArgs.request.json()).toEqual({
@@ -46,8 +42,8 @@ describe('defineProvider', () => {
     })
 
     await testProvider.send('test://aaa?foo=bar', { title: 'Hello, world!' })
-    expect(vi.mocked(httpTransport.send)).toHaveBeenCalledTimes(2)
-    const callArgs2 = vi.mocked(httpTransport.send).mock.calls[1][0]
+    expect(mockTransport.send).toHaveBeenCalledTimes(2)
+    const callArgs2 = vi.mocked(mockTransport.send).mock.calls[1][0]
     expect(await callArgs2.request.json()).toEqual({
       foo: 'bar',
       title: 'Hello, world!',
@@ -55,28 +51,31 @@ describe('defineProvider', () => {
   })
 
   it('should parse params with promise parser', async () => {
+    const mockTransport: Transport<{ request: Request }> = {
+      send: vi.fn().mockResolvedValue(undefined),
+    }
+
     const testProvider = defineProvider('test:', {
-      extractor() {
-        return { foo: 'bar' }
-      },
-      async send() {
+      transport: mockTransport,
+      async prepare() {
+        const foo = this.url.searchParams.get('foo') ?? 'default'
         const request = new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
-            ...this.data,
+            foo,
             title: this.message.title,
             body: this.message.body,
           }),
         })
-        await httpTransport.send({ request })
+        return { request }
       },
     })
 
     expect(testProvider.protocol).toBe('test:')
 
     await testProvider.send('test://aaa?foo=bar', { title: 'Hello, world!', body: 'Hello, world!' })
-    expect(vi.mocked(httpTransport.send)).toHaveBeenCalledTimes(1)
-    const callArgs = vi.mocked(httpTransport.send).mock.calls[0][0]
+    expect(mockTransport.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(mockTransport.send).mock.calls[0][0]
     expect(callArgs.request.url).toBe('https://example.com/')
     expect(callArgs.request.method).toBe('POST')
     expect(await callArgs.request.json()).toEqual({
@@ -87,21 +86,29 @@ describe('defineProvider', () => {
   })
 
   it('should get the default options', async () => {
+    const mockTransport: Transport<{ request: Request }> = {
+      send: vi.fn().mockResolvedValue(undefined),
+    }
+
     const testProvider = defineProvider('test:', {
       defaultOptions: { foo: 'bar' },
-      extractor: () => ({}),
-      async send() {
-        await httpTransport.send({ request: new Request('https://example.com', { method: 'POST' }) })
+      transport: mockTransport,
+      async prepare() {
+        return { request: new Request('https://example.com', { method: 'POST' }) }
       },
     })
     expect(testProvider.defaultOptions).toEqual({ foo: 'bar' })
   })
 
   it('should throw an error if the protocol is not supported', async () => {
+    const mockTransport: Transport<{ request: Request }> = {
+      send: vi.fn().mockResolvedValue(undefined),
+    }
+
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await httpTransport.send({ request: new Request('https://example.com', { method: 'POST' }) })
+      transport: mockTransport,
+      async prepare() {
+        return { request: new Request('https://example.com', { method: 'POST' }) }
       },
     })
 

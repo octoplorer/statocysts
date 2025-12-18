@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
-import type { Transport } from '../transport'
 import { ofetch } from 'ofetch'
+import { defineTransport } from '../transport'
 
 /**
  * HTTP payload for HTTP transport
@@ -14,8 +14,8 @@ export interface HttpPayload {
  * HTTP transport implementation
  * Handles sending data over HTTP/HTTPS protocols
  */
-export const httpTransport: Transport<HttpPayload> = {
-  async send(payload) {
+export const httpTransport = defineTransport({
+  async send(payload: HttpPayload) {
     await ofetch(payload.request, payload.fetchOptions)
   },
-}
+})

@@ -1,7 +1,15 @@
+import type { Transport } from './transport'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineProvider } from './provider'
 
 import { buildSenderRegistry } from './sender'
+
+// Helper to create a mock transport
+function createMockTransport() {
+  return {
+    send: vi.fn().mockResolvedValue(undefined),
+  } as Transport<any>
+}
 
 describe('buildSenderRegistry', () => {
   beforeEach(() => {
@@ -9,10 +17,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should create a sender registry with resolveProvider method', () => {
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        // Mock send implementation
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -23,10 +32,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should resolve provider by protocol from string URL', () => {
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        // Mock send implementation
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -37,10 +47,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should resolve provider by protocol from URL object', () => {
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        // Mock send implementation
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -51,10 +62,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should return undefined for unsupported protocol', () => {
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        // Mock send implementation
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -65,10 +77,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should return undefined for URL without protocol', () => {
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        // Mock send implementation
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -83,11 +96,11 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should create a sender that sends messages to all registered URLs', async () => {
-    const sendMock = vi.fn().mockResolvedValue(undefined)
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock()
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -96,15 +109,15 @@ describe('buildSenderRegistry', () => {
 
     await sender.send('Hello, world!')
 
-    expect(sendMock).toHaveBeenCalledTimes(2)
+    expect(mockTransport.send).toHaveBeenCalledTimes(2)
   })
 
   it('should filter out URLs without matching providers', async () => {
-    const sendMock = vi.fn().mockResolvedValue(undefined)
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock()
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -114,15 +127,17 @@ describe('buildSenderRegistry', () => {
     await sender.send('Hello, world!')
 
     // Should only call send once for the supported protocol
-    expect(sendMock).toHaveBeenCalledTimes(1)
+    expect(mockTransport.send).toHaveBeenCalledTimes(1)
   })
 
   it('should pass FetchOptions to provider send', async () => {
-    const sendMock = vi.fn().mockResolvedValue(undefined)
+    const mockTransport = createMockTransport()
+    const prepareMock = vi.fn().mockResolvedValue({ url: 'test://example.com' })
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send(ctx, options) {
-        await sendMock(ctx.url, ctx.message, options)
+      transport: mockTransport,
+      async prepare(ctx, options) {
+        prepareMock(ctx.url, ctx.message, options)
+        return { url: ctx.url.toString() }
       },
     })
 
@@ -132,8 +147,8 @@ describe('buildSenderRegistry', () => {
     const options = { headers: { 'X-Custom': 'value' } }
     await sender.send('Hello, world!', options)
 
-    expect(sendMock).toHaveBeenCalledTimes(1)
-    expect(sendMock).toHaveBeenCalledWith(
+    expect(prepareMock).toHaveBeenCalledTimes(1)
+    expect(prepareMock).toHaveBeenCalledWith(
       new URL('test://example.com'),
       { title: 'Hello, world!' },
       options,
@@ -141,19 +156,19 @@ describe('buildSenderRegistry', () => {
   })
 
   it('should handle multiple providers with different protocols', async () => {
-    const sendMock1 = vi.fn().mockResolvedValue(undefined)
-    const sendMock2 = vi.fn().mockResolvedValue(undefined)
+    const mockTransport1 = createMockTransport()
+    const mockTransport2 = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock1()
+      transport: mockTransport1,
+      async prepare() {
+        return {}
       },
     })
 
     const httpProvider = defineProvider('http:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock2()
+      transport: mockTransport2,
+      async prepare() {
+        return {}
       },
     })
 
@@ -162,16 +177,16 @@ describe('buildSenderRegistry', () => {
 
     await sender.send('Hello, world!')
 
-    expect(sendMock1).toHaveBeenCalledTimes(1)
-    expect(sendMock2).toHaveBeenCalledTimes(1)
+    expect(mockTransport1.send).toHaveBeenCalledTimes(1)
+    expect(mockTransport2.send).toHaveBeenCalledTimes(1)
   })
 
   it('should handle empty URLs array', async () => {
-    const sendMock = vi.fn().mockResolvedValue(undefined)
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock()
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -180,15 +195,15 @@ describe('buildSenderRegistry', () => {
 
     await sender.send('Hello, world!')
 
-    expect(sendMock).not.toHaveBeenCalled()
+    expect(mockTransport.send).not.toHaveBeenCalled()
   })
 
   it('should handle sender with no valid providers', async () => {
-    const sendMock = vi.fn().mockResolvedValue(undefined)
+    const mockTransport = createMockTransport()
     const testProvider = defineProvider('test:', {
-      extractor: () => ({}),
-      async send() {
-        await sendMock()
+      transport: mockTransport,
+      async prepare() {
+        return {}
       },
     })
 
@@ -197,6 +212,6 @@ describe('buildSenderRegistry', () => {
 
     await sender.send('Hello, world!')
 
-    expect(sendMock).not.toHaveBeenCalled()
+    expect(mockTransport.send).not.toHaveBeenCalled()
   })
 })

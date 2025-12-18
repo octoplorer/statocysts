@@ -1,78 +1,63 @@
+import type { Transport } from './transport'
 import { assert } from '#/utils/assert'
 import defu from 'defu'
 
 export interface ServiceProvider<
   Protocol extends string,
-  Data = unknown,
-  Options = unknown,
+  T extends Transport<any>,
+  Options = void,
 > {
+  readonly $transport: T
   readonly protocol: Protocol
-  $infer: Data
   defaultOptions: Options | undefined
-  send: (
-    url: string,
-    message: { title: string, body?: string },
-    options?: Options,
-  ) => Promise<void>
+  send: (url: string, message: { title: string, body?: string }, options?: Options) => Promise<void>
 }
 
-export interface DefineProviderContext<Data = unknown> {
+export interface DefineProviderContext {
   url: URL
   message: { title: string, body?: string }
-  data: Data
 }
 
-export interface DefineProviderOptions<Data = unknown, Options = unknown> {
+export interface DefineProviderOptions<Payload, Options> {
   defaultOptions?: Options
-  extractor?: (url: URL) => Data
-  send: (
-    this: DefineProviderContext<Data>,
-    ctx: DefineProviderContext<Data>,
+  transport: Transport<Payload>
+  prepare: (
+    this: DefineProviderContext,
+    ctx: DefineProviderContext,
     options: Options,
-  ) => Promise<void>
+  ) => Promise<Payload>
 }
 
-export const DEFAULT_EXTRACTOR = (url: URL): unknown => Object.fromEntries(url.searchParams.entries())
-
-export function defineProvider<
-  const Protocol extends string,
-  Data = unknown,
-  Options = unknown,
->(
+export function defineProvider<const Protocol extends string, Payload, Options>(
   protocol: Protocol,
-  createOptions: DefineProviderOptions<Data, Options>,
-): ServiceProvider<Protocol, Data, Options> {
-  const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<Omit<DefineProviderOptions<Data, Options>, 'send'>>
-
-  const send: ServiceProvider<Protocol, Data, Options>['send'] = async (
-    protocolUrl,
-    message,
-    options,
-  ): Promise<void> => {
+  createOptions: DefineProviderOptions<Payload, Options>,
+): ServiceProvider<Protocol, Transport<Payload>, Options> {
+  const send: ServiceProvider<Protocol, Transport<Payload>, Options>['send'] = async (protocolUrl, message, options): Promise<void> => {
     const url = new URL(protocolUrl)
 
     assert(url.protocol === protocol, `Unexpected protocol "${url.protocol}"`)
 
-    const data = createOpt.extractor(url)
-
-    const ctx: DefineProviderContext<Data> = {
-      data,
+    const ctx: DefineProviderContext = {
       url,
       message,
     }
 
     const opts = defu(createOptions.defaultOptions ?? {}, options ?? {}) as Options
 
-    await createOptions.send.call(ctx, ctx, opts)
+    const payload = await createOptions.prepare.call(ctx, ctx, opts)
+
+    await createOptions.transport.send(payload)
   }
   return {
     get protocol() {
       return protocol
     },
-    send,
     get defaultOptions() {
       return createOptions.defaultOptions
     },
-    $infer: {} as Data,
+    get $transport() {
+      return createOptions.transport
+    },
+    send,
   }
 }

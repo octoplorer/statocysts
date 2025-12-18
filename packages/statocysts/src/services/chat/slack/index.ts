@@ -4,10 +4,6 @@ import { httpTransport } from '#/core/transports/http'
 import { assert } from '#/utils/assert'
 import { withoutLeadingSlash } from 'ufo'
 
-export interface SlackData {
-  type: 'bot' | 'webhook'
-}
-
 export interface SlackOptions {
   /**
    * The base URL for webhook services
@@ -31,9 +27,20 @@ export interface SlackOptions {
 }
 
 export const slack = defineProvider('slack:', {
-  extractor: (url) => {
+  transport: httpTransport,
+  defaultOptions: {
+    hookBaseUrl: 'https://hooks.slack.com/',
+    botApiBaseUrl: 'https://slack.com/',
+  } as SlackOptions,
+  async prepare(_, options) {
+    const { url } = this
+
+    // Validate URL format
     assert(url.hostname === 'bot' || url.hostname === 'webhook', `Invalid slack URL: ${url.toString()}`)
-    if (url.hostname === 'bot') {
+
+    const type = url.hostname as 'bot' | 'webhook'
+
+    if (type === 'bot') {
       assert(url.username, 'Channel ID is required')
       assert(url.password, 'Bot token is required')
     }
@@ -41,28 +48,20 @@ export const slack = defineProvider('slack:', {
       const pathParts = url.pathname.split('/').filter(Boolean)
       assert(pathParts.length === 3, 'Webhook URL is invalid')
     }
-    return {
-      type: url.hostname,
-    } as SlackData
-  },
-  defaultOptions: {
-    hookBaseUrl: 'https://hooks.slack.com/',
-    botApiBaseUrl: 'https://slack.com/',
-  } as SlackOptions,
-  async send(_, options) {
-    const { type } = this.data
-    let url: URL
+
+    let requestUrl: URL
     const headers = new Headers([
       ['Content-Type', 'application/json'],
     ])
     const body: Record<string, any> = {
       text: this.message.title,
     }
+
     if (type === 'bot') {
-      const { username: channel, password: token, searchParams } = this.url
-      url = new URL('/api/chat.postMessage', options.botApiBaseUrl)
+      const { username: channel, password: token, searchParams } = url
+      requestUrl = new URL('/api/chat.postMessage', options.botApiBaseUrl)
       searchParams.forEach((value, key) => {
-        url.searchParams.set(key, value)
+        requestUrl.searchParams.set(key, value)
       })
 
       headers.set('Authorization', `Bearer ${token}`)
@@ -70,25 +69,24 @@ export const slack = defineProvider('slack:', {
       body.channel = channel
     }
     else {
-      const { searchParams } = this.url
-      url = new URL(`/services/${withoutLeadingSlash(this.url.pathname)}`, options.hookBaseUrl)
+      const { searchParams } = url
+      requestUrl = new URL(`/services/${withoutLeadingSlash(url.pathname)}`, options.hookBaseUrl)
       searchParams.forEach((value, key) => {
-        url.searchParams.set(key, value)
+        requestUrl.searchParams.set(key, value)
       })
     }
 
-    const request = new Request(url, {
+    const request = new Request(requestUrl, {
       method: 'POST',
       headers,
       body: JSON.stringify(options.body ?? body),
     })
 
-    // Extract FetchOptions from options if it's a combined type
     const fetchOptions: FetchOptions | undefined = options as FetchOptions
 
-    await httpTransport.send({
+    return {
       request,
       fetchOptions,
-    })
+    }
   },
 })
