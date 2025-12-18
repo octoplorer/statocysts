@@ -1,4 +1,5 @@
 import { defineProvider } from '#/core/provider'
+import { withProtocol } from 'ufo'
 
 export const jsonProvider = defineProvider('json:', {
   createRequest() {
@@ -32,7 +33,7 @@ export const jsonProvider = defineProvider('json:', {
       }
     })
 
-    const requestUrl = url.toString().replace('json:', 'https:')
+    const requestUrl = withProtocol(url.toString(), 'https:')
 
     return new Request(requestUrl, {
       method: 'POST',
