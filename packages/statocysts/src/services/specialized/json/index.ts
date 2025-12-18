@@ -10,7 +10,11 @@ export const json = defineProvider('json:', {
     ])
 
     const body: Record<string, string> = {
-      message: this.message,
+      title: this.message.title,
+    }
+
+    if (this.message.body) {
+      body.body = this.message.body
     }
 
     Array.from(url.searchParams.entries()).forEach(([key, value]) => {
@@ -38,7 +42,7 @@ export const json = defineProvider('json:', {
     return new Request(requestUrl, {
       method: 'POST',
       body: JSON.stringify(body),
-      headers
+      headers,
     })
   },
 })

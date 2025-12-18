@@ -5,7 +5,7 @@ describe('slack bot API', async () => {
   it('should build a request with bot API token', async () => {
     const req = slack.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )
     expect(req.method).toBe('POST')
     expect(req.url).toBe('https://slack.com/api/chat.postMessage')
@@ -20,19 +20,19 @@ describe('slack bot API', async () => {
   it('should throw an error if the bot API URL is invalid', async () => {
     expect(() => slack.buildRequest(
       'slack://:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )).toThrow('Channel ID is required')
 
     expect(() => slack.buildRequest(
       'slack://CHANNELID:@bot',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )).toThrow('Bot token is required')
   })
 
   it('should pass all original search params to the request', async () => {
     const req = slack.buildRequest(
       'slack://CHANNELID:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot?foo=bar&baz=qux',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )
     expect(req.url).toBe('https://slack.com/api/chat.postMessage?foo=bar&baz=qux')
   })
@@ -42,7 +42,7 @@ describe('slack webhook', () => {
   it('should build a request with webhook service', async () => {
     const req = slack.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )
     expect(req.method).toBe('POST')
     expect(req.url).toBe('https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX')
@@ -55,15 +55,14 @@ describe('slack webhook', () => {
   it('should throw an error if the webhook URL is invalid', async () => {
     expect(() => slack.buildRequest(
       'slack://webhook/T00000000/B00000000',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )).toThrow('Webhook URL is invalid')
   })
-
 
   it('should pass all original search params to the request', async () => {
     const req = slack.buildRequest(
       'slack://webhook/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux',
-      'Hello, world!',
+      { title: 'Hello, world!' },
     )
     expect(req.url).toBe('https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX?foo=bar&baz=qux')
   })

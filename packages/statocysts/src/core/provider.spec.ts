@@ -1,58 +1,70 @@
-import { describe, expect, it } from "vitest";
-import { defineProvider } from "./provider";
+import { describe, expect, it } from 'vitest'
+import { defineProvider } from './provider'
 
 describe('defineProvider', () => {
   it('should parse params', async () => {
     const testProvider = defineProvider('test:', {
       extractor() {
-        return { foo: "bar" }
+        return { foo: 'bar' }
       },
       createRequest() {
         return new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
             ...this.data,
-            message: this.message
+            title: this.message.title,
+            body: this.message.body,
           }),
         })
-      }
+      },
     })
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
+    const request = testProvider.buildRequest('test://aaa?foo=bar', { title: 'Hello, world!', body: 'Hello, world!' })
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({
-      foo: "bar",
-      message: "Hello, world!",
+      foo: 'bar',
+      title: 'Hello, world!',
+      body: 'Hello, world!',
+    })
+
+    const requestWithoutBody = testProvider.buildRequest('test://aaa?foo=bar', { title: 'Hello, world!' })
+    expect(requestWithoutBody.url).toBe('https://example.com/')
+    expect(requestWithoutBody.method).toBe('POST')
+    expect(await requestWithoutBody.json()).toEqual({
+      foo: 'bar',
+      title: 'Hello, world!',
     })
   })
 
   it('should parse params with promise parser', async () => {
     const testProvider = defineProvider('test:', {
       extractor() {
-        return { foo: "bar" }
+        return { foo: 'bar' }
       },
       createRequest() {
         return new Request('https://example.com', {
           method: 'POST',
           body: JSON.stringify({
             ...this.data,
-            message: this.message
+            title: this.message.title,
+            body: this.message.body,
           }),
         })
-      }
+      },
     })
 
     expect(testProvider.protocol).toBe('test:')
 
-    const request = testProvider.buildRequest('test://aaa?foo=bar', "Hello, world!")
+    const request = testProvider.buildRequest('test://aaa?foo=bar', { title: 'Hello, world!', body: 'Hello, world!' })
     expect(request.url).toBe('https://example.com/')
     expect(request.method).toBe('POST')
     expect(await request.json()).toEqual({
-      foo: "bar",
-      message: "Hello, world!",
+      foo: 'bar',
+      title: 'Hello, world!',
+      body: 'Hello, world!',
     })
   })
 
@@ -71,6 +83,9 @@ describe('defineProvider', () => {
       createRequest: () => new Request('https://example.com', { method: 'POST' }),
     })
 
-    expect(() => testProvider.buildRequest('http://aaa?foo=bar', "Hello, world!")).toThrow('Unexpected protocol "http:"')
+    expect(() => testProvider.buildRequest(
+      'http://aaa?foo=bar',
+      { title: 'Hello, world!', body: 'Hello, world!' },
+    )).toThrow('Unexpected protocol "http:"')
   })
 })

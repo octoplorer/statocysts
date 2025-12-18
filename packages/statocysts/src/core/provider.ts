@@ -9,12 +9,12 @@ export interface ServiceProvider<
   readonly protocol: Protocol
   $infer: Data
   defaultOptions: Options | undefined
-  buildRequest: (url: string, message: string, options?: Options) => Request
+  buildRequest: (url: string, message: { title: string, body?: string }, options?: Options) => Request
 }
 
 export interface DefineProviderContext<Data = unknown> {
   url: URL
-  message: string
+  message: { title: string, body?: string }
   data: Data
 }
 
@@ -37,9 +37,9 @@ export function defineProvider<
   const createOpt = defu(createOptions, { extractor: DEFAULT_EXTRACTOR }) as Required<DefineProviderOptions<Data>>
 
   const buildRequest: ServiceProvider<Protocol, Data, Options>['buildRequest'] = (
-    protocolUrl: string,
-    message: string,
-    options?: Options,
+    protocolUrl,
+    message,
+    options,
   ): Request => {
     const url = new URL(protocolUrl)
 

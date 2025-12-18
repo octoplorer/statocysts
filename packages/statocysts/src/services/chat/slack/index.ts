@@ -54,7 +54,7 @@ export const slack = defineProvider('slack:', {
       ['Content-Type', 'application/json'],
     ])
     const body: Record<string, any> = {
-      text: this.message,
+      text: this.message.title,
     }
     if (type === 'bot') {
       const { username: channel, password: token, searchParams } = this.url
