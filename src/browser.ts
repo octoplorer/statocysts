@@ -1,37 +1,28 @@
+import type { Sender, SenderUrl } from '#/shared'
 import type { FetchOptions } from 'ofetch'
+import { slack } from '#/services/chat/slack'
+import { json } from '#/services/specialized/json'
+import { buildSenderRegistry } from '#/shared'
+
+import { assert } from '#/utils/assert'
 import { ofetch } from 'ofetch'
-import { json, slack } from './shared'
-import { assert } from './utils/assert'
 
-export type Protocol = 'json:' | 'slack:'
+export const senderRegistry = buildSenderRegistry([json, slack])
 
-export const SUPPORTED_PROTOCOLS = ['json:', 'slack:'] as const
+export function createSender(urls: SenderUrl[]): Sender {
+  return senderRegistry(urls)
+}
 
-const providers = {
-  'json:': json,
-  'slack:': slack,
-} as const
-
-async function send(
+export async function send(
   url: string | URL,
   message: string,
   options?: FetchOptions,
 ): Promise<void> {
   const _url = typeof url === 'string' ? new URL(url) : url
-  assert(
-    SUPPORTED_PROTOCOLS.includes(_url.protocol as Protocol),
-    `Unsupported protocol ${_url.protocol}`,
-  )
-
-  const provider = providers[_url.protocol as Protocol]
-  if (!provider) {
-    throw new Error(`Unsupported protocol ${_url.protocol}`)
-  }
-
-  const request = await provider.buildRequest(_url.toString(), message)
+  const provider = senderRegistry.resolveProvider(_url)
+  assert(provider, `Unsupported protocol ${_url.protocol}`)
+  const request = provider.buildRequest(_url.toString(), message, options)
   await ofetch(request, options)
 }
 
 export * from './shared'
-export { send }
-

@@ -18,15 +18,15 @@ describe('slack bot API', async () => {
   })
 
   it('should throw an error if the bot API URL is invalid', async () => {
-    await expect(slack.buildRequest(
+    expect(() => slack.buildRequest(
       'slack://:xoxb-123456789012-1234567890123-XXXXXXXXXXXXXXXXXXXXXXXX@bot',
       'Hello, world!',
-    )).rejects.toThrow('Channel ID is required')
+    )).toThrow('Channel ID is required')
 
-    await expect(slack.buildRequest(
+    expect(() => slack.buildRequest(
       'slack://CHANNELID:@bot',
       'Hello, world!',
-    )).rejects.toThrow('Bot token is required')
+    )).toThrow('Bot token is required')
   })
 
   it('should pass all original search params to the request', async () => {
@@ -53,10 +53,10 @@ describe('slack webhook', () => {
   })
 
   it('should throw an error if the webhook URL is invalid', async () => {
-    await expect(slack.buildRequest(
+    expect(() => slack.buildRequest(
       'slack://webhook/T00000000/B00000000',
       'Hello, world!',
-    )).rejects.toThrow('Webhook URL is invalid')
+    )).toThrow('Webhook URL is invalid')
   })
 
 

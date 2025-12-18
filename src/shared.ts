@@ -1,3 +1,2 @@
 export * from './core/provider'
-export * from './services/chat'
-export * from './services/specialized'
+export * from './core/sender'

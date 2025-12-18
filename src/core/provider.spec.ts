@@ -71,6 +71,6 @@ describe('defineProvider', () => {
       createRequest: () => new Request('https://example.com', { method: 'POST' }),
     })
 
-    await expect(testProvider.buildRequest('http://aaa?foo=bar', "Hello, world!")).rejects.toThrow('Unexpected protocol "http:"')
+    expect(() => testProvider.buildRequest('http://aaa?foo=bar', "Hello, world!")).toThrow('Unexpected protocol "http:"')
   })
 })
