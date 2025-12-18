@@ -21,7 +21,7 @@ export interface DefineProviderContext {
   message: { title: string, body?: string }
 }
 
-export interface DefineProviderOptions<T extends Transport<any>, Options> {
+export interface DefineProviderOptions<T extends Transport, Options> {
   defaultOptions?: Options
   transport: T
   prepare: (
