@@ -14,7 +14,7 @@ export interface HttpPayload {
  * HTTP transport implementation
  * Handles sending data over HTTP/HTTPS protocols
  */
-export const httpTransport = defineTransport({
+export const http = defineTransport({
   async send(payload: HttpPayload) {
     await ofetch(payload.request, payload.fetchOptions)
   },

@@ -1,10 +1,10 @@
 import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
-import { httpTransport } from '#/core/transports/http'
+import { http } from '#/core/transports/http'
 import { withProtocol } from 'ufo'
 
 export const json = defineProvider('json:', {
-  transport: httpTransport,
+  transport: http,
   async prepare(_, options) {
     const url = new URL(this.url)
 

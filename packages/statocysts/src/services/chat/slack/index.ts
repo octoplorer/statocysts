@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
-import { httpTransport } from '#/core/transports/http'
+import { http } from '#/core/transports/http'
 import { assert } from '#/utils/assert'
 import { withoutLeadingSlash } from 'ufo'
 
@@ -27,7 +27,7 @@ export interface SlackOptions {
 }
 
 export const slack = defineProvider('slack:', {
-  transport: httpTransport,
+  transport: http,
   defaultOptions: {
     hookBaseUrl: 'https://hooks.slack.com/',
     botApiBaseUrl: 'https://slack.com/',
