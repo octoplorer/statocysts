@@ -1,6 +1,6 @@
 /// <reference types="vitest/importMeta" />
-import { send } from "#/index";
-import { describe, expect, it } from "vitest";
+import { send } from '#/index'
+import { describe, expect, it } from 'vitest'
 
 describe('slack integration test', () => {
   it.skipIf(process.env.VITE_SLACK_BOTAPI_TEST_URL === undefined)(
@@ -34,9 +34,9 @@ describe('slack integration test', () => {
               }),
             }))
           },
-        }
+        },
       )
-    }
+    },
   )
 
   it.skipIf(process.env.VITE_SLACK_WEBHOOK_TEST_URL === undefined)(
@@ -50,8 +50,8 @@ describe('slack integration test', () => {
             expect(response.status).toBe(200)
             expect(response._data).toBe('ok')
           },
-        }
+        },
       )
-    }
+    },
   )
 })
