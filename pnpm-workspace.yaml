@@ -6,4 +6,6 @@ catalogs:
     '@antfu/eslint-config': ^6.7.1
     bumpp: ^10.3.2
     eslint: ^9.39.2
+    lint-staged: ^16.2.7
+    simple-git-hooks: ^2.13.1
     typescript: ^5.9.3

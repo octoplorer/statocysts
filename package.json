@@ -7,13 +7,24 @@
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
-    "release": "bumpp -r --excute=\"pnpm i\""
+    "release": "bumpp -r --excute=\"pnpm i\"",
+    "postinstall": "simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "^1.1.0",
+    "lint-staged": "catalog:dev",
+    "simple-git-hooks": "catalog:dev",
     "typescript": "catalog:dev"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue,md}": [
+      "eslint --cache --fix"
+    ]
   }
 }
