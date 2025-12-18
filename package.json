@@ -6,11 +6,14 @@
   "scripts": {
     "build": "pnpm --filter 'statocysts' run build",
     "lint": "eslint --cache .",
-    "lint:fix": "eslint --cache . --fix"
+    "lint:fix": "eslint --cache . --fix",
+    "release": "bumpp -r --excute=\"pnpm i\""
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.7.1",
-    "eslint": "^9.39.2",
-    "eslint-plugin-format": "^1.1.0"
+    "@antfu/eslint-config": "catalog:dev",
+    "bumpp": "catalog:dev",
+    "eslint": "catalog:dev",
+    "eslint-plugin-format": "^1.1.0",
+    "typescript": "catalog:dev"
   }
 }

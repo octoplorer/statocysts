@@ -4,19 +4,40 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  dev:
+    '@antfu/eslint-config':
+      specifier: ^6.7.1
+      version: 6.7.1
+    bumpp:
+      specifier: ^10.3.2
+      version: 10.3.2
+    eslint:
+      specifier: ^9.39.2
+      version: 9.39.2
+    typescript:
+      specifier: ^5.9.3
+      version: 5.9.3
+
 importers:
 
   .:
     devDependencies:
       '@antfu/eslint-config':
-        specifier: ^6.7.1
+        specifier: catalog:dev
         version: 6.7.1(@vue/compiler-sfc@3.5.25)(eslint-plugin-format@1.1.0(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.15(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2))
+      bumpp:
+        specifier: catalog:dev
+        version: 10.3.2(magicast@0.5.1)
       eslint:
-        specifier: ^9.39.2
+        specifier: catalog:dev
         version: 9.39.2(jiti@2.6.1)
       eslint-plugin-format:
         specifier: ^1.1.0
         version: 1.1.0(eslint@9.39.2(jiti@2.6.1))
+      typescript:
+        specifier: catalog:dev
+        version: 5.9.3
 
   packages/statocysts:
     dependencies:
@@ -39,14 +60,11 @@ importers:
       '@vitest/coverage-v8':
         specifier: 4.0.15
         version: 4.0.15(vitest@4.0.15(@types/node@25.0.2)(jiti@2.6.1)(yaml@2.8.2))
-      bumpp:
-        specifier: ^10.3.2
-        version: 10.3.2(magicast@0.5.1)
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(synckit@0.11.11)(typescript@5.9.3)
       typescript:
-        specifier: ^5.9.3
+        specifier: catalog:dev
         version: 5.9.3
       vitest:
         specifier: ^4.0.15

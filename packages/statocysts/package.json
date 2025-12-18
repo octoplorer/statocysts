@@ -61,7 +61,6 @@
     "dev": "tsdown --watch",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp && pnpm publish",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
@@ -73,9 +72,8 @@
   "devDependencies": {
     "@types/node": "^25.0.2",
     "@vitest/coverage-v8": "4.0.15",
-    "bumpp": "^10.3.2",
     "tsdown": "^0.18.0",
-    "typescript": "^5.9.3",
+    "typescript": "catalog:dev",
     "vitest": "^4.0.15"
   }
 }
