@@ -1,9 +1,9 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['./src/cli.ts'],
+  entry: ['./src/cli.ts', './src/index.ts'],
   target: 'node18',
   clean: true,
-  dts: false,
+  dts: true,
   platform: 'node',
 })
