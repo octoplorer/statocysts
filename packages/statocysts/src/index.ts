@@ -13,12 +13,13 @@ export function createSender(urls: SenderUrl[]): Sender {
 
 export async function send(
   url: string | URL,
-  message: string,
+  title: string,
+  body?: string,
 ): Promise<void> {
   const _url = typeof url === 'string' ? new URL(url) : url
   const provider = senderRegistry.resolveProvider(_url)
   assert(provider, `Unsupported protocol ${_url.protocol}`)
-  const messageObj = { title: message }
+  const messageObj = { title, body }
   await provider.send(_url.toString(), messageObj)
 }
 
