@@ -2,7 +2,7 @@
   "name": "@statocysts/monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.26.0",
+  "packageManager": "pnpm@10.26.1",
   "license": "MIT",
   "scripts": {
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
