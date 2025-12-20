@@ -10,9 +10,6 @@ server-chan://uid:sctp1234567890abcdefghijklmnopqr@v3?tags=<tag1>&tags=<tag2>&sh
 
 ### Server chan turbo
 
-> [!TIP]
-> Recommended to use Server chan 3 instead.
-
 Follow its [official documentation](https://sct.ftqq.com/) to get the SENDKEY.
 
 ```
