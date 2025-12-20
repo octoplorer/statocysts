@@ -7,7 +7,8 @@ import { hideBin } from 'yargs/helpers'
 
 interface CliArgs {
   url: string[]
-  message?: string
+  title: string
+  body?: string
   file?: string
 }
 
@@ -42,12 +43,12 @@ async function readFromStdin(): Promise<string> {
 
 /**
  * Get message content from various sources
- * Priority: --message > --file > stdin
+ * Priority: --body > --file > stdin
  */
-async function getMessage(args: CliArgs): Promise<string> {
-  // Priority 1: Direct message argument
-  if (args.message) {
-    return args.message
+async function getBody(args: CliArgs): Promise<string> {
+  // Priority 1: Direct body argument
+  if (args.body) {
+    return args.body
   }
 
   // Priority 2: Read from file
@@ -72,9 +73,9 @@ async function getMessage(args: CliArgs): Promise<string> {
 /**
  * Send notifications to all specified URLs
  */
-async function sendNotifications(urls: string[], message: string): Promise<void> {
+async function sendNotifications(urls: string[], title: string, body?: string): Promise<void> {
   const results = await Promise.allSettled(
-    urls.map(url => send(url, message)),
+    urls.map(url => send(url, title, body)),
   )
 
   const failures: { url: string, error: string }[] = []
@@ -103,7 +104,7 @@ async function sendNotifications(urls: string[], message: string): Promise<void>
 export async function run(): Promise<void> {
   const argv = await yargs(hideBin(process.argv))
     .scriptName('stato')
-    .usage('$0 -u <url> [-m <message> | -f <file>]')
+    .usage('$0 -u <url> -t <title> [-b <body> | -f <file>]')
     .option('url', {
       alias: 'u',
       type: 'string',
@@ -111,21 +112,28 @@ export async function run(): Promise<void> {
       demandOption: true,
       description: 'Notification service URL(s)',
     })
-    .option('message', {
-      alias: 'm',
+    .option('title', {
+      alias: 't',
       type: 'string',
-      description: 'Message content to send',
+      demandOption: true,
+      description: 'Notification title',
+    })
+    .option('body', {
+      alias: 'b',
+      type: 'string',
+      description: 'Notification body content',
     })
     .option('file', {
       alias: 'f',
       type: 'string',
-      description: 'Read message content from file',
+      description: 'Read body content from file',
     })
     .example([
-      ['$0 -u "slack://webhook/xxx/yyy/zzz" -m "Hello World"', 'Send message to Slack webhook'],
-      ['$0 -u "slack://webhook/a/b/c" -u "json://example.com/api" -m "Hello"', 'Send to multiple URLs'],
-      ['$0 -u "slack://webhook/xxx/yyy/zzz" -f message.txt', 'Send message from file'],
-      ['echo "Hello" | $0 -u "slack://webhook/xxx/yyy/zzz"', 'Send message from stdin'],
+      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -b "Hello World"', 'Send notification to Slack webhook'],
+      ['$0 -u "slack://webhook/a/b/c" -u "json://example.com/api" -t "Alert" -b "Hello"', 'Send to multiple URLs'],
+      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -f message.txt', 'Send with body from file'],
+      ['echo "Hello" | $0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert"', 'Send with body from stdin'],
+      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Simple Alert"', 'Send title only'],
     ])
     .help()
     .version()
@@ -133,14 +141,9 @@ export async function run(): Promise<void> {
     .parse() as CliArgs
 
   try {
-    const message = await getMessage(argv)
+    const body = await getBody(argv)
 
-    if (!message) {
-      console.error('Error: No message provided. Use -m, -f, or pipe content via stdin.')
-      process.exit(1)
-    }
-
-    await sendNotifications(argv.url, message)
+    await sendNotifications(argv.url, argv.title, body || undefined)
     console.log('Notification sent successfully!')
   }
   catch (error) {
