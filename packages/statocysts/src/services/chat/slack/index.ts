@@ -55,8 +55,33 @@ export const slack = defineProvider('slack:', {
     const headers = new Headers([
       ['Content-Type', 'application/json'],
     ])
-    const body: Record<string, any> = {
-      text: this.message.title,
+    const body: Record<string, any> = {}
+
+    // Build message content based on title and body
+    if (this.message.body) {
+      // When body is present, use blocks for rich markdown formatting
+      body.blocks = [
+        {
+          type: 'header',
+          text: {
+            type: 'plain_text',
+            text: this.message.title,
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: this.message.body,
+          },
+        },
+      ]
+      // Fallback text for notifications
+      body.text = this.message.title
+    }
+    else {
+      // When only title is present, use simple text format
+      body.text = this.message.title
     }
 
     if (type === 'bot') {
