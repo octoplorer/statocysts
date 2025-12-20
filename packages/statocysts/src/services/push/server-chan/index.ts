@@ -57,7 +57,8 @@ export const serverChan = defineProvider('server-chan:', {
       }
     }
     else {
-      // Server Chan Turbo: server-chan://:SENDKEY@turbo?short=<short>&noip=<1|0|true|false>&channel=<channel>&openid=<openid>
+      // Server Chan Turbo: server-chan://ftqq:SENDKEY@turbo?short=<short>&noip=<1|0|true|false>&channel=<channel>&openid=<openid>
+      // Note: username (ftqq) is optional and not used in the API request
       const { password: sendKey, searchParams } = url
 
       assert(sendKey, 'SendKey is required for Server Chan Turbo')

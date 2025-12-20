@@ -148,7 +148,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo',
       { title: 'Hello, world!' },
     )
 
@@ -167,7 +167,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo',
       { title: 'Test Title', body: 'This is the message body' },
     )
 
@@ -187,7 +187,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?short=Brief',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?short=Brief',
       { title: 'Test' },
     )
 
@@ -204,7 +204,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=1',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=1',
       { title: 'Test' },
     )
 
@@ -221,7 +221,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=true',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=true',
       { title: 'Test' },
     )
 
@@ -238,7 +238,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=0',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=0',
       { title: 'Test' },
     )
 
@@ -255,7 +255,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=false',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?noip=false',
       { title: 'Test' },
     )
 
@@ -272,7 +272,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?channel=wechat',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?channel=wechat',
       { title: 'Test' },
     )
 
@@ -289,7 +289,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?openid=oABCD1234567890',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?openid=oABCD1234567890',
       { title: 'Test' },
     )
 
@@ -306,7 +306,7 @@ describe('server-chan turbo', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await serverChan.send(
-      'server-chan://:SCT123456abcdefghijklmnopqrstuvwxy@turbo?short=Brief&noip=1&channel=wechat&openid=oABCD1234567890',
+      'server-chan://ftqq:SCT123456abcdefghijklmnopqrstuvwxy@turbo?short=Brief&noip=1&channel=wechat&openid=oABCD1234567890',
       { title: 'Test', body: 'Message body' },
     )
 
@@ -325,7 +325,7 @@ describe('server-chan turbo', () => {
 
   it('should throw an error if sendKey is missing', async () => {
     await expect(serverChan.send(
-      'server-chan://:@turbo',
+      'server-chan://ftqq:@turbo',
       { title: 'Hello, world!' },
     )).rejects.toThrow('SendKey is required for Server Chan Turbo')
   })
