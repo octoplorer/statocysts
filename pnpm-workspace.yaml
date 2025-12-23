@@ -1,12 +1,10 @@
+catalogMode: prefer
+
+shellEmulator: true
+
+trustPolicy: no-downgrade
 packages:
   - packages/*
-
-catalog:
-  '@types/smtp-server': ^3.5.12
-  emailjs: ^5.0.0
-  smtp-server: ^3.18.0
-
-catalogMode: prefer
 
 catalogs:
   build:
@@ -16,25 +14,24 @@ catalogs:
   dev:
     '@antfu/eslint-config': ^6.7.3
     '@antfu/ni': ^28.0.0
+    '@types/smtp-server': ^3.5.12
     '@vitest/coverage-v8': 4.0.16
     bumpp: ^10.3.2
     eslint: ^9.39.2
     eslint-plugin-format: ^1.1.0
     lint-staged: ^16.2.7
     simple-git-hooks: ^2.13.1
+    smtp-server: ^3.18.0
     taze: ^19.9.2
     typescript: ^5.9.3
     vitest: ^4.0.16
   lib:
     add: ^2.0.6
     defu: ^6.1.4
+    emailjs: ^5.0.0
     ofetch: ^1.5.1
     ufo: ^1.6.1
     zod: ^4.2.1
   types:
     '@types/node': ^25.0.3
     '@types/yargs': ^17.0.35
-
-shellEmulator: true
-
-trustPolicy: no-downgrade

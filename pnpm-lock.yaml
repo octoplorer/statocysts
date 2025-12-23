@@ -13,16 +13,6 @@ catalogs:
     yargs:
       specifier: ^18.0.0
       version: 18.0.0
-  default:
-    '@types/smtp-server':
-      specifier: ^3.5.12
-      version: 3.5.12
-    emailjs:
-      specifier: ^5.0.0
-      version: 5.0.0
-    smtp-server:
-      specifier: ^3.18.0
-      version: 3.18.0
   dev:
     '@antfu/eslint-config':
       specifier: ^6.7.3
@@ -30,6 +20,9 @@ catalogs:
     '@antfu/ni':
       specifier: ^28.0.0
       version: 28.0.0
+    '@types/smtp-server':
+      specifier: ^3.5.12
+      version: 3.5.12
     '@vitest/coverage-v8':
       specifier: 4.0.16
       version: 4.0.16
@@ -48,6 +41,9 @@ catalogs:
     simple-git-hooks:
       specifier: ^2.13.1
       version: 2.13.1
+    smtp-server:
+      specifier: ^3.18.0
+      version: 3.18.0
     taze:
       specifier: ^19.9.2
       version: 19.9.2
@@ -64,6 +60,9 @@ catalogs:
     defu:
       specifier: ^6.1.4
       version: 6.1.4
+    emailjs:
+      specifier: ^5.0.0
+      version: 5.0.0
     ofetch:
       specifier: ^1.5.1
       version: 1.5.1
@@ -144,7 +143,7 @@ importers:
         specifier: catalog:lib
         version: 6.1.4
       emailjs:
-        specifier: 'catalog:'
+        specifier: catalog:lib
         version: 5.0.0(typescript@5.9.3)
       ofetch:
         specifier: catalog:lib
@@ -160,13 +159,13 @@ importers:
         specifier: catalog:types
         version: 25.0.3
       '@types/smtp-server':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 3.5.12
       '@vitest/coverage-v8':
         specifier: catalog:dev
         version: 4.0.16(vitest@4.0.16(@types/node@25.0.3)(jiti@2.6.1)(yaml@2.8.2))
       smtp-server:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 3.18.0
       tsdown:
         specifier: catalog:build
