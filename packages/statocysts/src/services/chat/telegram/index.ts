@@ -30,8 +30,11 @@ export const telegram = defineProvider('telegram:', {
 
     // Validate URL format
     assert(url.hostname === 'bot', `Invalid telegram URL: ${url.toString()}`)
-    assert(url.username, 'Chat ID is required')
-    assert(url.password, 'Bot token is required')
+    assert(url.username, 'Bot token is required')
+
+    // Extract chat IDs from pathname (e.g., /chat-1/chat-2)
+    const pathSegments = url.pathname.split('/').filter(Boolean)
+    assert(pathSegments.length > 0, 'At least one chat ID is required')
 
     const queryResult = getValidateQuery(url, telegramQuerySchema.safeParse)
 
@@ -41,9 +44,15 @@ export const telegram = defineProvider('telegram:', {
 
     const query = queryResult.data
 
-    // Decode chat ID to handle @ symbols (e.g., @mychannel)
-    const chatId = decodeURIComponent(url.username)
-    const botToken = url.password
+    // Bot token is in the username and password fields, because token contains `:` character
+    const botToken = `${url.username}:${url.password}`
+
+    // First chat ID from pathname (decode to handle @ symbols like @mychannel)
+    // Support format: chat-id or chat-id:message-thread-id
+    const chatPart = decodeURIComponent(pathSegments[0])
+    const [chatId, messageThreadId] = chatPart.includes(':')
+      ? chatPart.split(':', 2)
+      : [chatPart, undefined]
 
     // Build API URL
     const requestUrl = new URL(`/bot${botToken}/sendMessage`, options.apiBaseUrl)
@@ -83,6 +92,11 @@ export const telegram = defineProvider('telegram:', {
       chat_id: chatId,
       text,
       parse_mode: query.parse_mode,
+    }
+
+    // Add message_thread_id if specified (for topic/forum groups)
+    if (messageThreadId) {
+      body.message_thread_id = Number.parseInt(messageThreadId, 10)
     }
 
     const request = new Request(requestUrl, {

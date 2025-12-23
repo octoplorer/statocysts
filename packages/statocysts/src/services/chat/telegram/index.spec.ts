@@ -18,7 +18,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321',
       { title: 'Hello, world!' },
     )
 
@@ -26,10 +26,10 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(req.method).toBe('POST')
-    expect(req.url).toBe('https://api.telegram.org/botABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
+    expect(req.url).toBe('https://api.telegram.org/bot123456789:ABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
     expect(req.headers.get('Content-Type')).toBe('application/json')
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: 'Hello, world!',
       parse_mode: undefined,
     })
@@ -39,7 +39,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=Markdown',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=Markdown',
       { title: 'Test Title', body: 'This is the message body' },
     )
 
@@ -47,10 +47,10 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(req.method).toBe('POST')
-    expect(req.url).toBe('https://api.telegram.org/botABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
+    expect(req.url).toBe('https://api.telegram.org/bot123456789:ABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
     expect(req.headers.get('Content-Type')).toBe('application/json')
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: '*Test Title*\n\nThis is the message body',
       parse_mode: 'Markdown',
     })
@@ -60,7 +60,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=HTML',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=HTML',
       { title: 'Test Title', body: 'This is the message body' },
     )
 
@@ -68,7 +68,7 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: '<b>Test Title</b>\n\nThis is the message body',
       parse_mode: 'HTML',
     })
@@ -78,7 +78,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=MarkdownV2',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=MarkdownV2',
       { title: 'Test Title', body: 'This is the message body' },
     )
 
@@ -86,7 +86,7 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: '*Test Title*\n\nThis is the message body',
       parse_mode: 'MarkdownV2',
     })
@@ -96,7 +96,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=MarkdownV2',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=MarkdownV2',
       { title: 'Test_Title-With.Special!Chars', body: 'Body text' },
     )
 
@@ -104,7 +104,7 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: '*Test\\_Title\\-With\\.Special\\!Chars*\n\nBody text',
       parse_mode: 'MarkdownV2',
     })
@@ -114,7 +114,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://@mychannel:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/@mychannel',
       { title: 'Channel message' },
     )
 
@@ -132,7 +132,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://%40mychannel:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/%40mychannel',
       { title: 'Encoded channel' },
     )
 
@@ -150,7 +150,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=Markdown',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=Markdown',
       { title: 'Simple title' },
     )
 
@@ -158,7 +158,7 @@ describe('telegram', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
     expect(await req.json()).toEqual({
-      chat_id: '123456789',
+      chat_id: '987654321',
       text: 'Simple title',
       parse_mode: 'Markdown',
     })
@@ -166,28 +166,28 @@ describe('telegram', () => {
 
   it('should throw an error if chat ID is missing', async () => {
     await expect(telegram.send(
-      'telegram://:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
       { title: 'Hello, world!' },
-    )).rejects.toThrow('Chat ID is required')
+    )).rejects.toThrow('At least one chat ID is required')
   })
 
   it('should throw an error if bot token is missing', async () => {
     await expect(telegram.send(
-      'telegram://123456789:@bot',
+      'telegram://@bot/987654321',
       { title: 'Hello, world!' },
     )).rejects.toThrow('Bot token is required')
   })
 
   it('should throw an error for invalid hostname', async () => {
     await expect(telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@invalid',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@invalid/987654321',
       { title: 'Hello, world!' },
     )).rejects.toThrow('Invalid telegram URL')
   })
 
   it('should throw an error for invalid parse_mode', async () => {
     await expect(telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot?parse_mode=InvalidMode',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=InvalidMode',
       { title: 'Hello, world!' },
     )).rejects.toThrow('Invalid telegram query')
   })
@@ -196,7 +196,7 @@ describe('telegram', () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 
     await telegram.send(
-      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321',
       { title: 'Hello' },
       { apiBaseUrl: 'https://custom.telegram.org' },
     )
@@ -204,6 +204,44 @@ describe('telegram', () => {
     expect(http.send).toHaveBeenCalledTimes(1)
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
-    expect(req.url).toBe('https://custom.telegram.org/botABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
+    expect(req.url).toBe('https://custom.telegram.org/bot123456789:ABCdefGHIjklMNOpqrsTUVwxyz/sendMessage')
+  })
+
+  it('should handle message thread ID for forum topics', async () => {
+    vi.mocked(http.send).mockResolvedValue(undefined)
+
+    await telegram.send(
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/-1001234567890:42',
+      { title: 'Topic message' },
+    )
+
+    expect(http.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(http.send).mock.calls[0][0]
+    const req = callArgs.request
+    expect(await req.json()).toEqual({
+      chat_id: '-1001234567890',
+      text: 'Topic message',
+      parse_mode: undefined,
+      message_thread_id: 42,
+    })
+  })
+
+  it('should handle message thread ID with body and parse mode', async () => {
+    vi.mocked(http.send).mockResolvedValue(undefined)
+
+    await telegram.send(
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/-1001234567890:42?parse_mode=Markdown',
+      { title: 'Topic Title', body: 'Topic body content' },
+    )
+
+    expect(http.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(http.send).mock.calls[0][0]
+    const req = callArgs.request
+    expect(await req.json()).toEqual({
+      chat_id: '-1001234567890',
+      text: '*Topic Title*\n\nTopic body content',
+      parse_mode: 'Markdown',
+      message_thread_id: 42,
+    })
   })
 })
