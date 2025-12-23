@@ -1,4 +1,5 @@
 import type { SmtpPayload } from '#/core/transports/smtp'
+import type { MessageHeaders } from 'emailjs'
 import { smtp } from '#/core/transports/smtp'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { email } from './index'
@@ -15,6 +16,13 @@ describe('email provider', () => {
     vi.clearAllMocks()
   })
 
+  // Helper function to extract payload and message
+  function getLastCall() {
+    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const message = payload.message as MessageHeaders
+    return { payload, message }
+  }
+
   it('should send basic email with required parameters', async () => {
     vi.mocked(smtp.send).mockResolvedValue(undefined)
 
@@ -24,15 +32,15 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { payload, message } = getLastCall()
 
     expect(payload.client.host).toBe('smtp.example.com')
     expect(payload.client.port).toBe(587)
     expect(payload.client.tls).toBe(true)
-    expect(payload.message.from).toBe('sender@example.com')
-    expect(payload.message.to).toBe('recipient@example.com')
-    expect(payload.message.subject).toBe('Test Email')
-    expect(payload.message.text).toBe('Test Email')
+    expect(message.from).toBe('sender@example.com')
+    expect(message.to).toBe('recipient@example.com')
+    expect(message.subject).toBe('Test Email')
+    expect(message.text).toBe('Test Email')
   })
 
   it('should send email with SMTP authentication', async () => {
@@ -44,7 +52,7 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { payload } = getLastCall()
 
     expect(payload.client.user).toBe('user123')
     expect(payload.client.password).toBe('pass456')
@@ -59,9 +67,9 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { message } = getLastCall()
 
-    expect(payload.message.to).toBe('user1@example.com, user2@example.com, user3@example.com')
+    expect(message.to).toBe('user1@example.com, user2@example.com, user3@example.com')
   })
 
   it('should send email with cc and bcc', async () => {
@@ -73,10 +81,10 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { message } = getLastCall()
 
-    expect(payload.message.cc).toBe('cc1@example.com, cc2@example.com')
-    expect(payload.message.bcc).toBe('bcc1@example.com')
+    expect(message.cc).toBe('cc1@example.com, cc2@example.com')
+    expect(message.bcc).toBe('bcc1@example.com')
   })
 
   it('should handle empty cc and bcc arrays', async () => {
@@ -88,10 +96,10 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { message } = getLastCall()
 
-    expect(payload.message.cc).toBeUndefined()
-    expect(payload.message.bcc).toBeUndefined()
+    expect(message.cc).toBeUndefined()
+    expect(message.bcc).toBeUndefined()
   })
 
   it('should use custom subject from query parameter', async () => {
@@ -103,9 +111,9 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { message } = getLastCall()
 
-    expect(payload.message.subject).toBe('Custom Subject')
+    expect(message.subject).toBe('Custom Subject')
   })
 
   it('should use defaultFrom option when from is not specified', async () => {
@@ -118,23 +126,25 @@ describe('email provider', () => {
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { message } = getLastCall()
 
-    expect(payload.message.from).toBe('default@example.com')
+    expect(message.from).toBe('default@example.com')
   })
 
   it('should use username as from when from is not specified', async () => {
     vi.mocked(smtp.send).mockResolvedValue(undefined)
 
     await email.send(
-      'email://myuser@smtp.example.com/?to=recipient@example.com',
+      'email://myuser:pass@smtp.example.com/?to=recipient@example.com',
       { title: 'Test' },
     )
 
     expect(smtp.send).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(smtp.send).mock.calls[0][0] as SmtpPayload
+    const { payload, message } = getLastCall()
 
-    expect(payload.message.from).toBe('myuser')
+    expect(message.from).toBe('myuser')
+    expect(payload.client.user).toBe('myuser')
+    expect(payload.client.password).toBe('pass')
   })
 
   it('should configure SSL and TLS correctly', async () => {

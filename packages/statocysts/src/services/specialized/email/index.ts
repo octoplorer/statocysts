@@ -77,8 +77,8 @@ export const email = defineProvider('email:', {
       client: {
         host,
         port,
-        user: user || undefined,
-        password: password || undefined,
+        // Only include auth if both user and password are provided
+        ...(user && password ? { user, password } : {}),
         ssl: query.ssl ?? false,
         tls: query.tls ?? (port === 587),
         ...options.smtpConfig,
