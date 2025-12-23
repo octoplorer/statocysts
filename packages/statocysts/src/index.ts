@@ -3,12 +3,13 @@ import { discord } from '#/services/chat/discord'
 import { slack } from '#/services/chat/slack'
 import { telegram } from '#/services/chat/telegram'
 import { bark } from '#/services/push/bark'
+import { email } from '#/services/specialized/email'
 import { json } from '#/services/specialized/json'
 import { buildSenderRegistry } from '#/shared'
 
 import { assert } from '#/utils'
 
-export const senderRegistry = buildSenderRegistry([bark, json, slack, telegram, discord])
+export const senderRegistry = buildSenderRegistry([bark, email, json, slack, telegram, discord])
 
 export function createSender(urls: SenderUrl[]): Sender {
   return senderRegistry(urls)
@@ -26,5 +27,5 @@ export async function send(
   await provider.send(_url.toString(), messageObj)
 }
 
-export { bark, discord, json, slack, telegram }
+export { bark, discord, email, json, slack, telegram }
 export * from './shared'
