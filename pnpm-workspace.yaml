@@ -1,11 +1,12 @@
-catalogMode: prefer
-
-shellEmulator: true
-
-trustPolicy: no-downgrade
-
 packages:
   - packages/*
+
+catalog:
+  '@types/smtp-server': ^3.5.12
+  emailjs: ^5.0.0
+  smtp-server: ^3.18.0
+
+catalogMode: prefer
 
 catalogs:
   build:
@@ -33,3 +34,7 @@ catalogs:
   types:
     '@types/node': ^25.0.3
     '@types/yargs': ^17.0.35
+
+shellEmulator: true
+
+trustPolicy: no-downgrade
