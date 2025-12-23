@@ -71,13 +71,16 @@
   "dependencies": {
     "add": "catalog:lib",
     "defu": "catalog:lib",
+    "emailjs": "catalog:lib",
     "ofetch": "catalog:lib",
     "ufo": "catalog:lib",
     "zod": "catalog:lib"
   },
   "devDependencies": {
     "@types/node": "catalog:types",
+    "@types/smtp-server": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
+    "smtp-server": "catalog:dev",
     "tsdown": "catalog:build",
     "typescript": "catalog:dev",
     "vitest": "catalog:dev"
