@@ -9,6 +9,17 @@ describe('bark integration test', () => {
       const fetchOptions: FetchOptions = {
         onResponse: ({ response }) => {
           expect(response.status).toBe(200)
+          expect(response._data).toEqual(expect.objectContaining({
+            code: 200,
+            message: 'success',
+            data: expect.arrayContaining([
+              expect.objectContaining({
+                device_key: expect.any(String),
+                code: 200,
+              }),
+            ]),
+            timestamp: expect.any(Number),
+          }))
         },
       }
       await bark.send(
