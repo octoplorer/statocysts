@@ -1,7 +1,7 @@
 import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
-import { getValidateQuery } from '#/utils'
+import { escapeMarkdown, getValidateQuery } from '#/utils'
 import { assert } from '#/utils/assert'
 import z from 'zod'
 
@@ -73,7 +73,7 @@ export const telegram = defineProvider('telegram:', {
       }
       else if (parseMode === 'MarkdownV2') {
         // MarkdownV2 requires escaping special characters
-        const escapedTitle = this.message.title.replace(/([_*[\]()~`>#+\-=|{}.!])/g, '\\$1')
+        const escapedTitle = escapeMarkdown(this.message.title)
         titleFormatted = `*${escapedTitle}*`
       }
       else {
@@ -87,7 +87,7 @@ export const telegram = defineProvider('telegram:', {
       // No body, title is the main content
       // Need to escape special characters in MarkdownV2 mode
       if (query.parse_mode === 'MarkdownV2') {
-        text = this.message.title.replace(/([_*[\]()~`>#+\-=|{}.!])/g, '\\$1')
+        text = escapeMarkdown(this.message.title)
       }
       else {
         text = this.message.title
