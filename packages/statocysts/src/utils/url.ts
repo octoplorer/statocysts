@@ -7,3 +7,9 @@ export function getValidateQuery<T>(
   const query = getQuery(url.toString())
   return parser(query)
 }
+
+export function withoutPathname(input: string): string {
+  const _url = new URL(input)
+  _url.pathname = ''
+  return _url.toString()
+}
