@@ -1,7 +1,7 @@
 import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
-import { assert } from '#/utils/assert'
+import { assert } from '#/utils'
 import { withoutLeadingSlash } from 'ufo'
 
 export interface SlackOptions {

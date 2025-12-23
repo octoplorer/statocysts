@@ -1,5 +1,5 @@
 import type { Transport } from './transport'
-import { assert } from '#/utils/assert'
+import { assert } from '#/utils'
 import defu from 'defu'
 
 // Utility type to infer Payload from Transport

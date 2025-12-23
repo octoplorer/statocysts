@@ -3,7 +3,7 @@ import { slack } from '#/services/chat/slack'
 import { json } from '#/services/specialized/json'
 import { buildSenderRegistry } from '#/shared'
 
-import { assert } from '#/utils/assert'
+import { assert } from '#/utils'
 
 export const senderRegistry = buildSenderRegistry([json, slack])
 
