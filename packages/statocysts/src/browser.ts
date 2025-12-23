@@ -1,12 +1,13 @@
 import type { Sender, SenderUrl } from '#/shared'
 import { slack } from '#/services/chat/slack'
 import { telegram } from '#/services/chat/telegram'
+import { bark } from '#/services/push/bark'
 import { json } from '#/services/specialized/json'
 import { buildSenderRegistry } from '#/shared'
 
 import { assert } from '#/utils'
 
-export const senderRegistry = buildSenderRegistry([json, slack, telegram])
+export const senderRegistry = buildSenderRegistry([bark, json, slack, telegram])
 
 export function createSender(urls: SenderUrl[]): Sender {
   return senderRegistry(urls)
@@ -24,5 +25,5 @@ export async function send(
   await provider.send(_url.toString(), messageObj)
 }
 
-export { json, slack, telegram }
+export { bark, json, slack, telegram }
 export * from './shared'
