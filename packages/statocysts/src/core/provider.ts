@@ -49,7 +49,7 @@ export function defineProvider<const Protocol extends string, T extends Transpor
       message,
     }
 
-    const opts = defu(createOptions.defaultOptions ?? {}, options ?? {}) as Options
+    const opts = defu(options ?? {}, createOptions.defaultOptions ?? {}) as Options
 
     const payload = await createOptions.prepare.call(ctx, ctx, opts)
 
