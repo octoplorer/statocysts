@@ -84,8 +84,14 @@ export const telegram = defineProvider('telegram:', {
       text = `${titleFormatted}\n\n${this.message.body}`
     }
     else {
-      // No body, title is the main content (no special formatting)
-      text = this.message.title
+      // No body, title is the main content
+      // Need to escape special characters in MarkdownV2 mode
+      if (query.parse_mode === 'MarkdownV2') {
+        text = this.message.title.replace(/([_*[\]()~`>#+\-=|{}.!])/g, '\\$1')
+      }
+      else {
+        text = this.message.title
+      }
     }
 
     const body: Record<string, any> = {

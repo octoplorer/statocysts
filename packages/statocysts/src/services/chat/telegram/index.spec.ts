@@ -164,6 +164,24 @@ describe('telegram', () => {
     })
   })
 
+  it('should escape special characters when no body in MarkdownV2 mode', async () => {
+    vi.mocked(http.send).mockResolvedValue(undefined)
+
+    await telegram.send(
+      'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot/987654321?parse_mode=MarkdownV2',
+      { title: 'Title_with-special.chars!' },
+    )
+
+    expect(http.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(http.send).mock.calls[0][0]
+    const req = callArgs.request
+    expect(await req.json()).toEqual({
+      chat_id: '987654321',
+      text: 'Title\\_with\\-special\\.chars\\!',
+      parse_mode: 'MarkdownV2',
+    })
+  })
+
   it('should throw an error if chat ID is missing', async () => {
     await expect(telegram.send(
       'telegram://123456789:ABCdefGHIjklMNOpqrsTUVwxyz@bot',
