@@ -5,6 +5,7 @@
   "packageManager": "pnpm@10.26.1",
   "license": "MIT",
   "scripts": {
+    "up": "nlx taze",
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
@@ -13,11 +14,13 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
+    "@antfu/ni": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
+    "taze": "catalog:dev",
     "typescript": "catalog:dev"
   },
   "simple-git-hooks": {
