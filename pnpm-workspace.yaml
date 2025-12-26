@@ -8,7 +8,7 @@ packages:
 
 catalogs:
   build:
-    tsdown: ^0.18.2
+    tsdown: ^0.18.3
   cli:
     yargs: ^18.0.0
   dev:
