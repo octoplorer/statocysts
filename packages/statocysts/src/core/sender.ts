@@ -1,8 +1,7 @@
 import type { ServiceProvider } from '#/core/provider'
-import type { FetchOptions } from 'ofetch'
 
 export interface Sender {
-  send: (message: string, options?: FetchOptions) => Promise<void>
+  send: (title: string, body?: string) => Promise<void>
 }
 
 export type SenderUrl = string | URL
@@ -38,14 +37,13 @@ export function buildSenderRegistry(
     }).filter((p): p is { provider: ServiceProvider<string, any, any>, url: SenderUrl } => !!p)
 
     return {
-      async send(message: string, options?: FetchOptions) {
+      async send(title: string, body?: string) {
         for (const registry of registries) {
           // Convert message string to { title, body? } format
-          const messageObj = { title: message }
+          const messageObj = { title, body }
           await registry.provider.send(
             registry.url.toString(),
             messageObj,
-            options,
           )
         }
       },
