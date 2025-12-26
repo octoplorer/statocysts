@@ -4,6 +4,7 @@ import * as readline from 'node:readline'
 import { send } from 'statocysts'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
+import { version } from '../package.json' with { type: 'json' }
 
 interface CliArgs {
   url: string[]
@@ -136,7 +137,7 @@ export async function run(): Promise<void> {
       ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Simple Alert"', 'Send title only'],
     ])
     .help()
-    .version()
+    .version(version)
     .strict()
     .parse() as CliArgs
 
