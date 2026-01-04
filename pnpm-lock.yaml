@@ -13,6 +13,10 @@ catalogs:
     yargs:
       specifier: ^18.0.0
       version: 18.0.0
+  default:
+    zod:
+      specifier: 4.3.5
+      version: 4.3.5
   dev:
     '@antfu/eslint-config':
       specifier: ^6.7.3
@@ -69,9 +73,6 @@ catalogs:
     ufo:
       specifier: ^1.6.1
       version: 1.6.1
-    zod:
-      specifier: ^4.2.1
-      version: 4.2.1
   types:
     '@types/node':
       specifier: ^25.0.3
@@ -153,7 +154,7 @@ importers:
         version: 1.6.1
       zod:
         specifier: catalog:lib
-        version: 4.2.1
+        version: 4.3.5
     devDependencies:
       '@types/node':
         specifier: catalog:types
@@ -2782,8 +2783,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.5:
+    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -5887,6 +5888,6 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@4.2.1: {}
+  zod@4.3.5: {}
 
   zwitch@2.0.4: {}
