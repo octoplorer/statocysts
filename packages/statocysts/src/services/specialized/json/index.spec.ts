@@ -1,6 +1,6 @@
 import { http } from '#/core/transports/http'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { json } from './index'
+import { json, jsons } from './index'
 
 // Mock httpTransport
 vi.mock('#/core/transports/http', () => ({
@@ -25,7 +25,7 @@ describe('json provider', () => {
     expect(http.send).toHaveBeenCalledTimes(1)
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
-    expect(request.url).toBe('https://api.example.com/webhook')
+    expect(request.url).toBe('http://api.example.com/webhook')
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/json')
     expect(await request.json()).toEqual({
@@ -44,7 +44,7 @@ describe('json provider', () => {
 
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
-    expect(request.url).toBe('https://api.example.com/webhook')
+    expect(request.url).toBe('http://api.example.com/webhook')
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/json')
     expect(request.headers.get('Authorization')).toBe('Bearer token123')
@@ -65,7 +65,7 @@ describe('json provider', () => {
 
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
-    expect(request.url).toBe('https://example.com/api')
+    expect(request.url).toBe('http://example.com/api')
     expect(request.method).toBe('POST')
     expect(request.headers.get('Content-Type')).toBe('application/json')
     expect(request.headers.get('Authorization')).toBe('Bearer abc')
@@ -149,7 +149,7 @@ describe('json provider', () => {
 
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
-    expect(request.url).toBe('https://api.example.com/webhook?')
+    expect(request.url).toBe('http://api.example.com/webhook?')
     expect(request.method).toBe('POST')
     expect([...request.headers.values()].length).toEqual(1)
     expect(request.headers.get('Content-Type')).toBe('application/json')
@@ -169,7 +169,7 @@ describe('json provider', () => {
 
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
-    expect(request.url).toBe('https://api.example.com/v1/webhooks/notifications')
+    expect(request.url).toBe('http://api.example.com/v1/webhooks/notifications')
   })
 
   it('should handle special characters in body property values', async () => {
@@ -200,5 +200,52 @@ describe('json provider', () => {
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const request = callArgs.request
     expect(request.headers.get('Authorization')).toBe('Bearer token456')
+  })
+})
+
+describe('jsons provider', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('should build a basic request without query parameters using HTTPS', async () => {
+    vi.mocked(http.send).mockResolvedValue(undefined)
+
+    await jsons.send(
+      'jsons://api.example.com/webhook',
+      { title: 'Hello, world!', body: 'Hello, world!' },
+    )
+
+    expect(http.send).toHaveBeenCalledTimes(1)
+    const callArgs = vi.mocked(http.send).mock.calls[0][0]
+    const request = callArgs.request
+    expect(request.url).toBe('https://api.example.com/webhook')
+    expect(request.method).toBe('POST')
+    expect(request.headers.get('Content-Type')).toBe('application/json')
+    expect(await request.json()).toEqual({
+      title: 'Hello, world!',
+      body: 'Hello, world!',
+    })
+  })
+
+  it('should build a request with headers and body properties using HTTPS', async () => {
+    vi.mocked(http.send).mockResolvedValue(undefined)
+
+    await jsons.send(
+      'jsons://api.example.com/webhook?+Authorization=Bearer+token123&:title=Alert&:priority=high',
+      { title: 'Hello, world!', body: 'Hello, world!' },
+    )
+
+    const callArgs = vi.mocked(http.send).mock.calls[0][0]
+    const request = callArgs.request
+    expect(request.url).toBe('https://api.example.com/webhook')
+    expect(request.method).toBe('POST')
+    expect(request.headers.get('Content-Type')).toBe('application/json')
+    expect(request.headers.get('Authorization')).toBe('Bearer token123')
+    expect(await request.json()).toEqual({
+      title: 'Alert',
+      priority: 'high',
+      body: 'Hello, world!',
+    })
   })
 })
