@@ -52,7 +52,7 @@ async function prepareJsonRequest(this: any, ctx: any, defaultProtocol: string, 
   }
 }
 
-// 支持 json:// 协议（默认HTTP）
+// Supports json:// protocol (default to HTTP)
 export const json = defineProvider('json:', {
   transport: http,
   defaultOptions: {} as FetchOptions,
@@ -61,7 +61,7 @@ export const json = defineProvider('json:', {
   },
 })
 
-// 新增 jsons:// 协议（明确HTTPS）
+// Supports jsons:// protocol (explicit HTTPS)
 export const jsons = defineProvider('jsons:', {
   transport: http,
   defaultOptions: {} as FetchOptions,
