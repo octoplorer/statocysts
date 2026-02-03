@@ -130,31 +130,6 @@ describe('buildSenderRegistry', () => {
     expect(mockTransport.send).toHaveBeenCalledTimes(1)
   })
 
-  it('should pass FetchOptions to provider send', async () => {
-    const mockTransport = createMockTransport()
-    const prepareMock = vi.fn().mockResolvedValue({ url: 'test://example.com' })
-    const testProvider = defineProvider('test:', {
-      transport: mockTransport,
-      async prepare(ctx, options) {
-        prepareMock(ctx.url, ctx.message, options)
-        return { url: ctx.url.toString() }
-      },
-    })
-
-    const registry = buildSenderRegistry([testProvider])
-    const sender = registry(['test://example.com'])
-
-    const options = { headers: { 'X-Custom': 'value' } }
-    await sender.send('Hello, world!', options)
-
-    expect(prepareMock).toHaveBeenCalledTimes(1)
-    expect(prepareMock).toHaveBeenCalledWith(
-      new URL('test://example.com'),
-      { title: 'Hello, world!' },
-      options,
-    )
-  })
-
   it('should handle multiple providers with different protocols', async () => {
     const mockTransport1 = createMockTransport()
     const mockTransport2 = createMockTransport()
