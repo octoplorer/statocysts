@@ -1,9 +1,10 @@
+import type { DefineProviderContext } from '#/core/provider'
 import type { FetchOptions } from 'ofetch'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { withProtocol } from 'ufo'
 
-async function prepareJsonRequest(this: any, ctx: any, defaultProtocol: string, options: FetchOptions) {
+async function prepareJsonRequest(this: DefineProviderContext, _ctx: DefineProviderContext, defaultProtocol: string, options: FetchOptions) {
   const url = new URL(this.url)
 
   const protocol = defaultProtocol
