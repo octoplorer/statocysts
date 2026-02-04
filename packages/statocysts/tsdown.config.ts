@@ -7,13 +7,6 @@ export default defineConfig({
   dts: true,
   platform: 'neutral',
   outputOptions: {
-    codeSplitting: {
-      groups: [
-        {
-          test: /src\/core/,
-          name: 'core',
-        },
-      ],
-    },
+
   },
 })
