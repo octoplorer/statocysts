@@ -6,10 +6,10 @@ import { bark } from '#/services/push/bark'
 import { email } from '#/services/specialized/email'
 import { json, jsons } from '#/services/specialized/json'
 import { buildSenderRegistry } from '#/shared'
-
 import { assert } from '#/utils'
+import { serverChan } from './services/push/server-chan'
 
-export const senderRegistry = buildSenderRegistry([bark, email, json, jsons, slack, telegram, discord])
+export const senderRegistry = buildSenderRegistry([bark, email, json, jsons, serverChan, slack, telegram, discord])
 
 export function createSender(urls: SenderUrl[]): Sender {
   return senderRegistry(urls)

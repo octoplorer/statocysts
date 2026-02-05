@@ -5,10 +5,10 @@ import { telegram } from '#/services/chat/telegram'
 import { bark } from '#/services/push/bark'
 import { json, jsons } from '#/services/specialized/json'
 import { buildSenderRegistry } from '#/shared'
-
 import { assert } from '#/utils'
+import { serverChan } from './services/push/server-chan'
 
-export const senderRegistry = buildSenderRegistry([bark, json, jsons, slack, telegram, discord])
+export const senderRegistry = buildSenderRegistry([bark, json, serverChan, jsons, slack, telegram, discord])
 
 export function createSender(urls: SenderUrl[]): Sender {
   return senderRegistry(urls)
