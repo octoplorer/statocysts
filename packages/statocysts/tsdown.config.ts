@@ -6,7 +6,7 @@ export default defineConfig({
   clean: true,
   dts: true,
   platform: 'neutral',
-  outputOptions: {
-
-  },
+  shims: true,
+  publint: 'ci-only',
+  attw: 'ci-only',
 })

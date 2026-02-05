@@ -7,9 +7,10 @@
   "scripts": {
     "up": "nlx taze",
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
+    "test": "pnpm --filter 'statocysts' run test",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
-    "release": "bumpp -r --excute=\"pnpm i\"",
+    "release": "bumpp -r --execute=\"pnpm i\"",
     "postinstall": "simple-git-hooks"
   },
   "devDependencies": {
