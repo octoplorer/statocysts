@@ -96,18 +96,16 @@ describe('telegram integration test', () => {
     async () => {
       const response = await sendAndGetResponse(
         `${process.env.VITE_TELEGRAM_TEST_URL!}?parse_mode=HTML`,
-        { title: 'HTML Title', body: 'Message with <b>bold</b> and <i>italic</i> text' },
+        { title: 'HTML Title', body: 'Message with special chars: <>&' },
       )
 
       expect(response.status).toBe(200)
       expect(response._data).toEqual(expect.objectContaining({
         ok: true,
         result: expect.objectContaining({
-          text: 'HTML Title\n\nMessage with bold and italic text',
+          text: expect.stringMatching(/HTML Title[\s\S]*Message with special chars: <>&/),
           entities: expect.arrayContaining([
             expect.objectContaining({ type: 'bold', offset: 0, length: 10 }),
-            expect.objectContaining({ type: 'bold' }),
-            expect.objectContaining({ type: 'italic' }),
           ]),
         }),
       }))

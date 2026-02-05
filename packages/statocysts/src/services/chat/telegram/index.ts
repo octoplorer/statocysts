@@ -67,23 +67,26 @@ export const telegram = defineProvider('telegram:', {
       // Title as h1, body as content
       const parseMode = query.parse_mode
       let titleFormatted: string
+      let bodyFormatted: string
 
       if (parseMode === 'HTML') {
-        // Escape title to prevent breaking the <b> tag
+        // Escape title and body to prevent breaking HTML tags
         titleFormatted = `<b>${escapeHtml(this.message.title)}</b>`
+        bodyFormatted = escapeHtml(this.message.body)
       }
       else if (parseMode === 'MarkdownV2') {
-        // MarkdownV2 requires escaping special characters in title
+        // MarkdownV2 requires escaping special characters in title and body
         const escapedTitle = escapeMarkdown(this.message.title)
         titleFormatted = `*${escapedTitle}*`
+        bodyFormatted = escapeMarkdown(this.message.body)
       }
       else {
         // Markdown or default
         titleFormatted = `*${this.message.title}*`
+        bodyFormatted = this.message.body
       }
 
-      // Body is not escaped - user controls formatting
-      text = `${titleFormatted}\n\n${this.message.body}`
+      text = `${titleFormatted}\n\n${bodyFormatted}`
     }
     else {
       // No body, title is the main content

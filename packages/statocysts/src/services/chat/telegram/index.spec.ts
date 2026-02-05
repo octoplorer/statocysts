@@ -85,10 +85,10 @@ describe('telegram', () => {
     expect(http.send).toHaveBeenCalledTimes(1)
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
-    // Only title is escaped, body is not escaped (user controls formatting)
+    // Both title and body are escaped in HTML mode
     expect(await req.json()).toEqual({
       chat_id: '987654321',
-      text: '<b>Test &lt;Title&gt;</b>\n\nBody with <b>bold</b> & "special" chars',
+      text: '<b>Test &lt;Title&gt;</b>\n\nBody with &lt;b&gt;bold&lt;/b&gt; &amp; "special" chars',
       parse_mode: 'HTML',
     })
   })
@@ -122,10 +122,10 @@ describe('telegram', () => {
     expect(http.send).toHaveBeenCalledTimes(1)
     const callArgs = vi.mocked(http.send).mock.calls[0][0]
     const req = callArgs.request
-    // Only title is escaped, body is not escaped (user controls formatting)
+    // Both title and body are escaped in MarkdownV2 mode
     expect(await req.json()).toEqual({
       chat_id: '987654321',
-      text: '*Test\\_Title\\-With\\.Special\\!Chars*\n\nBody_with-special.chars!',
+      text: '*Test\\_Title\\-With\\.Special\\!Chars*\n\nBody\\_with\\-special\\.chars\\!',
       parse_mode: 'MarkdownV2',
     })
   })
