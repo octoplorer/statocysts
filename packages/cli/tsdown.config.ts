@@ -8,5 +8,4 @@ export default defineConfig({
   platform: 'node',
   shims: true,
   publint: 'ci-only',
-  attw: 'ci-only',
 })
