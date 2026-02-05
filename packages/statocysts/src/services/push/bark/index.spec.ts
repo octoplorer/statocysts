@@ -30,7 +30,7 @@ describe('bark basic functionality', () => {
     expect(req.headers.get('Content-Type')).toBe('application/json')
     expect(await req.json()).toEqual(expect.objectContaining({
       device_keys: ['myDeviceKey'],
-      body: 'Hello, world!',
+      markdown: 'Hello, world!',
     }))
   })
 
@@ -51,7 +51,7 @@ describe('bark basic functionality', () => {
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
       title: 'Test Title',
-      body: 'This is the message body',
+      markdown: 'This is the message body',
     })
   })
 
@@ -69,7 +69,7 @@ describe('bark basic functionality', () => {
     expect(req.url).toBe('https://bark.example.com/push')
     expect(await req.json()).toEqual({
       device_keys: ['deviceKey123'],
-      body: 'Custom Server',
+      markdown: 'Custom Server',
     })
   })
 
@@ -107,7 +107,7 @@ describe('bark query parameters', () => {
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
       title: 'Title',
-      body: 'Body',
+      markdown: 'Body',
       subtitle: 'Test Subtitle',
     })
   })
@@ -125,7 +125,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Grouped notification',
+      markdown: 'Grouped notification',
       group: 'MyGroup',
     })
   })
@@ -143,7 +143,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Click to open',
+      markdown: 'Click to open',
       url: 'https://example.com',
     })
   })
@@ -161,7 +161,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Custom icon',
+      markdown: 'Custom icon',
       icon: 'https://example.com/icon.png',
     })
   })
@@ -179,7 +179,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Alert!',
+      markdown: 'Alert!',
       sound: 'alarm',
     })
   })
@@ -197,7 +197,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Continuous ringtone',
+      markdown: 'Continuous ringtone',
       call: '1',
     })
   })
@@ -215,7 +215,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Active notification',
+      markdown: 'Active notification',
       level: 'active',
     })
   })
@@ -233,7 +233,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Time sensitive',
+      markdown: 'Time sensitive',
       level: 'timeSensitive',
     })
   })
@@ -251,7 +251,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Passive notification',
+      markdown: 'Passive notification',
       level: 'passive',
     })
   })
@@ -269,7 +269,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Critical alert',
+      markdown: 'Critical alert',
       level: 'critical',
     })
   })
@@ -287,7 +287,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Loud alert',
+      markdown: 'Loud alert',
       level: 'critical',
       volume: '10',
     })
@@ -306,7 +306,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Badge count',
+      markdown: 'Badge count',
       badge: 5,
     })
   })
@@ -324,7 +324,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Auto copy enabled',
+      markdown: 'Auto copy enabled',
       autoCopy: '1',
     })
   })
@@ -342,7 +342,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Copy text',
+      markdown: 'Copy text',
       copy: 'Text to copy',
     })
   })
@@ -360,7 +360,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'No action on tap',
+      markdown: 'No action on tap',
       action: 'none',
     })
   })
@@ -378,7 +378,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Archive this',
+      markdown: 'Archive this',
       isArchive: '1',
     })
   })
@@ -396,7 +396,7 @@ describe('bark query parameters', () => {
     const req = callArgs.request
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
-      body: 'Encrypted',
+      markdown: 'Encrypted',
       ciphertext: 'encryptedData123',
     })
   })
@@ -415,7 +415,7 @@ describe('bark query parameters', () => {
     expect(await req.json()).toEqual({
       device_keys: ['myDeviceKey'],
       title: 'Complex notification',
-      body: 'With many options',
+      markdown: 'With many options',
       subtitle: 'Subtitle',
       group: 'alerts',
       sound: 'alarm',

@@ -52,7 +52,7 @@ export const bark = defineProvider('bark:', {
       ['Content-Type', 'application/json'],
     ])
 
-    const contentData: { body: string, title?: string } = message.body ? { title: message.title, body: message.body } : { body: message.title }
+    const contentData: { markdown: string, title?: string } = message.body ? { title: message.title, markdown: message.body } : { markdown: message.title }
 
     const body = defu({ device_keys: deviceKeys }, contentData, query)
 
