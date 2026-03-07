@@ -8,7 +8,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['tests/**/*.spec.ts'],
+    include: ['tests/**/*.spec.ts', 'src/**/*.spec.ts'],
     testTimeout: 30 * 1000,
     typecheck: {
       enabled: true,
