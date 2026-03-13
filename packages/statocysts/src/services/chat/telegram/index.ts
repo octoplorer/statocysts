@@ -81,9 +81,9 @@ export const telegram = defineProvider('telegram:', {
         bodyFormatted = escapeMarkdown(this.message.body)
       }
       else {
-        // Markdown or default
-        titleFormatted = `*${this.message.title}*`
-        bodyFormatted = this.message.body
+        // Markdown or default - escape special chars to prevent parse errors
+        titleFormatted = `*${escapeMarkdown(this.message.title)}*`
+        bodyFormatted = escapeMarkdown(this.message.body)
       }
 
       text = `${titleFormatted}\n\n${bodyFormatted}`
