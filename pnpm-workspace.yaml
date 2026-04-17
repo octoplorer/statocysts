@@ -20,7 +20,7 @@ catalogs:
     simple-git-hooks: ^2.13.1
     smtp-server: ^3.18.1
     taze: ^19.10.0
-    typescript: ^5.9.3
+    typescript: ^6.0.0
     vitest: ^4.1.0
   lib:
     add: ^2.0.6
