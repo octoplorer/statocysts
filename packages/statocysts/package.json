@@ -69,7 +69,6 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "add": "catalog:lib",
     "defu": "catalog:lib",
     "emailjs": "catalog:lib",
     "ofetch": "catalog:lib",
