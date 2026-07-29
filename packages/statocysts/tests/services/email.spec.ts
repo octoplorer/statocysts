@@ -1,7 +1,7 @@
 import type { SMTPServerSession } from 'smtp-server'
-import { email } from '#/index'
 import { SMTPServer } from 'smtp-server'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { email } from '#/index'
 
 describe('email integration test', () => {
   let server: SMTPServer

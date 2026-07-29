@@ -1,7 +1,7 @@
 /// <reference types="vitest/importMeta" />
 import type { FetchOptions, FetchResponse } from 'ofetch'
-import { telegram } from '#/index'
 import { describe, expect, it } from 'vitest'
+import { telegram } from '#/index'
 
 interface TelegramApiResponse {
   ok: boolean

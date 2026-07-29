@@ -1,7 +1,7 @@
-import type { SmtpPayload } from '#/core/transports/smtp'
 import type { MessageHeaders } from 'emailjs'
-import { smtp } from '#/core/transports/smtp'
+import type { SmtpPayload } from '#/core/transports/smtp'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { smtp } from '#/core/transports/smtp'
 import { email } from './index'
 
 // Mock smtp transport

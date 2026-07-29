@@ -1,8 +1,8 @@
 import type { FetchOptions } from 'ofetch'
+import { withoutLeadingSlash } from 'ufo'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { assert } from '#/utils'
-import { withoutLeadingSlash } from 'ufo'
 
 export interface SlackOptions {
   /**

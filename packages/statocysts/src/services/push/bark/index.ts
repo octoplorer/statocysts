@@ -1,9 +1,10 @@
 import type { FetchOptions } from 'ofetch'
-import { defineProvider, http } from '#/shared'
-import { assert, getValidateQuery, withoutPathname } from '#/utils'
 import defu from 'defu'
 import { withProtocol } from 'ufo'
 import z from 'zod'
+import { defineProvider } from '#/core/provider'
+import { http } from '#/core/transports/http'
+import { assert, getValidateQuery, withoutPathname } from '#/utils'
 
 export interface BarkOptions {
   fetchOptions?: FetchOptions

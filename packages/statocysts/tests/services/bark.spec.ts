@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
-import { bark } from '#/index'
 import { describe, expect, it } from 'vitest'
+import { bark } from '#/index'
 
 describe('bark integration test', () => {
   const skipCondition = process.env.VITE_BARK_TEST_URL === undefined

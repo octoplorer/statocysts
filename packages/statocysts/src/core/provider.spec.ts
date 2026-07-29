@@ -85,19 +85,47 @@ describe('defineProvider', () => {
     })
   })
 
-  it('should get the default options', async () => {
+  it.each([
+    undefined,
+    { title: '' },
+    { title: '   ' },
+    { title: 'Hello', body: 1 },
+  ])('should reject invalid notification %#', async (notification) => {
     const mockTransport: Transport<{ request: Request }> = {
       send: vi.fn().mockResolvedValue(undefined),
     }
 
     const testProvider = defineProvider('test:', {
-      defaultOptions: { foo: 'bar' },
       transport: mockTransport,
       async prepare() {
         return { request: new Request('https://example.com', { method: 'POST' }) }
       },
     })
-    expect(testProvider.defaultOptions).toEqual({ foo: 'bar' })
+
+    await expect(testProvider.send(
+      'test://example.com',
+      notification as never,
+    )).rejects.toThrow(TypeError)
+    expect(mockTransport.send).not.toHaveBeenCalled()
+  })
+
+  it('should preserve a direct provider failure', async () => {
+    const cause = new Error('transport failed')
+    const mockTransport: Transport<{ request: Request }> = {
+      send: vi.fn().mockRejectedValue(cause),
+    }
+
+    const testProvider = defineProvider('test:', {
+      transport: mockTransport,
+      async prepare() {
+        return { request: new Request('https://example.com', { method: 'POST' }) }
+      },
+    })
+
+    await expect(testProvider.send(
+      'test://example.com',
+      { title: 'Alert' },
+    )).rejects.toBe(cause)
   })
 
   it('should throw an error if the protocol is not supported', async () => {

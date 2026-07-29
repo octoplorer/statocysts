@@ -10,13 +10,13 @@ Highly inspired by [shoutrrr](https://github.com/containrrr/shoutrrr) and [appri
 
 ## Installation
 
-### using npm
+### Using npm
 
 ```bash
 npm install statocysts
 ```
 
-### ussing CLI
+### Using the CLI
 
 ```bash
 npm install -g @statocysts/cli
@@ -24,27 +24,46 @@ npm install -g @statocysts/cli
 
 ## Quick Start
 
-### As a package
+### Send once
 
 ```typescript
 import { send } from 'statocysts'
 
-await send('slack://webhook/xxx/yyy/zzz', 'Hello World')
+await send('slack://webhook/xxx/yyy/zzz', {
+  title: 'Hello World',
+  body: 'Optional details',
+})
 ```
 
-```typescript
-import { createSender } from 'statocysts'
+### Send repeatedly to multiple targets
 
-const sender = createSender([
+```typescript
+import { createNotifier } from 'statocysts'
+
+const notifier = createNotifier([
   'slack://webhook/xxx/yyy/zzz',
   'json://example.com/api/endpoint',
 ])
 
-sender.send('Hello World')
+await notifier.send({ title: 'Hello World' })
 ```
 
-### Using CLI
+All targets are attempted in parallel. A partial or complete failure rejects with `NotificationDeliveryError` after every target has completed.
+
+### Use provider-specific options
+
+```typescript
+import { telegram } from 'statocysts'
+
+await telegram.send(
+  'telegram://token@bot/chat-id',
+  { title: 'Hello World' },
+  { fetchOptions: { timeout: 5000 } },
+)
+```
+
+### Using the CLI
 
 ```bash
-stato -u "slack://webhook/xxx/yyy/zzz" -m "Hello World"
+stato -u "slack://webhook/xxx/yyy/zzz" -t "Hello World"
 ```

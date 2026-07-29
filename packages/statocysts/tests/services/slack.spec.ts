@@ -1,7 +1,7 @@
 /// <reference types="vitest/importMeta" />
 import type { FetchOptions } from 'ofetch'
-import { slack } from '#/index'
 import { describe, expect, it } from 'vitest'
+import { slack } from '#/index'
 
 describe('slack integration test', () => {
   it.skipIf(process.env.VITE_SLACK_BOTAPI_TEST_URL === undefined)(
