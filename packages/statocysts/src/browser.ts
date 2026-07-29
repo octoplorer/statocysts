@@ -1,6 +1,7 @@
 import type { Sender, SenderUrl } from '#/shared'
 import { discord } from '#/services/chat/discord'
 import { lark } from '#/services/chat/lark'
+import { qqbot } from '#/services/chat/qqbot'
 import { slack } from '#/services/chat/slack'
 import { telegram } from '#/services/chat/telegram'
 import { bark } from '#/services/push/bark'
@@ -9,7 +10,7 @@ import { buildSenderRegistry } from '#/shared'
 import { assert } from '#/utils'
 import { serverChan } from './services/push/server-chan'
 
-export const senderRegistry = buildSenderRegistry([bark, json, serverChan, jsons, slack, telegram, discord, lark])
+export const senderRegistry = buildSenderRegistry([bark, json, qqbot, serverChan, jsons, slack, telegram, discord, lark])
 
 export function createSender(urls: SenderUrl[]): Sender {
   return senderRegistry(urls)
@@ -27,5 +28,5 @@ export async function send(
   await provider.send(_url.toString(), messageObj)
 }
 
-export { bark, discord, json, lark, slack, telegram }
+export { bark, discord, json, lark, qqbot, slack, telegram }
 export * from './shared'
