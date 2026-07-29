@@ -1,3 +1,5 @@
+import { assert } from '#/utils'
+
 export interface Notification {
   title: string
   body?: string
@@ -30,21 +32,23 @@ export class NotificationDeliveryError extends Error {
 }
 
 export function assertNotification(value: unknown): asserts value is Notification {
-  if (typeof value !== 'object' || value === null) {
-    throw new TypeError('Notification must be an object')
-  }
+  assert(
+    typeof value === 'object' && value !== null,
+    new TypeError('Notification must be an object'),
+  )
 
   const { title, body } = value as Record<string, unknown>
 
-  if (typeof title !== 'string') {
-    throw new TypeError('Notification title must be a string')
-  }
-
-  if (title.trim().length === 0) {
-    throw new TypeError('Notification title must not be empty')
-  }
-
-  if (body !== undefined && typeof body !== 'string') {
-    throw new TypeError('Notification body must be a string')
-  }
+  assert(
+    typeof title === 'string',
+    new TypeError('Notification title must be a string'),
+  )
+  assert(
+    title.trim().length > 0,
+    new TypeError('Notification title must not be empty'),
+  )
+  assert(
+    body === undefined || typeof body === 'string',
+    new TypeError('Notification body must be a string'),
+  )
 }
