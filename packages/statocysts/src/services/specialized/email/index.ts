@@ -1,9 +1,9 @@
-import type { SmtpPayload } from '#/core/transports/smtp'
 import type { SMTPConnectionOptions } from 'emailjs'
+import type { SmtpPayload } from '#/core/transports/smtp'
+import z from 'zod'
 import { defineProvider } from '#/core/provider'
 import { smtp } from '#/core/transports/smtp'
 import { assert } from '#/utils'
-import z from 'zod'
 
 export interface EmailOptions {
   // Optional default sender email address

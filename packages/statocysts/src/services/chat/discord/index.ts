@@ -1,9 +1,9 @@
 import type { FetchOptions } from 'ofetch'
+import defu from 'defu'
+import z from 'zod'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { assert, getValidateQuery } from '#/utils'
-import defu from 'defu'
-import z from 'zod'
 
 interface DiscordOptions {
   fetchOptions?: FetchOptions

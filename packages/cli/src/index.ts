@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import process from 'node:process'
 import * as readline from 'node:readline'
-import { send } from 'statocysts'
+import { createNotifier, NotificationDeliveryError } from 'statocysts'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import { version } from '../package.json' with { type: 'json' }
@@ -75,31 +75,12 @@ async function getBody(args: CliArgs): Promise<string> {
  * Send notifications to all specified URLs
  */
 async function sendNotifications(urls: string[], title: string, body?: string): Promise<void> {
-  const results = await Promise.allSettled(
-    urls.map(url => send(url, title, body)),
-  )
+  const notifier = createNotifier(urls)
+  await notifier.send({ title, body })
+}
 
-  const failures: { url: string, error: string }[] = []
-
-  results.forEach((result, index) => {
-    if (result.status === 'rejected') {
-      failures.push({
-        url: urls[index],
-        error: result.reason?.message || String(result.reason),
-      })
-    }
-  })
-
-  if (failures.length > 0) {
-    console.error('\nFailed to send to some URLs:')
-    failures.forEach(({ url, error }) => {
-      console.error(`  - ${url}: ${error}`)
-    })
-
-    if (failures.length === urls.length) {
-      process.exit(1)
-    }
-  }
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
 }
 
 export async function run(): Promise<void> {
@@ -148,7 +129,15 @@ export async function run(): Promise<void> {
     console.log('Notification sent successfully!')
   }
   catch (error) {
-    console.error(`Error: ${(error as Error).message}`)
+    if (error instanceof NotificationDeliveryError) {
+      console.error('\nFailed to send to some URLs:')
+      error.failures.forEach((failure) => {
+        console.error(`  - ${failure.target}: ${getErrorMessage(failure.cause)}`)
+      })
+    }
+    else {
+      console.error(`Error: ${getErrorMessage(error)}`)
+    }
     process.exit(1)
   }
 }

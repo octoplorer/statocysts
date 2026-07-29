@@ -2,6 +2,8 @@ import { ofetch } from 'ofetch'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { http } from '#/core/transports/http'
 import { qqbot } from '.'
+import { qqbot as browserQQBot, createNotifier as createBrowserNotifier } from '../../../browser'
+import { createNotifier as createNodeNotifier, qqbot as nodeQQBot } from '../../../index'
 
 // Mock http transport
 vi.mock('#/core/transports/http', () => ({
@@ -247,6 +249,15 @@ describe('qqbot token caching', () => {
       { title: 'second' },
     )
     expect(ofetch).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('qqbot runtime catalog', () => {
+  it('exports and registers qqbot in browser and node runtimes', () => {
+    expect(browserQQBot).toBe(qqbot)
+    expect(nodeQQBot).toBe(qqbot)
+    expect(() => createBrowserNotifier(['qqbot://app:secret@user/openid'])).not.toThrow()
+    expect(() => createNodeNotifier(['qqbot://app:secret@user/openid'])).not.toThrow()
   })
 })
 

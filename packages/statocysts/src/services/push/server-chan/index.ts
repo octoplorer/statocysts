@@ -1,5 +1,6 @@
 import type { FetchOptions } from 'ofetch'
-import { defineProvider, http } from '#/shared'
+import { defineProvider } from '#/core/provider'
+import { http } from '#/core/transports/http'
 import { assert } from '#/utils'
 
 export interface ServerChanOptions {

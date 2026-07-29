@@ -1,5 +1,5 @@
-import { http } from '#/core/transports/http'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { http } from '#/core/transports/http'
 import { bark } from '.'
 
 // Mock httpTransport

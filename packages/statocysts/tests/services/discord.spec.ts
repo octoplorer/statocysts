@@ -1,7 +1,7 @@
 /// <reference types="vitest/importMeta" />
 import type { FetchOptions } from 'ofetch'
-import { discord } from '#/index'
 import { describe, expect, it } from 'vitest'
+import { discord } from '#/index'
 
 describe('discord integration test', () => {
   it.skipIf(process.env.VITE_DISCORD_TEST_URL === undefined)(

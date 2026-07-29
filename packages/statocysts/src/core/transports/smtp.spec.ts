@@ -128,13 +128,11 @@ describe('smtp transport', () => {
 
   it('should handle email with custom headers', async () => {
     const message: MessageHeaders = {
-      from: 'sender@example.com',
-      to: 'receiver@example.com',
-      subject: 'Custom Headers',
-      text: 'Test',
-      headers: {
-        'X-Custom-Header': 'custom-value',
-      },
+      'from': 'sender@example.com',
+      'to': 'receiver@example.com',
+      'subject': 'Custom Headers',
+      'text': 'Test',
+      'X-Custom-Header': 'custom-value',
     }
 
     const payload: SmtpPayload = {
@@ -148,7 +146,7 @@ describe('smtp transport', () => {
     await smtp.send(payload)
 
     expect(receivedMails).toHaveLength(1)
-    // Custom headers in emailjs are not properly handled, so we skip this check
     expect(receivedMails[0].data).toMatch(/Subject:.*Custom.*Headers/)
+    expect(receivedMails[0].data).toContain('X-Custom-Header: custom-value')
   })
 })

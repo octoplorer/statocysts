@@ -1,9 +1,9 @@
 import type { FetchOptions } from 'ofetch'
+import z from 'zod'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { escapeHtml, escapeMarkdown, getValidateQuery } from '#/utils'
 import { assert } from '#/utils/assert'
-import z from 'zod'
 
 export const telegramQuerySchema = z.object({
   parse_mode: z.enum(['Markdown', 'MarkdownV2', 'HTML']).optional(),
