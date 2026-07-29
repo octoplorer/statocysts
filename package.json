@@ -10,6 +10,7 @@
     "test": "pnpm --filter 'statocysts' run test",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
+    "typecheck": "pnpm -r typecheck",
     "release": "bumpp -r --execute=\"pnpm i\"",
     "postinstall": "simple-git-hooks"
   },

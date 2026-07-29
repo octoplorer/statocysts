@@ -18,7 +18,9 @@
     "apprise"
   ],
   "imports": {
-    "#/*": "./src/*"
+    "#/services/*": "./src/services/*/index.ts",
+    "#/utils": "./src/utils/index.ts",
+    "#/*": "./src/*.ts"
   },
   "exports": {
     ".": {

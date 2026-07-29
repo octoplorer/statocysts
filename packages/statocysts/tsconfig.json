@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "esnext",
     "lib": [
       "es2023",
@@ -11,9 +10,6 @@
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
-    "paths": {
-      "#/*": ["./src/*"]
-    },
     "resolveJsonModule": true,
     "types": ["node"],
     "strict": true,

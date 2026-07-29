@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "esnext",
     "lib": ["es2023"],
     "moduleDetection": "force",
@@ -17,8 +16,5 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "references": [
-    { "path": "../statocysts" }
-  ],
   "include": ["src"]
 }
