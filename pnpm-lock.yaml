@@ -9,10 +9,6 @@ catalogs:
     tsdown:
       specifier: ^0.22.14
       version: 0.22.14
-  ci:
-    publint:
-      specifier: ^0.3.22
-      version: 0.3.22
   cli:
     yargs:
       specifier: ^18.1.0
@@ -130,7 +126,7 @@ importers:
         version: 17.0.35
       tsdown:
         specifier: catalog:build
-        version: 0.22.14(publint@0.3.22)(typescript@6.0.3)
+        version: 0.22.14(publint@0.3.23)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -164,13 +160,13 @@ importers:
         version: 4.1.10(vitest@4.1.10)
       publint:
         specifier: catalog:ci
-        version: 0.3.22
+        version: 0.3.23
       smtp-server:
         specifier: catalog:dev
         version: 3.19.2
       tsdown:
         specifier: catalog:build
-        version: 0.22.14(publint@0.3.22)(typescript@6.0.3)
+        version: 0.22.14(publint@0.3.23)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -2139,9 +2135,6 @@ packages:
     resolution: {integrity: sha512-MyIV3ZA/PmyBN/ud8vV9XzwTrNtR4jFrObymZYnZqMmW0zA8Z17vnT0rBgFE/TlohB+YCHqXMgZzb3Csp49vqg==}
     engines: {node: '>=14.16'}
 
-  package-manager-detector@1.6.0:
-    resolution: {integrity: sha512-61A5ThoTiDG/C8s8UMZwSorAGwMJ0ERVGj2OjoW5pAalsNOg15+iQiPzrLJ4jhZ1HJzmC2PIHT2oEiH3R5fzNA==}
-
   package-manager-detector@1.8.0:
     resolution: {integrity: sha512-yQA4H19AmPEoMUeavPMDIe1higySl/gH/yaQrkT/s07Qp+7pp2hYz30N3z2l5BkjVkF9Ow6o0wjJamm2y7Sn0A==}
 
@@ -2211,8 +2204,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  publint@0.3.22:
-    resolution: {integrity: sha512-6Z/scsr5CA7APdwyF35EY88CqgDj1textWuY788DVTJYPCWVv/Wn9G6KmLnrVRnStgYcahqN4wCDLZGSbQJ69w==}
+  publint@0.3.23:
+    resolution: {integrity: sha512-5MQipUPcB7MWw84zLUkHrg/H/UBtk3LL+A0GngTTBSsiNJLQurMUaSIRG3edlOrRz4UFe0AOKK9TZdIWviV+jQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2750,7 +2743,7 @@ snapshots:
 
   '@antfu/install-pkg@1.1.0':
     dependencies:
-      package-manager-detector: 1.6.0
+      package-manager-detector: 1.8.0
       tinyexec: 1.1.2
 
   '@antfu/ni@30.3.0':
@@ -4695,8 +4688,6 @@ snapshots:
 
   p-timeout@6.1.4: {}
 
-  package-manager-detector@1.6.0: {}
-
   package-manager-detector@1.8.0: {}
 
   parse-gitignore@2.0.0: {}
@@ -4756,7 +4747,7 @@ snapshots:
 
   prettier@3.8.3: {}
 
-  publint@0.3.22:
+  publint@0.3.23:
     dependencies:
       '@publint/pack': 0.1.6
       package-manager-detector: 1.8.0
@@ -4991,7 +4982,7 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
-  tsdown@0.22.14(publint@0.3.22)(typescript@6.0.3):
+  tsdown@0.22.14(publint@0.3.23)(typescript@6.0.3):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -5009,7 +5000,7 @@ snapshots:
       unconfig-core: 7.5.0
       verkit: 0.3.1
     optionalDependencies:
-      publint: 0.3.22
+      publint: 0.3.23
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@typescript/native-preview'
