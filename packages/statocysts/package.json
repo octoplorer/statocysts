@@ -1,7 +1,7 @@
 {
   "name": "statocysts",
   "type": "module",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Notification library for JavaScript",
   "license": "MIT",
   "homepage": "https://github.com/octoplorer/statocysts",
