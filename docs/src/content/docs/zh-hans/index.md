@@ -6,7 +6,7 @@ hero:
   tagline: 基础设施的「感觉器官」。
   actions:
     - text: 快速开始
-      link: ./getting-started/
+      link: /statocysts/zh-hans/getting-started/
       variant: primary
     - text: 查看 GitHub
       link: https://github.com/octoplorer/statocysts
@@ -24,3 +24,10 @@ hero:
 ## 支持的通知提供方
 
 Statocysts 支持 Slack、Discord、飞书、QQ 机器人、Telegram、Bark、Server 酱、邮件、通用 JSON 端点和本地控制台日志。
+
+## 浏览文档
+
+- [了解核心概念](/statocysts/zh-hans/guide/core-concepts/)
+- [发送并复用通知](/statocysts/zh-hans/guide/sending-notifications/)
+- [选择通知提供方](/statocysts/zh-hans/providers/)
+- [使用命令行界面](/statocysts/zh-hans/reference/cli/)

@@ -12,7 +12,8 @@
   "dependencies": {
     "@astrojs/starlight": "catalog:docs",
     "astro": "catalog:docs",
-    "sharp": "catalog:docs"
+    "sharp": "catalog:docs",
+    "starlight-links-validator": "catalog:docs"
   },
   "devDependencies": {
     "@astrojs/check": "catalog:docs",

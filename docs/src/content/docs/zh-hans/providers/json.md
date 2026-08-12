@@ -1,0 +1,63 @@
+---
+title: JSON 端点
+description: 向通用 HTTP 和 HTTPS JSON 端点发送 POST 通知。
+---
+
+协议：`json:` 和 `jsons:`  
+运行时：Node.js 和浏览器
+
+## 通知目标格式
+
+```text
+json://<host>[:<port>]/<path>
+jsons://<host>[:<port>]/<path>
+```
+
+`json:` 使用 HTTP，`jsons:` 使用 HTTPS。
+
+```ts
+import { send } from 'statocysts'
+
+await send('jsons://example.com/notifications', {
+  title: 'Deployment complete',
+  body: 'Production is healthy.',
+})
+```
+
+默认请求体为：
+
+```json
+{
+  "title": "Deployment complete",
+  "body": "Production is healthy."
+}
+```
+
+通知不含正文时会省略 `body`。
+
+## 添加请求头和请求体字段
+
+解码后以空格开头的查询参数键会成为请求头；以 `:` 开头的键会成为额外的请求体字段。
+
+```text
+jsons://example.com/notifications?%20Authorization=Bearer%20TOKEN&:environment=production
+```
+
+这会发送 `Authorization: Bearer TOKEN`，并在 JSON 请求体中添加 `"environment": "production"`。其他查询参数会保留在端点 URL 中。
+
+:::tip
+在表单风格查询字符串中，`+Authorization` 同样会解码成以空格开头的请求头键。
+:::
+
+## 提供方专属选项
+
+`json.send()` 和 `jsons.send()` 直接接受 `ofetch` 的 `FetchOptions`：
+
+```ts
+import { jsons } from 'statocysts'
+
+await jsons.send(target, notification, {
+  timeout: 5000,
+  retry: 2,
+})
+```

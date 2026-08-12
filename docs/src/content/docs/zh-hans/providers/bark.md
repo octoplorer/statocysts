@@ -1,0 +1,55 @@
+---
+title: Bark
+description: 向一个或多个设备密钥发送 Bark 推送通知。
+---
+
+协议：`bark:`  
+运行时：Node.js 和浏览器
+
+## 通知目标格式
+
+```text
+bark://<server>[:<port>]/<device-key>[/<device-key>...]
+```
+
+```ts
+import { send } from 'statocysts'
+
+await send(
+  'bark://api.day.app/DEVICE_KEY',
+  { title: 'Deployment complete', body: 'Production is healthy.' },
+)
+```
+
+通知提供方会向 `<server>/push` 发送 HTTPS 请求。增加路径段可以在一个请求中向多个设备密钥投递。
+
+## 查询参数
+
+支持以下 Bark 字段：
+
+- `subtitle`、`group`、`url`、`icon`、`sound` 和 `ciphertext`；
+- `level`：`active`、`timeSensitive`、`passive` 或 `critical`；
+- `call=1`、`autoCopy=1` 和 `isArchive=1`；
+- `volume`、数字类型的 `badge`、`copy` 和 `action=none`。
+
+```text
+bark://api.day.app/DEVICE_KEY?group=operations&level=timeSensitive&sound=alarm
+```
+
+查询参数会进入 JSON 请求体。枚举值或标志值非法时，投递会失败。
+
+## 通知格式
+
+包含正文时，标题作为 `title`，正文作为 `markdown`；只有标题时，标题作为 `markdown`。
+
+## 提供方专属选项
+
+直接调用 `bark.send()` 可以传入 `fetchOptions`：
+
+```ts
+import { bark } from 'statocysts'
+
+await bark.send(target, notification, {
+  fetchOptions: { timeout: 5000 },
+})
+```

@@ -86,15 +86,13 @@ stato verify -u "slack://webhook/xxx/yyy/zzz" -u "unsupported://target"
 
 The exit code is `0` when every URL is valid and `1` when any URL is invalid.
 
-## Supported Services
+## Supported Providers
 
-This CLI supports all notification services provided by statocysts:
+The CLI supports every provider exported by `statocysts`: Slack, Discord, Lark/Feishu, QQ Bot, Telegram, Bark, Server Chan, email, JSON endpoints, and logger.
 
-- **Slack**: `slack://webhook/xxx/yyy/zzz` or `slack://bot@channel:token`
-- **JSON**: `json://example.com/api/endpoint`
-- **Logger**: `logger://` (console output for development)
+Read the [provider reference](https://octoplorer.github.io/statocysts/providers/) for tested notification target formats and options.
 
-For more details on URL formats, please refer to the [statocysts documentation](https://github.com/octoplorer/statocysts).
+> Notification targets often contain credentials. Prefer environment variables or another secret-injection mechanism instead of literal URLs in shell history.
 
 ## License
 

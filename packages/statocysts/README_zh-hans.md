@@ -2,9 +2,7 @@
 
 # Statocysts
 
-一个现代的 JavaScript 通知库,堪称基础设施的「感觉器官」。
-
-深受 [shoutrrr](https://github.com/containrrr/shoutrrr) 与 [apprise](https://github.com/caronc/apprise) 的启发。
+一个现代的 JavaScript 通知库——基础设施的「感觉器官」。
 
 [![NPM Version](https://img.shields.io/npm/v/statocysts)](https://npmjs.com/statocysts)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/statocysts)
@@ -12,243 +10,78 @@
 
 ## 特性
 
-- **基于 URL 的目标寻址** —— 每个通知目标都由一个协议 URL(如 `slack://...`)标识,新增或切换通知服务无需改动任何代码。
-- **并行投递** —— 通知器的所有目标会被并发尝试。
-- **部分失败报告** —— 投递失败时抛出 `NotificationDeliveryError`,精确指出哪些目标失败及失败原因。
-- **提供方专属选项** —— 支持按次覆盖超时、API 地址、自定义请求体等。
-- **运行环境无关** —— 同时支持 Node.js 与现代浏览器(提供独立的 `statocysts/browser` 入口)。
-- **零配置 CLI** —— 在终端里用 `stato` 直接发送或校验通知 URL。
+- **基于 URL 的目标寻址** —— 使用一个通知目标 URL 选择通知提供方和接收方。
+- **并行投递** —— 并发尝试所有通知目标。
+- **可定位的失败信息** —— 通过 `NotificationDeliveryError` 检查每个失败目标。
+- **提供方专属选项** —— 配置超时、API 地址和请求内容。
+- **Node.js 和浏览器入口** —— 只导入当前运行时支持的通知提供方。
+- **命令行界面** —— 使用 `stato` 发送通知和校验通知目标。
 
 ## 安装
 
-### 库
-
-```bash
-npm install statocysts
-```
-
-### CLI
-
-```bash
-npm install -g @statocysts/cli
+```sh
+pnpm add statocysts
 ```
 
 ## 快速开始
 
-### 发送一次
-
-```typescript
+```ts
 import { send } from 'statocysts'
 
-await send('slack://webhook/xxx/yyy/zzz', {
-  title: 'Hello World',
-  body: 'Optional details',
+await send('slack://webhook/T00000000/B00000000/WEBHOOK_TOKEN', {
+  title: 'Deployment complete',
+  body: 'Production is healthy.',
 })
 ```
 
-### 复用通知器,发送到多个目标
+复用通知器向多个通知目标发送：
 
-```typescript
+```ts
 import { createNotifier } from 'statocysts'
 
 const notifier = createNotifier([
-  'slack://webhook/xxx/yyy/zzz',
-  'json://example.com/api/endpoint',
+  process.env.SLACK_TARGET!,
+  process.env.TELEGRAM_TARGET!,
 ])
 
-await notifier.send({ title: 'Hello World' })
+await notifier.send({ title: 'Service recovered' })
 ```
 
-所有目标都会被并行尝试。在全部目标完成后,若存在部分或全部失败,则抛出 `NotificationDeliveryError`。
+所有通知目标都会被尝试。如果存在投递失败，Promise 会在整个批次结束后抛出 `NotificationDeliveryError`。
 
-### 使用提供方专属选项
+## 浏览器
 
-```typescript
-import { telegram } from 'statocysts'
-
-await telegram.send(
-  'telegram://token@bot/chat-id',
-  { title: 'Hello World' },
-  { fetchOptions: { timeout: 5000 } },
-)
-```
-
-### 用 logger 提供方调试
-
-```typescript
-import { send } from 'statocysts'
-
-await send('logger://', {
-  title: 'Hello World',
-  body: 'Printed to the console for development',
-})
-// [statocysts] Hello World
-// Printed to the console for development
-```
-
-logger 提供方不发起任何网络请求,仅向控制台输出。使用 `logger://?level=warn`(或 `debug`/`error`)选择输出级别。
-
-### 使用 CLI
-
-```bash
-stato -u "slack://webhook/xxx/yyy/zzz" -t "Hello World"
-```
-
-### 发送前校验 URL
-
-```bash
-stato verify -u "slack://webhook/xxx/yyy/zzz"
-```
-
-## 支持的提供方
-
-| 提供方     | 协议               | 目标 URL 格式                                                                                               |
-| ---------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Slack      | `slack:`           | `slack://webhook/xxx/yyy/zzz` 或 `slack://bot@channel:token`                                                |
-| Discord    | `discord:`         | `discord://webhook@<webhook-id>:<token>`                                                                    |
-| Lark(飞书) | `lark:`            | `lark://webhook@<token>[:<secret>]`                                                                         |
-| QQ 机器人  | `qqbot:`           | `qqbot://user@<app-id>:<client-secret>/<openid>` 或 `qqbot://group@<app-id>:<client-secret>/<group-openid>` |
-| Telegram   | `telegram:`        | `telegram://bot@<token>/<chat-id-1>/<chat-id-2>`                                                            |
-| Bark       | `bark:`            | `bark://<server>/<device-key-1>/<device-key-2>`                                                             |
-| Server 酱  | `server-chan:`     | `server-chan://v3@<uid>:<send-key>` 或 `server-chan://turbo@<send-key>`                                     |
-| 邮件       | `email:`           | `email://<user>:<password>@<host>:<port>?to=...&from=...&subject=...`                                       |
-| JSON       | `json:` / `jsons:` | `json://example.com/api/endpoint`(HTTP)/ `jsons://...`(HTTPS)                                               |
-| 日志       | `logger:`          | `logger://?level=debug\|info\|warn\|error`                                                                  |
-
-### 自定义 JSON 请求
-
-JSON 提供方支持通过额外的查询参数定制发出的请求:
-
-- 键名以空格开头的参数(如 `%20Authorization`)会作为请求头发送。
-- 键名以 `:` 开头的参数(如 `:channel`)会追加到 JSON 请求体中。
-
-```bash
-stato -u 'json://example.com/api?%20Authorization=Bearer%20xxx&:channel=ops' -t "Hello World"
-```
-
-## API
-
-### `Notification`
-
-```typescript
-interface Notification {
-  title: string
-  body?: string
-}
-```
-
-`title` 必填且必须是非空字符串,`body` 可选。
-
-### `send(target, notification)`
-
-向单个目标发送一条通知。
-
-```typescript
-declare function send(target: string, notification: Notification): Promise<void>
-```
-
-### `createNotifier(targets)`
-
-创建一个绑定到一个或多个目标、可复用的通知器。每次 `send` 都会并行尝试所有目标。
-
-```typescript
-declare function createNotifier(targets: readonly string[]): Notifier
-declare function notifierSend(notification: Notification): Promise<void>
-```
-
-目标必须唯一,且使用已注册的协议。目标不受支持或格式非法时,会在创建阶段直接报错。
-
-### `NotificationDeliveryError`
-
-当至少一个目标投递失败时抛出。在所有目标完成后,可检查失败详情:
-
-```typescript
-try {
-  await notifier.send({ title: 'Hello World' })
-}
-catch (error) {
-  if (error instanceof NotificationDeliveryError) {
-    console.error(`Failed: ${error.failureCount}/${error.successCount + error.failureCount}`)
-    for (const failure of error.failures) {
-      console.error(`- ${failure.target}: ${failure.cause}`)
-    }
-  }
-}
-```
-
-- `failures: readonly NotificationFailure[]` —— 每个失败目标的 `{ target, cause }`
-- `successCount: number` —— 投递成功的目标数量
-- `failureCount: number` —— 投递失败的目标数量
-
-### 提供方对象
-
-每个提供方也作为独立对象导出,提供相同的 `send` 签名,并可传入提供方专属选项:
-
-```typescript
-import { slack, telegram } from 'statocysts'
-
-await slack.send('slack://webhook/xxx/yyy/zzz', notification)
-await telegram.send('telegram://bot@token/chat-id', notification, {
-  fetchOptions: { timeout: 5000 },
-})
-```
-
-大多数基于 HTTP 的提供方接受 `fetchOptions`,部分还接受额外选项,如 `apiBaseUrl`(Telegram、QQ Bot、Slack)或 `hookBaseUrl`(Slack)。详情请参阅各提供方的类型定义。
-
-## 浏览器支持
-
-在浏览器中使用时,请从浏览器入口导入:
-
-```typescript
+```ts
 import { send } from 'statocysts/browser'
-
-await send('json://example.com/api/endpoint', { title: 'Hello World' })
 ```
 
-浏览器入口仅包含不依赖 Node.js API 的提供方。`email` 与 `logger` 在浏览器中不可用。
+浏览器入口包含邮件之外的所有通知提供方。远程服务必须允许浏览器跨域请求，含有权限的通知目标凭据应留在服务端。
 
-## CLI 参考
+## CLI
 
-```
-stato [verify] -u <url> [-t <title>] [-b <body> | -f <file>]
-```
+```sh
+pnpm add --global @statocysts/cli
 
-| 命令     | 描述                        |
-| -------- | --------------------------- |
-| _(默认)_ | 发送通知(无子命令)。        |
-| `verify` | 校验通知服务 URL 是否合法。 |
-
-| 选项        | 别名 | 描述                      |
-| ----------- | ---- | ------------------------- |
-| `--url`     | `-u` | 通知服务 URL,可多次指定。 |
-| `--title`   | `-t` | 通知标题(发送时必填)。    |
-| `--body`    | `-b` | 通知正文。                |
-| `--file`    | `-f` | 从文件读取正文内容。      |
-| `--help`    |      | 显示帮助信息。            |
-| `--version` |      | 显示版本号。              |
-
-正文内容按以下优先级解析:`--body` → `--file` → 标准输入。
-
-```bash
-# 发送带标题和正文的通知
-stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -b "Hello World"
-
-# 同时发送到多个 URL
-stato -u "slack://webhook/xxx/yyy/zzz" -u "json://example.com/api" -t "Alert" -b "Hello"
-
-# 从文件读取正文
-stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -f message.txt
-
-# 从标准输入管道传入正文
-echo "Hello World" | stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert"
-
-# 校验 URL,不实际发送
-stato verify -u "slack://webhook/xxx/yyy/zzz"
-# ✓ slack://webhook/xxx/yyy/zzz
+stato -u "$NOTIFICATION_TARGET" -t "Deployment complete"
+stato verify -u "$NOTIFICATION_TARGET"
 ```
 
-`stato verify` 在所有 URL 均合法时以退出码 `0` 结束,任一 URL 非法时以 `1` 结束。
+## 通知提供方
+
+内置 Slack、Discord、飞书/Lark、QQ 机器人、Telegram、Bark、Server 酱、邮件、HTTP/HTTPS JSON 端点和本地控制台日志。
+
+通知目标 URL 通常包含凭据。请将其保存在环境变量或密钥存储中，并从日志里移除敏感内容。
+
+## 文档
+
+完整文档位于 [octoplorer.github.io/statocysts](https://octoplorer.github.io/statocysts/zh-hans/)：
+
+- [快速开始](https://octoplorer.github.io/statocysts/zh-hans/getting-started/)
+- [核心概念](https://octoplorer.github.io/statocysts/zh-hans/guide/core-concepts/)
+- [通知提供方参考](https://octoplorer.github.io/statocysts/zh-hans/providers/)
+- [API 参考](https://octoplorer.github.io/statocysts/zh-hans/reference/api/)
+- [CLI 参考](https://octoplorer.github.io/statocysts/zh-hans/reference/cli/)
 
 ## 许可证
 
-[MIT](https://github.com/octoplorer/statocysts/blob/main/LICENSE)
+[MIT](https://github.com/octoplorer/statocysts/blob/master/LICENSE)

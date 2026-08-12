@@ -1,0 +1,48 @@
+---
+title: 飞书和 Lark
+description: 通过已签名或未签名的飞书与 Lark Webhook 发送通知。
+---
+
+协议：`lark:`  
+运行时：Node.js 和浏览器
+
+## 通知目标格式
+
+```text
+lark://<webhook-token>[:<signing-secret>]@webhook[?domain=feishu]
+```
+
+LarkSuite Webhook：
+
+```text
+lark://WEBHOOK_TOKEN@webhook
+```
+
+带签名的飞书 Webhook：
+
+```text
+lark://WEBHOOK_TOKEN:SIGNING_SECRET@webhook?domain=feishu
+```
+
+`domain=feishu` 会选择 `open.feishu.cn`；未指定时使用 `open.larksuite.com`。
+
+## 通知格式
+
+只有标题时会生成文本消息。包含正文时，会生成交互式卡片：标题位于卡片头部，正文使用 Markdown。
+
+提供签名密钥时，Statocysts 会生成 Webhook 所需的时间戳和 HMAC-SHA256 签名。
+
+## 提供方专属选项
+
+直接调用 `lark.send()` 可以传入：
+
+```ts
+import { lark } from 'statocysts'
+
+await lark.send(target, notification, {
+  baseUrl: 'https://open.larksuite.com',
+  fetchOptions: { timeout: 5000 },
+})
+```
+
+`baseUrl` 适用于测试或兼容代理；正常的飞书/Lark 选择应使用 `domain` 查询参数。

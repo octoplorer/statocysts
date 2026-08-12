@@ -1,0 +1,57 @@
+---
+title: Slack
+description: Send Slack notifications through an incoming webhook or bot token.
+---
+
+Protocol: `slack:`  
+Runtime: Node.js and browser
+
+## Incoming webhook target
+
+```text
+slack://webhook/<team-id>/<channel-id>/<webhook-token>
+```
+
+```ts
+import { send } from 'statocysts'
+
+await send(
+  'slack://webhook/T00000000/B00000000/WEBHOOK_TOKEN',
+  { title: 'Deployment complete', body: 'Production is healthy.' },
+)
+```
+
+The path must contain exactly three segments. Query parameters are forwarded to the Slack webhook URL.
+
+## Bot target
+
+```text
+slack://<channel-id>:<bot-token>@bot
+```
+
+```ts
+await send(
+  'slack://C00000000:xoxb-example-token@bot',
+  { title: 'Deployment complete' },
+)
+```
+
+The channel ID is URL username and the bot token is URL password. Query parameters are forwarded to `chat.postMessage`.
+
+## Message format
+
+A title-only notification becomes Slack `text`. When a body is present, Statocysts sends a header block and Markdown section plus fallback text.
+
+## Provider options
+
+```ts
+import { slack } from 'statocysts'
+
+await slack.send(target, notification, {
+  hookBaseUrl: 'https://hooks.slack.com/',
+  botApiBaseUrl: 'https://slack.com/',
+  fetchOptions: { timeout: 5000 },
+})
+```
+
+`body` can replace the complete generated Slack request body. Use it only when you intentionally take responsibility for Slack payload compatibility.

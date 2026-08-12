@@ -60,3 +60,10 @@ Verify a notification URL without sending anything:
 ```sh
 stato verify -u "slack://webhook/xxx/yyy/zzz"
 ```
+
+## Next steps
+
+- [Understand notification targets and notifiers](/statocysts/guide/core-concepts/)
+- [Choose and configure a provider](/statocysts/providers/)
+- [Handle partial delivery failures](/statocysts/guide/error-handling/)
+- [Read the complete CLI reference](/statocysts/reference/cli/)

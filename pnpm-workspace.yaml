@@ -41,6 +41,7 @@ catalogs:
     '@astrojs/starlight': ^0.41.7
     astro: ^7.2.1
     sharp: ^0.35.3
+    starlight-links-validator: ^0.25.2
   lib:
     defu: ^6.1.7
     emailjs: ^5.0.2

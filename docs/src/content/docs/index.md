@@ -6,7 +6,7 @@ hero:
   tagline: The sensory organ for your infrastructure.
   actions:
     - text: Get started
-      link: ./getting-started/
+      link: /statocysts/getting-started/
       variant: primary
     - text: View on GitHub
       link: https://github.com/octoplorer/statocysts
@@ -24,3 +24,10 @@ hero:
 ## Supported providers
 
 Statocysts supports Slack, Discord, Lark, QQ Bot, Telegram, Bark, Server Chan, email, generic JSON endpoints, and local console logging.
+
+## Explore the documentation
+
+- [Understand the core concepts](/statocysts/guide/core-concepts/)
+- [Send and reuse notifications](/statocysts/guide/sending-notifications/)
+- [Choose a notification provider](/statocysts/providers/)
+- [Use the command-line interface](/statocysts/reference/cli/)

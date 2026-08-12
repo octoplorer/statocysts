@@ -1,0 +1,61 @@
+---
+title: Email
+description: Send plain-text email notifications through SMTP.
+---
+
+Protocol: `email:`  
+Runtime: Node.js only
+
+## Target format
+
+```text
+email://[<user>:<password>@]<host>[:<port>]/?to=<recipient>[&to=<recipient>...]
+```
+
+```ts
+import { send } from 'statocysts'
+
+await send(
+  'email://smtp.example.com:587/?from=alerts@example.com&to=operator@example.com',
+  { title: 'Deployment complete', body: 'Production is healthy.' },
+)
+```
+
+The default port is 587. URL-encode special characters in usernames, passwords, and query values.
+
+## Query parameters
+
+| Parameter | Description                                                         |
+| --------- | ------------------------------------------------------------------- |
+| `to`      | Required recipient. Repeat for multiple recipients.                 |
+| `cc`      | Carbon-copy recipient. Repeat as needed.                            |
+| `bcc`     | Blind-carbon-copy recipient. Repeat as needed.                      |
+| `from`    | Sender address. Defaults to `defaultFrom`, then SMTP username.      |
+| `subject` | Overrides the notification title as email subject.                  |
+| `ssl`     | `true` enables SSL; defaults to false.                              |
+| `tls`     | Any value except `false` enables TLS; defaults to true on port 587. |
+
+## Provider options
+
+```ts
+import { email } from 'statocysts'
+
+await email.send(
+  'email://smtp.example.com/?to=operator@example.com',
+  { title: 'SMTP test' },
+  {
+    defaultFrom: 'alerts@example.com',
+    smtpConfig: { timeout: 10000 },
+  },
+)
+```
+
+`defaultFrom` supplies a sender outside the target. `smtpConfig` merges partial EmailJS SMTP connection options over values derived from the URL.
+
+## Limitations
+
+Email notifications are plain text and do not support attachments or custom message headers.
+
+:::caution
+Keep SMTP credentials in a secret store. Prefer application-specific passwords and TLS/SSL.
+:::

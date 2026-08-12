@@ -60,3 +60,10 @@ stato -u "slack://webhook/xxx/yyy/zzz" -t "Deployment complete"
 ```sh
 stato verify -u "slack://webhook/xxx/yyy/zzz"
 ```
+
+## 后续步骤
+
+- [了解通知目标和通知器](/statocysts/zh-hans/guide/core-concepts/)
+- [选择并配置通知提供方](/statocysts/zh-hans/providers/)
+- [处理部分投递失败](/statocysts/zh-hans/guide/error-handling/)
+- [阅读完整 CLI 参考](/statocysts/zh-hans/reference/cli/)
