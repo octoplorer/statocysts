@@ -1,13 +1,19 @@
 allowBuilds:
+  esbuild: true
+  sharp: true
   simple-git-hooks: true
 catalogMode: prefer
 minimumReleaseAgeExclude:
   - '@types/node@25.9.0'
+  - astro@7.2.1
 
 shellEmulator: true
 
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - chokidar@4.0.3
 packages:
+  - docs
   - packages/*
 catalogs:
   build:
@@ -30,6 +36,14 @@ catalogs:
     taze: ^20.0.1
     typescript: ^6.0.3
     vitest: ^4.1.10
+  docs:
+    '@astrojs/check': ^0.9.10
+    '@astrojs/starlight': ^0.41.7
+    astro: ^7.2.1
+    sharp: ^0.35.3
+    starlight-links-validator: ^0.25.2
+    starlight-sidebar-topics: ^0.8.0
+    starlight-theme-rapide: ^0.5.2
   lib:
     defu: ^6.1.7
     emailjs: ^5.0.2

@@ -1,0 +1,42 @@
+---
+title: 通知提供方
+description: 选择通知提供方并构建经过测试的通知目标 URL。
+---
+
+import ProviderGrid from '../../../../components/ProviderGrid.astro'
+
+通知目标的协议用于选择通知提供方。你可以先比较以下内置集成，再打开对应页面查看经过测试的 URL 格式、查询参数和直接调用选项。运行时和浏览器安全限制请参阅[兼容性](/statocysts/zh-hans/reference/compatibility/)。
+
+## 即时通讯
+
+将通知发送到协作平台、社区和机器人会话。
+
+<ProviderGrid category="chat" locale="zh-hans" />
+
+## 推送服务
+
+通过专用推送服务将提醒直接投递到个人设备。
+
+<ProviderGrid category="push" locale="zh-hans" />
+
+## 专用集成
+
+将通知连接到 SMTP、通用 HTTP 端点或本地控制台输出。
+
+<ProviderGrid category="specialized" locale="zh-hans" />
+
+## 通知目标安全
+
+大多数通知目标都包含凭据。请将完整 URL 保存在环境变量或密钥存储中，从错误和日志里移除敏感内容，并在凭据暴露后立即轮换。
+
+## 通知运行时 API 和直接调用
+
+使用顶层 `send()` 或 `createNotifier()` 可以获得协议分发和统一的批量错误。需要提供方专属选项时，请导入具名通知提供方：
+
+```ts
+import { slack } from 'statocysts'
+
+await slack.send(process.env.SLACK_TARGET!, notification, {
+  fetchOptions: { timeout: 5000 },
+})
+```

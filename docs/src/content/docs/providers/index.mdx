@@ -1,0 +1,42 @@
+---
+title: Providers
+description: Choose a notification provider and build a tested target URL.
+---
+
+import ProviderGrid from '../../../components/ProviderGrid.astro'
+
+A notification target’s protocol selects its provider. Compare the built-in integrations below, then open a provider page for tested URL formats, query parameters, and direct-call options. For runtime and browser security constraints, see [Compatibility](/statocysts/reference/compatibility/).
+
+## Chat
+
+Send notifications to collaboration platforms, communities, and bot conversations.
+
+<ProviderGrid category="chat" locale="en" />
+
+## Push
+
+Deliver alerts directly to personal devices through dedicated push services.
+
+<ProviderGrid category="push" locale="en" />
+
+## Specialized
+
+Connect notifications to SMTP, generic HTTP endpoints, or local console output.
+
+<ProviderGrid category="specialized" locale="en" />
+
+## Target security
+
+Most provider targets contain credentials. Keep complete URLs in environment variables or secret stores, redact them in errors and logs, and rotate a credential immediately if it is exposed.
+
+## Runtime APIs and direct calls
+
+Use top-level `send()` or `createNotifier()` for protocol routing and consistent batch errors. Import a named provider when you need provider-specific options:
+
+```ts
+import { slack } from 'statocysts'
+
+await slack.send(process.env.SLACK_TARGET!, notification, {
+  fetchOptions: { timeout: 5000 },
+})
+```

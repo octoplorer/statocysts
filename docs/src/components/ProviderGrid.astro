@@ -1,0 +1,291 @@
+---
+import { Badge, Icon } from '@astrojs/starlight/components'
+
+type Category = 'chat' | 'push' | 'specialized'
+type Locale = 'en' | 'zh-hans'
+type LocalizedText = Record<Locale, string>
+
+interface Provider {
+  category: Category
+  description: LocalizedText
+  name: LocalizedText
+  protocols: string[]
+  runtime: 'node' | 'universal'
+  slug: string
+}
+
+interface Props {
+  category: Category
+  locale: Locale
+}
+
+const providers: Provider[] = [
+  {
+    category: 'chat',
+    description: {
+      en: 'Use incoming webhooks or a bot token to notify Slack channels.',
+      'zh-hans': '通过传入 Webhook 或机器人令牌向 Slack 频道发送通知。',
+    },
+    name: { en: 'Slack', 'zh-hans': 'Slack' },
+    protocols: ['slack:'],
+    runtime: 'universal',
+    slug: 'slack',
+  },
+  {
+    category: 'chat',
+    description: {
+      en: 'Post webhook notifications to Discord channels.',
+      'zh-hans': '通过 Webhook 向 Discord 频道发送通知。',
+    },
+    name: { en: 'Discord', 'zh-hans': 'Discord' },
+    protocols: ['discord:'],
+    runtime: 'universal',
+    slug: 'discord',
+  },
+  {
+    category: 'chat',
+    description: {
+      en: 'Deliver text and cards to Lark or Feishu incoming webhooks.',
+      'zh-hans': '通过传入 Webhook 向飞书或 Lark 发送文本和卡片。',
+    },
+    name: { en: 'Lark and Feishu', 'zh-hans': '飞书和 Lark' },
+    protocols: ['lark:'],
+    runtime: 'universal',
+    slug: 'lark',
+  },
+  {
+    category: 'chat',
+    description: {
+      en: 'Notify QQ users and groups through an official bot.',
+      'zh-hans': '通过官方机器人向 QQ 用户或群发送通知。',
+    },
+    name: { en: 'QQ Bot', 'zh-hans': 'QQ 机器人' },
+    protocols: ['qqbot:'],
+    runtime: 'universal',
+    slug: 'qq-bot',
+  },
+  {
+    category: 'chat',
+    description: {
+      en: 'Send bot messages to chats, channels, and forum topics.',
+      'zh-hans': '向会话、频道和论坛话题发送机器人消息。',
+    },
+    name: { en: 'Telegram', 'zh-hans': 'Telegram' },
+    protocols: ['telegram:'],
+    runtime: 'universal',
+    slug: 'telegram',
+  },
+  {
+    category: 'push',
+    description: {
+      en: 'Push notifications directly to Apple devices through Bark.',
+      'zh-hans': '通过 Bark 将通知直接推送到 Apple 设备。',
+    },
+    name: { en: 'Bark', 'zh-hans': 'Bark' },
+    protocols: ['bark:'],
+    runtime: 'universal',
+    slug: 'bark',
+  },
+  {
+    category: 'push',
+    description: {
+      en: 'Forward alerts through Server Chan v3 or Turbo.',
+      'zh-hans': '通过 Server 酱 v3 或 Turbo 转发提醒。',
+    },
+    name: { en: 'Server Chan', 'zh-hans': 'Server 酱' },
+    protocols: ['server-chan:'],
+    runtime: 'universal',
+    slug: 'server-chan',
+  },
+  {
+    category: 'specialized',
+    description: {
+      en: 'Deliver email through SMTP from the Node.js runtime.',
+      'zh-hans': '在 Node.js 运行时中通过 SMTP 投递邮件。',
+    },
+    name: { en: 'Email', 'zh-hans': '邮件' },
+    protocols: ['email:'],
+    runtime: 'node',
+    slug: 'email',
+  },
+  {
+    category: 'specialized',
+    description: {
+      en: 'Post notification payloads to HTTP or HTTPS endpoints.',
+      'zh-hans': '将通知载荷发送到 HTTP 或 HTTPS 端点。',
+    },
+    name: { en: 'JSON endpoints', 'zh-hans': 'JSON 端点' },
+    protocols: ['json:', 'jsons:'],
+    runtime: 'universal',
+    slug: 'json',
+  },
+  {
+    category: 'specialized',
+    description: {
+      en: 'Write formatted notifications to local console output.',
+      'zh-hans': '将格式化后的通知写入本地控制台。',
+    },
+    name: { en: 'Logger', 'zh-hans': '日志' },
+    protocols: ['logger:'],
+    runtime: 'universal',
+    slug: 'logger',
+  },
+]
+
+const { category, locale } = Astro.props
+const baseUrl = `${import.meta.env.BASE_URL.replace(/\/?$/, '')}/`
+const localePrefix = locale === 'zh-hans' ? 'zh-hans/' : ''
+const runtimeLabels = {
+  node: locale === 'zh-hans' ? '仅 Node.js' : 'Node.js only',
+  universal: locale === 'zh-hans' ? 'Node.js · 浏览器' : 'Node.js · Browser',
+}
+const items = providers.filter(provider => provider.category === category)
+---
+
+<ul class="provider-grid not-content">
+  {
+    items.map(provider => (
+      <li>
+        <a class="provider-card" href={`${baseUrl}${localePrefix}providers/${provider.slug}/`}>
+          <span class="provider-card__heading">
+            <span class="provider-card__name">{provider.name[locale]}</span>
+            <Icon class="provider-card__arrow rtl:flip" name="right-arrow" size="1.125rem" />
+          </span>
+          <span class="provider-card__description">{provider.description[locale]}</span>
+          <span class="provider-card__meta">
+            <span class="provider-card__protocols">
+              {provider.protocols.map(protocol => <Badge text={protocol} />)}
+            </span>
+            <span class="provider-card__runtime">{runtimeLabels[provider.runtime]}</span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .provider-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    list-style: none;
+    margin: 1.25rem 0 2.5rem;
+    padding: 0;
+  }
+
+  .provider-grid li {
+    min-width: 0;
+  }
+
+  .provider-card {
+    background: var(--statocysts-surface-raised);
+    border: 1px solid var(--sl-rapide-ui-border-color);
+    border-radius: 0.75rem;
+    color: var(--sl-color-gray-2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-sizing: border-box;
+    height: 100%;
+    min-width: 0;
+    padding: 1.125rem;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .provider-card__heading,
+  .provider-card__meta,
+  .provider-card__protocols {
+    align-items: center;
+    display: flex;
+  }
+
+  .provider-card__heading {
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-lg);
+    font-weight: 600;
+    gap: 0.75rem;
+    justify-content: space-between;
+    line-height: var(--sl-line-height-headings);
+  }
+
+  .provider-card__arrow {
+    color: var(--sl-color-gray-3);
+    flex: 0 0 auto;
+  }
+
+  .provider-card__description {
+    flex: 1;
+    font-size: var(--sl-text-sm);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .provider-card__meta {
+    flex-wrap: wrap;
+    gap: 0.625rem 0.75rem;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .provider-card__protocols {
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .provider-card__runtime {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+  }
+
+  .provider-card:focus-visible {
+    outline: 2px solid var(--sl-color-accent-high);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .provider-card {
+      transition-duration: 150ms;
+      transition-property: background-color, border-color;
+      transition-timing-function: ease-out;
+    }
+
+    .provider-card__arrow {
+      transition: transform 150ms ease-out;
+    }
+
+    .provider-card:is(:hover, :focus-visible) .provider-card__arrow {
+      transform: translateX(0.2rem);
+    }
+  }
+
+  .provider-card:is(:hover, :focus-visible) {
+    background: var(--statocysts-surface-interactive);
+    border-color: var(--sl-color-accent);
+  }
+
+  .provider-card:is(:hover, :focus-visible) .provider-card__heading,
+  .provider-card:is(:hover, :focus-visible) .provider-card__arrow {
+    color: var(--sl-color-accent-high);
+  }
+
+  @media (max-width: 33.999rem) {
+    .provider-card__meta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 34rem) {
+    .provider-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (forced-colors: active) {
+    .provider-card {
+      border-color: CanvasText;
+    }
+  }
+</style>
