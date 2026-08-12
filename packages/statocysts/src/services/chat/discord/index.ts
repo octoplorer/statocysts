@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
 import defu from 'defu'
-import z from 'zod'
+import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { assert, getValidateQuery } from '#/utils'
@@ -9,16 +9,16 @@ interface DiscordOptions {
   fetchOptions?: FetchOptions
 }
 
-const querySchema = z.object({
-  avatar_url: z.string().optional(),
-  username: z.string().optional(),
+const querySchema = v.object({
+  avatar_url: v.optional(v.string()),
+  username: v.optional(v.string()),
 
-  wait: z.string().transform((val) => {
+  wait: v.optional(v.pipe(v.string(), v.transform((val) => {
     if (val === 'false' || val === '0' || val === '') {
       return false
     }
     return true
-  }).optional(),
+  }))),
 })
 
 export const discord = defineProvider('discord:', {
@@ -31,13 +31,13 @@ export const discord = defineProvider('discord:', {
     assert(url.username, 'Webhook ID is required')
     assert(url.password, 'Webhook token is required')
 
-    const queryResult = getValidateQuery(url, querySchema.safeParse)
+    const queryResult = getValidateQuery(url, data => v.safeParse(querySchema, data))
 
     if (!queryResult.success) {
       throw new Error('Invalid discord query')
     }
 
-    const { wait, ...query } = queryResult.data
+    const { wait, ...query } = queryResult.output
 
     const headers = new Headers([
       ['Content-Type', 'application/json'],

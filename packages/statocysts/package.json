@@ -75,7 +75,7 @@
     "emailjs": "catalog:lib",
     "ofetch": "catalog:lib",
     "ufo": "catalog:lib",
-    "zod": "catalog:lib"
+    "valibot": "catalog:lib"
   },
   "devDependencies": {
     "@types/node": "catalog:types",

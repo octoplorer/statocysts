@@ -1,6 +1,6 @@
 import type { SMTPConnectionOptions } from 'emailjs'
 import type { SmtpPayload } from '#/core/transports/smtp'
-import z from 'zod'
+import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { smtp } from '#/core/transports/smtp'
 import { assert } from '#/utils'
@@ -12,12 +12,12 @@ export interface EmailOptions {
   smtpConfig?: Partial<SMTPConnectionOptions>
 }
 
-// Zod schema for validating single-value query parameters
-const queryParamSchema = z.object({
-  from: z.string().email().optional(),
-  subject: z.string().optional(),
-  ssl: z.string().transform(val => val === 'true').optional(),
-  tls: z.string().transform(val => val !== 'false').optional(),
+// Valibot schema for validating single-value query parameters
+const queryParamSchema = v.object({
+  from: v.optional(v.pipe(v.string(), v.email())),
+  subject: v.optional(v.string()),
+  ssl: v.optional(v.pipe(v.string(), v.transform(val => val === 'true'))),
+  tls: v.optional(v.pipe(v.string(), v.transform(val => val !== 'false'))),
 })
 
 export const email = defineProvider('email:', {
@@ -38,7 +38,7 @@ export const email = defineProvider('email:', {
     const tlsParam = url.searchParams.get('tls')
 
     // Validate single-value parameters
-    const queryResult = queryParamSchema.safeParse({
+    const queryResult = v.safeParse(queryParamSchema, {
       from: from || undefined,
       subject: subject || undefined,
       ssl: sslParam || undefined,
@@ -46,10 +46,11 @@ export const email = defineProvider('email:', {
     })
 
     if (!queryResult.success) {
-      throw new Error(`Invalid email query parameters: ${queryResult.error.message}`)
+      const message = v.flatten(queryResult.issues).root?.join('; ')
+      throw new Error(`Invalid email query parameters: ${message ?? 'validation failed'}`)
     }
 
-    const query = queryResult.data
+    const query = queryResult.output
 
     // Build SMTP client configuration
     const host = url.hostname

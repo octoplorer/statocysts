@@ -1,12 +1,12 @@
 import type { FetchOptions } from 'ofetch'
-import z from 'zod'
+import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
 import { escapeHtml, escapeMarkdown, getValidateQuery } from '#/utils'
 import { assert } from '#/utils/assert'
 
-export const telegramQuerySchema = z.object({
-  parse_mode: z.enum(['Markdown', 'MarkdownV2', 'HTML']).optional(),
+export const telegramQuerySchema = v.object({
+  parse_mode: v.optional(v.picklist(['Markdown', 'MarkdownV2', 'HTML'])),
 })
 
 export interface TelegramOptions {
@@ -36,13 +36,13 @@ export const telegram = defineProvider('telegram:', {
     const pathSegments = url.pathname.split('/').filter(Boolean)
     assert(pathSegments.length > 0, 'At least one chat ID is required')
 
-    const queryResult = getValidateQuery(url, telegramQuerySchema.safeParse)
+    const queryResult = getValidateQuery(url, data => v.safeParse(telegramQuerySchema, data))
 
     if (!queryResult.success) {
       throw new Error('Invalid telegram query')
     }
 
-    const query = queryResult.data
+    const query = queryResult.output
 
     // Bot token is in the username and password fields, because token contains `:` character
     const botToken = `${url.username}:${url.password}`
