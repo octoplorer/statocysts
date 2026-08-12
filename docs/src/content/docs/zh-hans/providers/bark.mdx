@@ -3,8 +3,16 @@ title: Bark
 description: 向一个或多个设备密钥发送 Bark 推送通知。
 ---
 
-协议：`bark:`  
-运行时：Node.js 和浏览器
+import ProviderMeta from '../../../../components/ProviderMeta.astro'
+
+<ProviderMeta
+  documentation={[
+    { href: 'https://bark.day.app/#/tutorial', label: 'Bark 使用教程' },
+  ]}
+  locale="zh-hans"
+  protocols={['bark:']}
+  runtime="universal"
+/>
 
 ## 通知目标格式
 

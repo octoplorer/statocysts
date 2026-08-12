@@ -3,8 +3,16 @@ title: Bark
 description: Send Bark push notifications to one or more device keys.
 ---
 
-Protocol: `bark:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
+
+<ProviderMeta
+  documentation={[
+    { href: 'https://bark.day.app/#/tutorial', label: 'Bark usage tutorial' },
+  ]}
+  locale="en"
+  protocols={['bark:']}
+  runtime="universal"
+/>
 
 ## Target format
 

@@ -3,8 +3,23 @@ title: Slack
 description: Send Slack notifications through an incoming webhook or bot token.
 ---
 
-Protocol: `slack:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
+
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/',
+      label: 'Incoming webhooks',
+    },
+    {
+      href: 'https://docs.slack.dev/reference/methods/chat.postMessage/',
+      label: 'chat.postMessage',
+    },
+  ]}
+  locale="en"
+  protocols={['slack:']}
+  runtime="universal"
+/>
 
 ## Incoming webhook target
 

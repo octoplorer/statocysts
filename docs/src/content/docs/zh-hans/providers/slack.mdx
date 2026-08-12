@@ -3,8 +3,23 @@ title: Slack
 description: 通过传入 Webhook 或机器人令牌发送 Slack 通知。
 ---
 
-协议：`slack:`  
-运行时：Node.js 和浏览器
+import ProviderMeta from '../../../../components/ProviderMeta.astro'
+
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/',
+      label: '传入 Webhook',
+    },
+    {
+      href: 'https://docs.slack.dev/reference/methods/chat.postMessage/',
+      label: 'chat.postMessage',
+    },
+  ]}
+  locale="zh-hans"
+  protocols={['slack:']}
+  runtime="universal"
+/>
 
 ## 传入 Webhook 通知目标
 

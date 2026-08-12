@@ -3,8 +3,19 @@ title: Discord
 description: 通过 Discord Webhook 发送通知。
 ---
 
-协议：`discord:`  
-运行时：Node.js 和浏览器
+import ProviderMeta from '../../../../components/ProviderMeta.astro'
+
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://docs.discord.com/developers/resources/webhook#execute-webhook',
+      label: 'Discord Webhook 资源',
+    },
+  ]}
+  locale="zh-hans"
+  protocols={['discord:']}
+  runtime="universal"
+/>
 
 ## 通知目标格式
 
