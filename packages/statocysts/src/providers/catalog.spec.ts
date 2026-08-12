@@ -10,6 +10,7 @@ const browserProviderNames = [
   'json',
   'jsons',
   'lark',
+  'logger',
   'qqbot',
   'serverChan',
   'slack',

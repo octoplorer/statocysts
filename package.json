@@ -7,7 +7,7 @@
   "scripts": {
     "up": "nlx taze",
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
-    "test": "pnpm --filter 'statocysts' run test",
+    "test": "pnpm --filter 'statocysts' run test && pnpm --filter '@statocysts/cli' run test",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
     "typecheck": "pnpm -r typecheck",

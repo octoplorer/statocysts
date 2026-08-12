@@ -62,8 +62,29 @@ await telegram.send(
 )
 ```
 
+### Debug with the logger provider
+
+```typescript
+import { send } from 'statocysts'
+
+await send('logger://', {
+  title: 'Hello World',
+  body: 'Printed to the console for development',
+})
+// [statocysts] Hello World
+// Printed to the console for development
+```
+
+The logger provider writes to the console without any network requests. Use `logger://?level=warn` (or `debug`/`error`) to pick the output level.
+
 ### Using the CLI
 
 ```bash
 stato -u "slack://webhook/xxx/yyy/zzz" -t "Hello World"
+```
+
+### Verify a URL before sending
+
+```bash
+stato verify -u "slack://webhook/xxx/yyy/zzz"
 ```
