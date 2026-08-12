@@ -21,7 +21,7 @@ hero:
         rel: me
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import { Card, CardGrid } from '@astrojs/starlight/components'
 
 <p class="home-eyebrow">One API · Unified delivery</p>
 
@@ -33,22 +33,23 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
 
 <div class="home-feature-grid">
   <CardGrid>
-    <Card title="Route by URL" icon="link">
-      Select a provider and recipient with a target such as <code>slack://…</code> or <code>email://…</code>.
+    <Card title="Unified targets" icon="link">
+      Describe providers and recipients with one consistent format.
     </Card>
-    <Card title="Deliver in parallel" icon="random">
-      Attempt every configured target concurrently instead of stopping after the first failure.
+    <Card title="Parallel delivery" icon="random">
+      Attempt every target concurrently without blocking the rest.
     </Card>
-    <Card title="Inspect every failure" icon="error">
-      Handle one <code>NotificationDeliveryError</code> with details for each unsuccessful target.
-    </Card>
-    <Card title="Run where you need it" icon="window">
-      Use the Node.js entry or a browser entry that excludes server-only providers.
+    <Card title="Collected failures" icon="error">
+      Return every failed delivery together for easier handling and diagnosis.
     </Card>
   </CardGrid>
 </div>
 
 ## From install to delivery
+
+```sh
+pnpm add statocysts
+```
 
 ```ts title="notify.ts"
 import { send } from 'statocysts'
@@ -59,58 +60,6 @@ await send(process.env.SLACK_TARGET!, {
 })
 ```
 
-Install with `pnpm add statocysts`, then keep complete target URLs in environment variables or a secret store.
+Keep complete target URLs in environment variables or a secret store.
 
-## Explore the documentation
-
-<div class="home-doc-grid">
-  <CardGrid>
-    <LinkCard
-      title="Get started"
-      description="Install the package and send your first notification."
-      href="/statocysts/getting-started/"
-    />
-    <LinkCard
-      title="Understand the core concepts"
-      description="Learn target URLs, notifier reuse, and batch error behavior."
-      href="/statocysts/guide/core-concepts/"
-    />
-    <LinkCard
-      title="Choose a provider"
-      description="Compare protocols, runtimes, and tested target formats."
-      href="/statocysts/providers/"
-    />
-    <LinkCard
-      title="Use the CLI"
-      description="Send and verify notification targets from a terminal."
-      href="/statocysts/reference/cli/"
-    />
-  </CardGrid>
-</div>
-
-## Run in production
-
-<div class="home-doc-grid">
-  <CardGrid>
-    <LinkCard
-      title="Protect notification credentials"
-      description="Keep targets out of browser bundles, logs, and source control."
-      href="/statocysts/guide/security/"
-    />
-    <LinkCard
-      title="Notify from GitHub Actions"
-      description="Report deployment results from CI using repository secrets."
-      href="/statocysts/recipes/github-actions/"
-    />
-    <LinkCard
-      title="Connect browser events safely"
-      description="Put privileged delivery behind an authenticated server endpoint."
-      href="/statocysts/recipes/browser-proxy/"
-    />
-    <LinkCard
-      title="Troubleshoot a delivery"
-      description="Isolate target, provider, transport, timeout, and CORS failures."
-      href="/statocysts/guide/troubleshooting/"
-    />
-  </CardGrid>
-</div>
+[Read the complete getting started guide →](/statocysts/getting-started/)

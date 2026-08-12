@@ -105,23 +105,7 @@ html[data-has-hero] .hero .tagline {
   line-height: 1.6;
 }
 
-.home-doc-grid .sl-link-card {
-  background: var(--statocysts-surface-raised);
-}
-
-.home-doc-grid .sl-link-card:hover,
-.home-doc-grid .sl-link-card:focus-within {
-  background: var(--statocysts-surface-interactive);
-  border-color: var(--sl-color-accent);
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .home-doc-grid .sl-link-card {
-    transition-duration: 150ms;
-    transition-property: background-color, border-color;
-    transition-timing-function: ease-out;
-  }
-
   .sl-link-button {
     transition-duration: 150ms;
     transition-property: background-color, border-color, color, transform;
@@ -134,6 +118,10 @@ html[data-has-hero] .hero .tagline {
 }
 
 @media (min-width: 50rem) {
+  .home-feature-grid .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   html[data-has-hero] .hero {
     grid-template-columns: minmax(0, 6fr) minmax(18rem, 5fr);
   }
