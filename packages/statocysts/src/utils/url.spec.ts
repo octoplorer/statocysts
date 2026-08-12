@@ -1,80 +1,80 @@
+import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import { z } from 'zod'
 import { getValidateQuery } from './url'
 
 describe('getValidateQuery', () => {
-  it('should parse and validate query params with zod schema', () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.coerce.number(),
+  it('should parse and validate query params with valibot schema', () => {
+    const schema = v.object({
+      name: v.string(),
+      age: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number()),
     })
 
     const url = 'https://example.com?name=John&age=25'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ name: 'John', age: 25 })
   })
 
   it('should work with URL object', () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.coerce.number(),
+    const schema = v.object({
+      name: v.string(),
+      age: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number()),
     })
 
     const url = new URL('https://example.com?name=Jane&age=30')
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ name: 'Jane', age: 30 })
   })
 
-  it('should handle optional fields with zod', () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.coerce.number().optional(),
-      email: z.string().email().optional(),
+  it('should handle optional fields with valibot', () => {
+    const schema = v.object({
+      name: v.string(),
+      age: v.optional(v.pipe(v.unknown(), v.transform(input => Number(input)), v.number())),
+      email: v.optional(v.pipe(v.string(), v.email())),
     })
 
     const url = 'https://example.com?name=Alice'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ name: 'Alice' })
   })
 
-  it('should handle default values with zod', () => {
-    const schema = z.object({
-      name: z.string(),
-      role: z.string().default('user'),
-      isActive: z.coerce.boolean().default(true),
+  it('should handle default values with valibot', () => {
+    const schema = v.object({
+      name: v.string(),
+      role: v.optional(v.string(), 'user'),
+      isActive: v.optional(v.pipe(v.unknown(), v.transform(input => Boolean(input)), v.boolean()), true),
     })
 
     const url = 'https://example.com?name=Bob'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ name: 'Bob', role: 'user', isActive: true })
   })
 
   it('should validate array query params', () => {
-    const schema = z.object({
-      tags: z.array(z.string()),
+    const schema = v.object({
+      tags: v.array(v.string()),
     })
 
     const url = 'https://example.com?tags=foo&tags=bar&tags=baz'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ tags: ['foo', 'bar', 'baz'] })
   })
 
   it('should handle complex nested schemas', () => {
-    const schema = z.object({
-      user: z.string(),
-      settings: z.object({
-        theme: z.enum(['light', 'dark']).default('light'),
-        notifications: z.coerce.boolean().default(true),
-      }).optional().default({ theme: 'light', notifications: true }),
+    const schema = v.object({
+      user: v.string(),
+      settings: v.optional(v.object({
+        theme: v.optional(v.picklist(['light', 'dark']), 'light'),
+        notifications: v.optional(v.pipe(v.unknown(), v.transform(input => Boolean(input)), v.boolean()), true),
+      }), { theme: 'light', notifications: true }),
     })
 
     const url = 'https://example.com?user=admin'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({
       user: 'admin',
@@ -83,42 +83,42 @@ describe('getValidateQuery', () => {
   })
 
   it('should throw validation error for invalid data', () => {
-    const schema = z.object({
-      age: z.coerce.number().min(18),
+    const schema = v.object({
+      age: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number(), v.minValue(18)),
     })
 
     const url = 'https://example.com?age=15'
 
     expect(() => {
-      getValidateQuery(url, data => schema.parse(data))
+      getValidateQuery(url, data => v.parse(schema, data))
     }).toThrow()
   })
 
   it('should throw error for missing required fields', () => {
-    const schema = z.object({
-      name: z.string(),
-      email: z.string().email(),
+    const schema = v.object({
+      name: v.string(),
+      email: v.pipe(v.string(), v.email()),
     })
 
     const url = 'https://example.com?name=John'
 
     expect(() => {
-      getValidateQuery(url, data => schema.parse(data))
+      getValidateQuery(url, data => v.parse(schema, data))
     }).toThrow()
   })
 
   it('should handle safeParse for graceful error handling', () => {
-    const schema = z.object({
-      email: z.string().email(),
-      age: z.coerce.number().min(0).max(150),
+    const schema = v.object({
+      email: v.pipe(v.string(), v.email()),
+      age: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number(), v.minValue(0), v.maxValue(150)),
     })
 
     const url = 'https://example.com?email=invalid&age=200'
-    const result = getValidateQuery(url, data => schema.safeParse(data))
+    const result = getValidateQuery(url, data => v.safeParse(schema, data))
 
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toBeInstanceOf(z.ZodError)
+      expect(result.issues.length).toBeGreaterThan(0)
     }
   })
 
@@ -141,86 +141,87 @@ describe('getValidateQuery', () => {
   })
 
   it('should handle empty query params', () => {
-    const schema = z.object({}).passthrough()
+    const schema = v.looseObject({})
 
     const url = 'https://example.com'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({})
   })
 
   it('should handle number coercion', () => {
-    const schema = z.object({
-      page: z.coerce.number().int().positive(),
-      limit: z.coerce.number().int().positive().max(100),
-      price: z.coerce.number(),
+    const schema = v.object({
+      page: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number(), v.integer(), v.gtValue(0)),
+      limit: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number(), v.integer(), v.gtValue(0), v.maxValue(100)),
+      price: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number()),
     })
 
     const url = 'https://example.com?page=2&limit=50&price=99.99'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ page: 2, limit: 50, price: 99.99 })
   })
 
   it('should handle boolean coercion', () => {
-    const schema = z.object({
-      isActive: z.coerce.boolean(),
-      hasAccess: z.coerce.boolean(),
+    const schema = v.object({
+      isActive: v.pipe(v.unknown(), v.transform(input => Boolean(input)), v.boolean()),
+      hasAccess: v.pipe(v.unknown(), v.transform(input => Boolean(input)), v.boolean()),
     })
 
     const url = 'https://example.com?isActive=true&hasAccess=1'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ isActive: true, hasAccess: true })
   })
 
   it('should handle enum validation', () => {
-    const schema = z.object({
-      status: z.enum(['active', 'inactive', 'pending']),
-      priority: z.enum(['low', 'medium', 'high']),
+    const schema = v.object({
+      status: v.picklist(['active', 'inactive', 'pending']),
+      priority: v.picklist(['low', 'medium', 'high']),
     })
 
     const url = 'https://example.com?status=active&priority=high'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({ status: 'active', priority: 'high' })
   })
 
   it('should throw error for invalid enum value', () => {
-    const schema = z.object({
-      status: z.enum(['active', 'inactive']),
+    const schema = v.object({
+      status: v.picklist(['active', 'inactive']),
     })
 
     const url = 'https://example.com?status=unknown'
 
     expect(() => {
-      getValidateQuery(url, data => schema.parse(data))
+      getValidateQuery(url, data => v.parse(schema, data))
     }).toThrow()
   })
 
   it('should transform data after validation', () => {
-    const schema = z.object({
-      date: z.string().transform(val => new Date(val)),
-      amount: z.coerce.number().transform(val => val * 100),
+    const schema = v.object({
+      date: v.pipe(v.string(), v.transform(val => new Date(val))),
+      amount: v.pipe(v.unknown(), v.transform(input => Number(input)), v.number(), v.transform(val => val * 100)),
     })
 
     const url = 'https://example.com?date=2023-01-01&amount=10.5'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result.date).toBeInstanceOf(Date)
     expect(result.amount).toBe(1050)
   })
 
-  it('should work with zod refine for custom validation', () => {
-    const schema = z.object({
-      password: z.string().min(8),
-      confirmPassword: z.string(),
-    }).refine(data => data.password === data.confirmPassword, {
-      message: 'Passwords do not match',
-    })
+  it('should work with valibot check for custom validation', () => {
+    const schema = v.pipe(
+      v.object({
+        password: v.pipe(v.string(), v.minLength(8)),
+        confirmPassword: v.string(),
+      }),
+      v.check(data => data.password === data.confirmPassword, 'Passwords do not match'),
+    )
 
     const url = 'https://example.com?password=secret123&confirmPassword=secret123'
-    const result = getValidateQuery(url, data => schema.parse(data))
+    const result = getValidateQuery(url, data => v.parse(schema, data))
 
     expect(result).toEqual({
       password: 'secret123',
@@ -228,16 +229,19 @@ describe('getValidateQuery', () => {
     })
   })
 
-  it('should throw error when refine validation fails', () => {
-    const schema = z.object({
-      password: z.string(),
-      confirmPassword: z.string(),
-    }).refine(data => data.password === data.confirmPassword)
+  it('should throw error when check validation fails', () => {
+    const schema = v.pipe(
+      v.object({
+        password: v.string(),
+        confirmPassword: v.string(),
+      }),
+      v.check(data => data.password === data.confirmPassword),
+    )
 
     const url = 'https://example.com?password=pass1&confirmPassword=pass2'
 
     expect(() => {
-      getValidateQuery(url, data => schema.parse(data))
+      getValidateQuery(url, data => v.parse(schema, data))
     }).toThrow()
   })
 })

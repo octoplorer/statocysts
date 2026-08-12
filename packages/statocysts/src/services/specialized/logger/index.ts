@@ -1,12 +1,12 @@
 import type { LoggerLevel } from './transport'
-import z from 'zod'
+import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { loggerTransport } from './transport'
 
-const levelSchema = z.enum(['debug', 'info', 'warn', 'error'])
+const levelSchema = v.picklist(['debug', 'info', 'warn', 'error'])
 
-const querySchema = z.object({
-  level: levelSchema.optional(),
+const querySchema = v.object({
+  level: v.optional(levelSchema),
 })
 
 /**
@@ -20,7 +20,7 @@ export const logger = defineProvider('logger:', {
   async prepare(ctx) {
     const { url, message } = ctx
 
-    const queryResult = querySchema.safeParse({
+    const queryResult = v.safeParse(querySchema, {
       level: url.searchParams.get('level') || undefined,
     })
 
@@ -29,7 +29,7 @@ export const logger = defineProvider('logger:', {
     }
 
     return {
-      level: (queryResult.data.level ?? 'info') as LoggerLevel,
+      level: (queryResult.output.level ?? 'info') as LoggerLevel,
       title: message.title,
       body: message.body,
     }
