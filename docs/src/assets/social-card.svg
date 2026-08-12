@@ -22,8 +22,8 @@
   <text x="96" y="260" fill="#eee9e6" font-family="system-ui, sans-serif" font-size="82" font-weight="650" letter-spacing="-3">Statocysts</text>
   <text x="96" y="330" fill="#b8b0ac" font-family="system-ui, sans-serif" font-size="32">The sensory organ for your infrastructure.</text>
   <g transform="translate(96 402)">
-    <rect width="535" height="54" rx="27" fill="#182a22" stroke="#3b8468"/>
-    <text x="26" y="36" fill="#83d5b6" font-family="ui-monospace, monospace" font-size="22">One API · Ten providers · Two runtimes</text>
+    <rect width="395" height="54" rx="27" fill="#182a22" stroke="#3b8468"/>
+    <text x="26" y="36" fill="#83d5b6" font-family="ui-monospace, monospace" font-size="22">One API · Unified delivery</text>
   </g>
   <g stroke="#3f5149" stroke-width="3">
     <path d="M836 226c-55-29-92-67-125-105"/><path d="M940 215c34-42 72-73 110-99"/>
