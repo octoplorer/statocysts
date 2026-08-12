@@ -1,0 +1,21 @@
+{
+  "name": "@statocysts/docs",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "catalog:docs",
+    "astro": "catalog:docs",
+    "sharp": "catalog:docs"
+  },
+  "devDependencies": {
+    "@astrojs/check": "catalog:docs",
+    "typescript": "catalog:dev"
+  }
+}

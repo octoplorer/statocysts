@@ -7,6 +7,10 @@
   "scripts": {
     "up": "nlx taze",
     "build": "pnpm --filter 'statocysts' run build && pnpm --filter '@statocysts/cli' run build",
+    "docs:dev": "pnpm --filter '@statocysts/docs' run dev",
+    "docs:build": "pnpm --filter '@statocysts/docs' run build",
+    "docs:preview": "pnpm --filter '@statocysts/docs' run preview",
+    "docs:check": "pnpm --filter '@statocysts/docs' run typecheck && pnpm run docs:build",
     "test": "pnpm --filter 'statocysts' run test && pnpm --filter '@statocysts/cli' run test",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
