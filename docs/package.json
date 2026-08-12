@@ -13,7 +13,8 @@
     "@astrojs/starlight": "catalog:docs",
     "astro": "catalog:docs",
     "sharp": "catalog:docs",
-    "starlight-links-validator": "catalog:docs"
+    "starlight-links-validator": "catalog:docs",
+    "starlight-theme-rapide": "catalog:docs"
   },
   "devDependencies": {
     "@astrojs/check": "catalog:docs",

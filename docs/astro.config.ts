@@ -1,6 +1,7 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import starlightLinksValidator from 'starlight-links-validator'
+import starlightThemeRapide from 'starlight-theme-rapide'
 
 export default defineConfig({
   site: 'https://octoplorer.github.io',
@@ -8,10 +9,13 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Statocysts',
-      plugins: [starlightLinksValidator({
-        errorOnInconsistentLocale: true,
-        sameSitePolicy: 'error',
-      })],
+      plugins: [
+        starlightThemeRapide(),
+        starlightLinksValidator({
+          errorOnInconsistentLocale: true,
+          sameSitePolicy: 'error',
+        }),
+      ],
       defaultLocale: 'root',
       locales: {
         'root': { label: 'English', lang: 'en' },

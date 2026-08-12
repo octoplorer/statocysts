@@ -42,6 +42,7 @@ catalogs:
     astro: ^7.2.1
     sharp: ^0.35.3
     starlight-links-validator: ^0.25.2
+    starlight-theme-rapide: ^0.5.2
   lib:
     defu: ^6.1.7
     emailjs: ^5.0.2
