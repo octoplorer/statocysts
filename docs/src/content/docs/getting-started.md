@@ -66,4 +66,6 @@ stato verify -u "slack://webhook/xxx/yyy/zzz"
 - [Understand notification targets and notifiers](/statocysts/guide/core-concepts/)
 - [Choose and configure a provider](/statocysts/providers/)
 - [Handle partial delivery failures](/statocysts/guide/error-handling/)
+- [Protect notification credentials](/statocysts/guide/security/)
+- [Follow a production recipe](/statocysts/recipes/github-actions/)
 - [Read the complete CLI reference](/statocysts/reference/cli/)

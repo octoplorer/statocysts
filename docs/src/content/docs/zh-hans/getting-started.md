@@ -66,4 +66,6 @@ stato verify -u "slack://webhook/xxx/yyy/zzz"
 - [了解通知目标和通知器](/statocysts/zh-hans/guide/core-concepts/)
 - [选择并配置通知提供方](/statocysts/zh-hans/providers/)
 - [处理部分投递失败](/statocysts/zh-hans/guide/error-handling/)
+- [保护通知凭据](/statocysts/zh-hans/guide/security/)
+- [使用生产配方](/statocysts/zh-hans/recipes/github-actions/)
 - [阅读完整 CLI 参考](/statocysts/zh-hans/reference/cli/)

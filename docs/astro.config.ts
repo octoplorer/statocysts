@@ -78,6 +78,17 @@ export default defineConfig({
             { slug: 'guide/sending-notifications' },
             { slug: 'guide/browser' },
             { slug: 'guide/error-handling' },
+            { slug: 'guide/security' },
+            { slug: 'guide/troubleshooting' },
+          ],
+        },
+        {
+          label: 'Recipes',
+          translations: { 'zh-CN': '配方' },
+          items: [
+            { slug: 'recipes/github-actions' },
+            { slug: 'recipes/multi-target-delivery' },
+            { slug: 'recipes/browser-proxy' },
           ],
         },
         {
@@ -124,6 +135,7 @@ export default defineConfig({
           items: [
             { slug: 'reference/api' },
             { slug: 'reference/cli' },
+            { slug: 'reference/compatibility' },
           ],
         },
       ],

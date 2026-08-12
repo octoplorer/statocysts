@@ -87,3 +87,30 @@ await send(process.env.SLACK_TARGET!, {
     />
   </CardGrid>
 </div>
+
+## 用于生产环境
+
+<div class="home-doc-grid">
+  <CardGrid>
+    <LinkCard
+      title="保护通知凭据"
+      description="避免通知目标进入浏览器产物、日志和源代码仓库。"
+      href="/statocysts/zh-hans/guide/security/"
+    />
+    <LinkCard
+      title="从 GitHub Actions 发送通知"
+      description="通过仓库密钥报告 CI 中的部署结果。"
+      href="/statocysts/zh-hans/recipes/github-actions/"
+    />
+    <LinkCard
+      title="安全地连接浏览器事件"
+      description="将特权投递放在经过认证的服务端接口之后。"
+      href="/statocysts/zh-hans/recipes/browser-proxy/"
+    />
+    <LinkCard
+      title="排查投递问题"
+      description="隔离通知目标、提供方、传输、超时和 CORS 问题。"
+      href="/statocysts/zh-hans/guide/troubleshooting/"
+    />
+  </CardGrid>
+</div>
