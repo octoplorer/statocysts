@@ -6,6 +6,8 @@ description: 通过 Server 酱 3 或 Turbo 发送通知。
 协议：`server-chan:`  
 运行时：Node.js 和浏览器
 
+官方文档：[Server 酱 3 API](https://doc.sc3.ft07.com/zh/serverchan3/server/api)、[Server 酱 Turbo](https://sct.ftqq.com/sendkey/)
+
 ## Server 酱 3
 
 ```text

@@ -6,6 +6,8 @@ description: 通过传入 Webhook 或机器人令牌发送 Slack 通知。
 协议：`slack:`  
 运行时：Node.js 和浏览器
 
+官方文档：[传入 Webhook](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)、[`chat.postMessage`](https://docs.slack.dev/reference/methods/chat.postMessage/)
+
 ## 传入 Webhook 通知目标
 
 ```text

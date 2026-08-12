@@ -6,6 +6,8 @@ description: Send notifications through Server Chan 3 or Server Chan Turbo.
 Protocol: `server-chan:`  
 Runtime: Node.js and browser
 
+Official documentation: [Server Chan 3 API](https://doc.sc3.ft07.com/zh/serverchan3/server/api), [Server Chan Turbo](https://sct.ftqq.com/sendkey/)
+
 ## Server Chan 3
 
 ```text

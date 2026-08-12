@@ -6,6 +6,8 @@ description: Send notifications through a Discord webhook.
 Protocol: `discord:`  
 Runtime: Node.js and browser
 
+Official documentation: [Discord webhook resource](https://docs.discord.com/developers/resources/webhook#execute-webhook)
+
 ## Target format
 
 ```text

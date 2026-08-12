@@ -6,6 +6,8 @@ description: 通过已签名或未签名的飞书与 Lark Webhook 发送通知�
 协议：`lark:`  
 运行时：Node.js 和浏览器
 
+官方文档：[Lark 自定义机器人](https://open.larksuite.com/document/client-docs/bot-v3/add-custom-bot?lang=en-US)、[飞书自定义机器人](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot?lang=zh-CN)
+
 ## 通知目标格式
 
 ```text

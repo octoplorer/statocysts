@@ -6,6 +6,8 @@ description: 通过 Discord Webhook 发送通知。
 协议：`discord:`  
 运行时：Node.js 和浏览器
 
+官方文档：[Discord Webhook 资源](https://docs.discord.com/developers/resources/webhook#execute-webhook)
+
 ## 通知目标格式
 
 ```text

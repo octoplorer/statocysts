@@ -6,6 +6,8 @@ description: 通过 Telegram Bot API 向会话、频道或话题发送通知。
 协议：`telegram:`  
 运行时：Node.js 和浏览器
 
+官方文档：[Bot API `sendMessage`](https://core.telegram.org/bots/api#sendmessage)
+
 ## 通知目标格式
 
 ```text

@@ -6,6 +6,8 @@ description: 向用户或群 OpenID 发送 QQ 机器人通知。
 协议：`qqbot:`  
 运行时：Node.js 和浏览器
 
+官方文档：[发送单聊消息](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_messages.post.html)、[发送群聊消息](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html)
+
 ## 用户通知目标
 
 ```text

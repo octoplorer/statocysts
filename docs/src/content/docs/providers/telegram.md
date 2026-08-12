@@ -6,6 +6,8 @@ description: Send Telegram Bot API notifications to a chat, channel, or topic.
 Protocol: `telegram:`  
 Runtime: Node.js and browser
 
+Official documentation: [Bot API `sendMessage`](https://core.telegram.org/bots/api#sendmessage)
+
 ## Target format
 
 ```text

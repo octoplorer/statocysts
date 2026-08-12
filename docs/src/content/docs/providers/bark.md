@@ -6,6 +6,8 @@ description: Send Bark push notifications to one or more device keys.
 Protocol: `bark:`  
 Runtime: Node.js and browser
 
+Official documentation: [Bark usage tutorial](https://bark.day.app/#/tutorial)
+
 ## Target format
 
 ```text

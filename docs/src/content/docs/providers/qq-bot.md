@@ -6,6 +6,8 @@ description: Send QQ Bot notifications to a user or group OpenID.
 Protocol: `qqbot:`  
 Runtime: Node.js and browser
 
+Official documentation: [Direct messages](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_messages.post.html), [Group messages](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html)
+
 ## User target
 
 ```text

@@ -6,6 +6,8 @@ description: Send Slack notifications through an incoming webhook or bot token.
 Protocol: `slack:`  
 Runtime: Node.js and browser
 
+Official documentation: [Incoming webhooks](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/), [`chat.postMessage`](https://docs.slack.dev/reference/methods/chat.postMessage/)
+
 ## Incoming webhook target
 
 ```text

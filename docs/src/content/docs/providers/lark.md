@@ -6,6 +6,8 @@ description: Send signed or unsigned Lark and Feishu webhook notifications.
 Protocol: `lark:`  
 Runtime: Node.js and browser
 
+Official documentation: [Lark custom bots](https://open.larksuite.com/document/client-docs/bot-v3/add-custom-bot?lang=en-US), [Feishu custom bots](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot?lang=zh-CN)
+
 ## Target format
 
 ```text

@@ -6,6 +6,8 @@ description: 向一个或多个设备密钥发送 Bark 推送通知。
 协议：`bark:`  
 运行时：Node.js 和浏览器
 
+官方文档：[Bark 使用教程](https://bark.day.app/#/tutorial)
+
 ## 通知目标格式
 
 ```text
