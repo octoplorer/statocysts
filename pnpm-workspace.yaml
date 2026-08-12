@@ -13,21 +13,21 @@ catalogs:
   build:
     tsdown: ^0.22.14
   ci:
-    publint: ^0.3.22
+    publint: ^0.3.23
   cli:
     yargs: ^18.1.0
   dev:
-    '@antfu/eslint-config': ^9.2.0
-    '@antfu/ni': ^30.3.0
+    '@antfu/eslint-config': ^9.3.0
+    '@antfu/ni': ^30.5.0
     '@types/smtp-server': ^3.5.13
     '@vitest/coverage-v8': ^4.1.10
-    bumpp: ^12.0.0
-    eslint: ^10.8.0
+    bumpp: ^12.2.0
+    eslint: ^10.8.1
     eslint-plugin-format: ^2.0.1
-    lint-staged: ^17.2.0
+    lint-staged: ^17.3.0
     simple-git-hooks: ^2.13.1
-    smtp-server: ^3.19.2
-    taze: ^19.16.0
+    smtp-server: ^3.19.3
+    taze: ^20.0.1
     typescript: ^6.0.3
     vitest: ^4.1.10
   lib:
@@ -37,5 +37,5 @@ catalogs:
     ufo: ^1.6.4
     zod: ^4.4.3
   types:
-    '@types/node': ^26.1.2
+    '@types/node': ^26.2.0
     '@types/yargs': ^17.0.35
