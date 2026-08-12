@@ -41,6 +41,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "test": "pnpm --filter statocysts build && vitest run",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm run build"
   },
@@ -52,6 +53,7 @@
     "@types/node": "catalog:types",
     "@types/yargs": "catalog:types",
     "tsdown": "catalog:build",
-    "typescript": "catalog:dev"
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev"
   }
 }

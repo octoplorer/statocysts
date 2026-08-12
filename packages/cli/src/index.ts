@@ -7,8 +7,11 @@ import { hideBin } from 'yargs/helpers'
 import { version } from '../package.json' with { type: 'json' }
 
 interface CliArgs {
+  _: (string | number)[]
+  help?: boolean
+  version?: boolean
   url: string[]
-  title: string
+  title?: string
   body?: string
   file?: string
 }
@@ -83,50 +86,106 @@ function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
 }
 
-export async function run(): Promise<void> {
-  const argv = await yargs(hideBin(process.argv))
-    .scriptName('stato')
-    .usage('$0 -u <url> -t <title> [-b <body> | -f <file>]')
-    .option('url', {
-      alias: 'u',
-      type: 'string',
-      array: true,
-      demandOption: true,
-      description: 'Notification service URL(s)',
-    })
-    .option('title', {
-      alias: 't',
-      type: 'string',
-      demandOption: true,
-      description: 'Notification title',
-    })
-    .option('body', {
-      alias: 'b',
-      type: 'string',
-      description: 'Notification body content',
-    })
-    .option('file', {
-      alias: 'f',
-      type: 'string',
-      description: 'Read body content from file',
-    })
-    .example([
-      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -b "Hello World"', 'Send notification to Slack webhook'],
-      ['$0 -u "slack://webhook/a/b/c" -u "json://example.com/api" -t "Alert" -b "Hello"', 'Send to multiple URLs'],
-      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -f message.txt', 'Send with body from file'],
-      ['echo "Hello" | $0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert"', 'Send with body from stdin'],
-      ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Simple Alert"', 'Send title only'],
-    ])
-    .help()
-    .version(version)
-    .strict()
-    .parse() as CliArgs
+/**
+ * Verify each URL against the same validation semantics as the runtime
+ * Returns the process exit code (0 = all valid, 1 = any invalid)
+ */
+function verifyUrls(urls: string[]): number {
+  let allValid = true
 
+  for (const url of urls) {
+    try {
+      createNotifier([url])
+      console.log(`✓ ${url}`)
+    }
+    catch (error) {
+      allValid = false
+      console.error(`✗ ${url}: ${getErrorMessage(error)}`)
+    }
+  }
+
+  return allValid ? 0 : 1
+}
+
+/**
+ * Run the CLI and resolve with the process exit code
+ */
+export async function run(args: string[] = hideBin(process.argv)): Promise<number> {
+  let argv: CliArgs
   try {
+    argv = await yargs(args)
+      .scriptName('stato')
+      .usage('$0 [verify] -u <url> [-t <title>] [-b <body> | -f <file>]')
+      .command('verify', 'Verify notification service URL(s)', yargs => yargs
+        .option('url', {
+          alias: 'u',
+          type: 'string',
+          array: true,
+          demandOption: true,
+          description: 'Notification service URL(s)',
+        }))
+      .option('url', {
+        alias: 'u',
+        type: 'string',
+        array: true,
+        description: 'Notification service URL(s)',
+      })
+      .option('title', {
+        alias: 't',
+        type: 'string',
+        description: 'Notification title',
+      })
+      .option('body', {
+        alias: 'b',
+        type: 'string',
+        description: 'Notification body content',
+      })
+      .option('file', {
+        alias: 'f',
+        type: 'string',
+        description: 'Read body content from file',
+      })
+      .example([
+        ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -b "Hello World"', 'Send notification to Slack webhook'],
+        ['$0 -u "slack://webhook/a/b/c" -u "json://example.com/api" -t "Alert" -b "Hello"', 'Send to multiple URLs'],
+        ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -f message.txt', 'Send with body from file'],
+        ['echo "Hello" | $0 -u "slack://webhook/xxx/yyy/zzz" -t "Alert"', 'Send with body from stdin'],
+        ['$0 -u "slack://webhook/xxx/yyy/zzz" -t "Simple Alert"', 'Send title only'],
+        ['$0 verify -u "slack://webhook/xxx/yyy/zzz"', 'Verify notification service URL(s)'],
+      ])
+      .help()
+      .version(version)
+      .strict()
+      .exitProcess(false)
+      .fail((msg, err) => {
+        throw err ?? new Error(msg)
+      })
+      .parse() as CliArgs
+  }
+  catch (error) {
+    console.error(`Error: ${getErrorMessage(error)}`)
+    return 1
+  }
+
+  if (argv.help || argv.version) {
+    return 0
+  }
+
+  if (argv._[0] === 'verify') {
+    return verifyUrls(argv.url)
+  }
+
+  // Default send path (kept for backward compatibility)
+  try {
+    if (!argv.title) {
+      throw new Error('Notification title is required (use -t <title>)')
+    }
+
     const body = await getBody(argv)
 
     await sendNotifications(argv.url, argv.title, body || undefined)
     console.log('Notification sent successfully!')
+    return 0
   }
   catch (error) {
     if (error instanceof NotificationDeliveryError) {
@@ -138,6 +197,6 @@ export async function run(): Promise<void> {
     else {
       console.error(`Error: ${getErrorMessage(error)}`)
     }
-    process.exit(1)
+    return 1
   }
 }

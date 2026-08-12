@@ -13,24 +13,33 @@ pnpm add -g @statocysts/cli
 ## Usage
 
 ```bash
-stato -u <url> [-m <message> | -f <file>]
+stato -u <url> -t <title> [-b <body> | -f <file>]
+stato verify -u <url> [-u <url2> ...]
 ```
+
+### Commands
+
+| Command     | Description                                        |
+| ----------- | -------------------------------------------------- |
+| _(default)_ | Send a notification (no subcommand).               |
+| `verify`    | Verify that notification service URL(s) are valid. |
 
 ### Options
 
 | Option      | Alias | Description                                                   |
 | ----------- | ----- | ------------------------------------------------------------- |
 | `--url`     | `-u`  | Notification service URL(s). Can be specified multiple times. |
-| `--message` | `-m`  | Message content to send directly.                             |
-| `--file`    | `-f`  | Read message content from a file.                             |
+| `--title`   | `-t`  | Notification title (required when sending).                   |
+| `--body`    | `-b`  | Notification body content.                                    |
+| `--file`    | `-f`  | Read body content from a file.                                |
 | `--help`    |       | Show help information.                                        |
 | `--version` |       | Show version number.                                          |
 
-### Message Priority
+### Body Priority
 
-The message content is determined in the following order:
+The body content is determined in the following order:
 
-1. `--message` argument (highest priority)
+1. `--body` argument (highest priority)
 2. `--file` argument
 3. Standard input (stdin)
 
@@ -39,32 +48,43 @@ The message content is determined in the following order:
 ### Send to a single URL
 
 ```bash
-stato -u "slack://webhook/xxx/yyy/zzz" -m "Hello World"
+stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -b "Hello World"
 ```
 
 ### Send to multiple URLs
 
 ```bash
-stato -u "slack://webhook/xxx/yyy/zzz" -u "json://example.com/api/notify" -m "Hello World"
+stato -u "slack://webhook/xxx/yyy/zzz" -u "json://example.com/api/notify" -t "Alert" -b "Hello World"
 ```
 
-### Read message from file
+### Read body from file
 
 ```bash
-stato -u "slack://webhook/xxx/yyy/zzz" -f message.txt
+stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert" -f message.txt
 ```
 
-### Read message from stdin
+### Read body from stdin
 
 ```bash
-echo "Hello World" | stato -u "slack://webhook/xxx/yyy/zzz"
+echo "Hello World" | stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert"
 ```
 
-### Use with pipeline
+### Verify URL(s)
+
+Verify that notification service URL(s) can be resolved and use a registered protocol, without sending anything:
 
 ```bash
-cat deployment.log | stato -u "slack://webhook/xxx/yyy/zzz"
+stato verify -u "slack://webhook/xxx/yyy/zzz"
+# ✓ slack://webhook/xxx/yyy/zzz
 ```
+
+```bash
+stato verify -u "slack://webhook/xxx/yyy/zzz" -u "unsupported://target"
+# ✓ slack://webhook/xxx/yyy/zzz
+# ✗ unsupported://target: Unsupported notification protocol: unsupported:
+```
+
+The exit code is `0` when every URL is valid and `1` when any URL is invalid.
 
 ## Supported Services
 
@@ -72,6 +92,7 @@ This CLI supports all notification services provided by statocysts:
 
 - **Slack**: `slack://webhook/xxx/yyy/zzz` or `slack://bot@channel:token`
 - **JSON**: `json://example.com/api/endpoint`
+- **Logger**: `logger://` (console output for development)
 
 For more details on URL formats, please refer to the [statocysts documentation](https://github.com/octoplorer/statocysts).
 
