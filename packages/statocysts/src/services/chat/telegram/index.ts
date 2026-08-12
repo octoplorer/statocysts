@@ -2,7 +2,7 @@ import type { FetchOptions } from 'ofetch'
 import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
-import { escapeHtml, escapeMarkdown, getValidateQuery } from '#/utils'
+import { escapeHtml, escapeMarkdown, safeParseQuery } from '#/utils'
 import { assert } from '#/utils/assert'
 
 export const telegramQuerySchema = v.object({
@@ -36,7 +36,7 @@ export const telegram = defineProvider('telegram:', {
     const pathSegments = url.pathname.split('/').filter(Boolean)
     assert(pathSegments.length > 0, 'At least one chat ID is required')
 
-    const queryResult = getValidateQuery(url, data => v.safeParse(telegramQuerySchema, data))
+    const queryResult = safeParseQuery(url, telegramQuerySchema)
 
     if (!queryResult.success) {
       throw new Error('Invalid telegram query')
