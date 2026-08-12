@@ -3,10 +3,20 @@ title: Server Chan
 description: Send notifications through Server Chan 3 or Server Chan Turbo.
 ---
 
-Protocol: `server-chan:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
 
-Official documentation: [Server Chan 3 API](https://doc.sc3.ft07.com/zh/serverchan3/server/api), [Server Chan Turbo](https://sct.ftqq.com/sendkey/)
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://doc.sc3.ft07.com/zh/serverchan3/server/api',
+      label: 'Server Chan 3 API',
+    },
+    { href: 'https://sct.ftqq.com/sendkey/', label: 'Server Chan Turbo' },
+  ]}
+  locale="en"
+  protocols={['server-chan:']}
+  runtime="universal"
+/>
 
 ## Server Chan 3
 

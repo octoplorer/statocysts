@@ -1,0 +1,191 @@
+---
+import { Badge, Icon } from '@astrojs/starlight/components'
+
+type Locale = 'en' | 'zh-hans'
+type Runtime = 'node' | 'universal'
+
+interface DocumentationLink {
+  href: string
+  label: string
+}
+
+interface Props {
+  documentation?: DocumentationLink[]
+  locale: Locale
+  protocols: string[]
+  runtime: Runtime
+}
+
+const { documentation = [], locale, protocols, runtime } = Astro.props
+const labels = {
+  documentation: locale === 'zh-hans' ? '官方文档' : 'Official documentation',
+  protocol: locale === 'zh-hans' ? '协议' : protocols.length > 1 ? 'Protocols' : 'Protocol',
+  runtime: locale === 'zh-hans' ? '运行时' : 'Runtime',
+}
+const runtimes = runtime === 'node'
+  ? [{ icon: 'server' as const, label: locale === 'zh-hans' ? '仅 Node.js' : 'Node.js only' }]
+  : [
+      { icon: 'server' as const, label: 'Node.js' },
+      { icon: 'window' as const, label: locale === 'zh-hans' ? '浏览器' : 'Browser' },
+    ]
+---
+
+<div class="provider-meta not-content">
+  <dl>
+    <div class="provider-meta__item">
+      <dt>{labels.protocol}</dt>
+      <dd class="provider-meta__protocols">
+        {protocols.map(protocol => <Badge text={protocol} size="medium" />)}
+      </dd>
+    </div>
+
+    <div class="provider-meta__item">
+      <dt>{labels.runtime}</dt>
+      <dd class="provider-meta__runtimes">
+        {
+          runtimes.map(item => (
+            <span class="provider-meta__runtime">
+              <Icon name={item.icon} size="1rem" />
+              {item.label}
+            </span>
+          ))
+        }
+      </dd>
+    </div>
+
+    {
+      documentation.length > 0 && (
+        <div class="provider-meta__item provider-meta__item--documentation">
+          <dt>{labels.documentation}</dt>
+          <dd class="provider-meta__links">
+            {documentation.map(item => (
+              <a href={item.href}>
+                <span>{item.label}</span>
+                <Icon name="external" size="0.875rem" />
+              </a>
+            ))}
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</div>
+
+<style>
+  .provider-meta {
+    container-type: inline-size;
+    margin-block: 1.5rem 2rem;
+  }
+
+  .provider-meta dl {
+    background: var(--statocysts-surface-raised);
+    border-radius: 0.75rem;
+    box-shadow: inset 0 0 0 1px var(--sl-rapide-ui-border-color);
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 1rem;
+  }
+
+  .provider-meta__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .provider-meta dt {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .provider-meta dd {
+    margin: 0;
+  }
+
+  .provider-meta__protocols,
+  .provider-meta__runtimes,
+  .provider-meta__links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .provider-meta__protocols {
+    gap: 0.375rem;
+  }
+
+  .provider-meta__runtimes {
+    gap: 0.5rem 1rem;
+  }
+
+  .provider-meta__runtime {
+    align-items: center;
+    color: var(--sl-color-gray-2);
+    display: inline-flex;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    gap: 0.375rem;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .provider-meta__runtime :global(svg) {
+    color: var(--sl-color-accent-high);
+    flex: 0 0 auto;
+  }
+
+  .provider-meta__links {
+    gap: 0.5rem 1rem;
+  }
+
+  .provider-meta__links a {
+    align-items: center;
+    color: var(--sl-color-text-accent);
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    gap: 0.25rem;
+    line-height: 1.5;
+    max-width: 100%;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+  }
+
+  .provider-meta__links a span {
+    overflow-wrap: anywhere;
+  }
+
+  .provider-meta__links a :global(svg) {
+    flex: 0 0 auto;
+  }
+
+  .provider-meta__links a:focus-visible {
+    border-radius: 0.125rem;
+    outline: 2px solid var(--sl-color-accent-high);
+    outline-offset: 3px;
+  }
+
+  @container (min-width: 30rem) {
+    .provider-meta dl {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 1.25rem;
+    }
+
+    .provider-meta__item--documentation {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .provider-meta dl {
+      border: 1px solid CanvasText;
+      box-shadow: none;
+    }
+  }
+</style>

@@ -3,10 +3,19 @@ title: Telegram
 description: Send Telegram Bot API notifications to a chat, channel, or topic.
 ---
 
-Protocol: `telegram:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
 
-Official documentation: [Bot API `sendMessage`](https://core.telegram.org/bots/api#sendmessage)
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://core.telegram.org/bots/api#sendmessage',
+      label: 'Bot API sendMessage',
+    },
+  ]}
+  locale="en"
+  protocols={['telegram:']}
+  runtime="universal"
+/>
 
 ## Target format
 

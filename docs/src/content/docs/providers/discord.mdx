@@ -3,10 +3,19 @@ title: Discord
 description: Send notifications through a Discord webhook.
 ---
 
-Protocol: `discord:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
 
-Official documentation: [Discord webhook resource](https://docs.discord.com/developers/resources/webhook#execute-webhook)
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://docs.discord.com/developers/resources/webhook#execute-webhook',
+      label: 'Discord webhook resource',
+    },
+  ]}
+  locale="en"
+  protocols={['discord:']}
+  runtime="universal"
+/>
 
 ## Target format
 

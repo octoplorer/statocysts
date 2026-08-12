@@ -3,8 +3,9 @@ title: Logger
 description: Print notifications to the console for development and debugging.
 ---
 
-Protocol: `logger:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
+
+<ProviderMeta locale="en" protocols={['logger:']} runtime="universal" />
 
 The logger provider performs no network request.
 

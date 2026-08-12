@@ -3,10 +3,23 @@ title: Lark and Feishu
 description: Send signed or unsigned Lark and Feishu webhook notifications.
 ---
 
-Protocol: `lark:`  
-Runtime: Node.js and browser
+import ProviderMeta from '../../../components/ProviderMeta.astro'
 
-Official documentation: [Lark custom bots](https://open.larksuite.com/document/client-docs/bot-v3/add-custom-bot?lang=en-US), [Feishu custom bots](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot?lang=zh-CN)
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://open.larksuite.com/document/client-docs/bot-v3/add-custom-bot?lang=en-US',
+      label: 'Lark custom bots',
+    },
+    {
+      href: 'https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot?lang=zh-CN',
+      label: 'Feishu custom bots',
+    },
+  ]}
+  locale="en"
+  protocols={['lark:']}
+  runtime="universal"
+/>
 
 ## Target format
 

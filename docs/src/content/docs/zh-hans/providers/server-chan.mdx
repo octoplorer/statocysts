@@ -3,10 +3,20 @@ title: Server 酱
 description: 通过 Server 酱 3 或 Turbo 发送通知。
 ---
 
-协议：`server-chan:`  
-运行时：Node.js 和浏览器
+import ProviderMeta from '../../../../components/ProviderMeta.astro'
 
-官方文档：[Server 酱 3 API](https://doc.sc3.ft07.com/zh/serverchan3/server/api)、[Server 酱 Turbo](https://sct.ftqq.com/sendkey/)
+<ProviderMeta
+  documentation={[
+    {
+      href: 'https://doc.sc3.ft07.com/zh/serverchan3/server/api',
+      label: 'Server 酱 3 API',
+    },
+    { href: 'https://sct.ftqq.com/sendkey/', label: 'Server 酱 Turbo' },
+  ]}
+  locale="zh-hans"
+  protocols={['server-chan:']}
+  runtime="universal"
+/>
 
 ## Server 酱 3
 
