@@ -1,0 +1,89 @@
+---
+title: Statocysts
+description: 使用一个 JavaScript API 将通知投递到十个通知提供方。
+template: splash
+hero:
+  tagline: 基础设施的「感觉器官」——使用一个 URL 将通知投递到任何目标。
+  image:
+    alt: Statocysts 章鱼吉祥物将同一事件分发到多个通知提供方端点。
+    dark: ../../../assets/hero-dark.svg
+    light: ../../../assets/hero-light.svg
+  actions:
+    - text: 快速开始
+      link: /statocysts/zh-hans/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: 查看 GitHub
+      link: https://github.com/octoplorer/statocysts
+      icon: external
+      variant: minimal
+      attrs:
+        rel: me
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+<p class="home-eyebrow">一个 API · 十个通知提供方 · 两种运行时</p>
+
+## 一种通知模型，连接每个投递目标
+
+<p class="home-lede">
+  使用协议 URL 标识通知提供方，并行投递到多个目标，再通过统一 API 检查每一个失败结果。
+</p>
+
+<div class="home-feature-grid">
+  <CardGrid>
+    <Card title="使用 URL 寻址" icon="link">
+      使用 <code>slack://…</code> 或 <code>email://…</code> 等通知目标选择提供方和接收者。
+    </Card>
+    <Card title="默认并行投递" icon="random">
+      并发尝试所有已配置目标，不会在首次失败后停止。
+    </Card>
+    <Card title="检查每个失败目标" icon="error">
+      通过一个 <code>NotificationDeliveryError</code> 获取所有投递失败的详细信息。
+    </Card>
+    <Card title="适配不同运行时" icon="window">
+      根据需要使用 Node.js 入口，或排除仅服务端提供方的浏览器入口。
+    </Card>
+  </CardGrid>
+</div>
+
+## 从安装到完成投递
+
+```ts title="notify.ts"
+import { send } from 'statocysts'
+
+await send(process.env.SLACK_TARGET!, {
+  title: '部署完成',
+  body: '生产环境运行正常。',
+})
+```
+
+使用 `pnpm add statocysts` 完成安装，并将完整通知目标 URL 保存在环境变量或密钥存储中。
+
+## 浏览文档
+
+<div class="home-doc-grid">
+  <CardGrid>
+    <LinkCard
+      title="快速开始"
+      description="安装软件包并发送第一条通知。"
+      href="/statocysts/zh-hans/getting-started/"
+    />
+    <LinkCard
+      title="了解核心概念"
+      description="了解通知目标 URL、通知器复用和批量错误行为。"
+      href="/statocysts/zh-hans/guide/core-concepts/"
+    />
+    <LinkCard
+      title="选择通知提供方"
+      description="比较协议、运行时和经过测试的通知目标格式。"
+      href="/statocysts/zh-hans/providers/"
+    />
+    <LinkCard
+      title="使用 CLI"
+      description="在终端中发送和校验通知目标。"
+      href="/statocysts/zh-hans/reference/cli/"
+    />
+  </CardGrid>
+</div>

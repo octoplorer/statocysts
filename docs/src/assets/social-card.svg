@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(938 315) rotate(90) scale(360)">
+      <stop stop-color="#2ca77a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#2ca77a" stop-opacity="0"/>
+    </radialGradient>
+    <symbol id="octopus" viewBox="0 0 64 64">
+      <path d="M-2 25C10 16 22 10 35 10c15 0 24 8 27 21 3 13-1 23-9 28-5 3-9 2-13-2-3 4-9 6-14 2-3-2-5-4-6-7-4 5-10 6-15 3-6-4-6-10-1-14-2-7-3-12-6-16Z" fill="#e9e5e2" stroke="#9c9693" stroke-linejoin="round"/>
+      <ellipse cx="29" cy="30" rx="5.5" ry="9" fill="#171918" transform="rotate(-31 29 30)"/>
+      <ellipse cx="45" cy="22" rx="5.5" ry="9" fill="#171918" transform="rotate(-31 45 22)"/>
+      <ellipse cx="31.5" cy="25.5" rx="1.35" ry="1.8" fill="#68cda7" transform="rotate(-31 31.5 25.5)"/>
+      <ellipse cx="47.5" cy="17.5" rx="1.35" ry="1.8" fill="#68cda7" transform="rotate(-31 47.5 17.5)"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="630" rx="36" fill="#121413"/>
+  <rect x="1" y="1" width="1198" height="628" rx="35" fill="none" stroke="#2b3933" stroke-width="2"/>
+  <ellipse cx="930" cy="315" rx="360" ry="350" fill="url(#glow)"/>
+  <g transform="translate(96 88)">
+    <rect width="72" height="72" rx="20" fill="#181d1a" stroke="#3c584c" stroke-width="2"/>
+    <use href="#octopus" width="72" height="72"/>
+  </g>
+  <text x="96" y="260" fill="#eee9e6" font-family="system-ui, sans-serif" font-size="82" font-weight="650" letter-spacing="-3">Statocysts</text>
+  <text x="96" y="330" fill="#b8b0ac" font-family="system-ui, sans-serif" font-size="32">The sensory organ for your infrastructure.</text>
+  <g transform="translate(96 402)">
+    <rect width="535" height="54" rx="27" fill="#182a22" stroke="#3b8468"/>
+    <text x="26" y="36" fill="#83d5b6" font-family="ui-monospace, monospace" font-size="22">One API · Ten providers · Two runtimes</text>
+  </g>
+  <g stroke="#3f5149" stroke-width="3">
+    <path d="M836 226c-55-29-92-67-125-105"/><path d="M940 215c34-42 72-73 110-99"/>
+    <path d="M824 354c-54 26-92 57-125 93"/><path d="M951 350c45 27 77 56 107 93"/>
+  </g>
+  <g fill="#171b19" stroke="#35443e" stroke-width="2">
+    <rect x="650" y="64" width="128" height="86" rx="22"/><rect x="1020" y="63" width="128" height="86" rx="22"/>
+    <rect x="636" y="428" width="142" height="88" rx="22"/><rect x="1018" y="427" width="142" height="88" rx="22"/>
+  </g>
+  <g fill="#68cda7"><circle cx="772" cy="163" r="5"/><circle cx="1019" cy="163" r="5"/><circle cx="777" cy="413" r="5"/><circle cx="1017" cy="413" r="5"/></g>
+  <rect x="792" y="189" width="188" height="190" rx="48" fill="#18231e" stroke="#47705f" stroke-width="3"/>
+  <use href="#octopus" x="812" y="210" width="148" height="148"/>
+</svg>

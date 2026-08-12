@@ -1,0 +1,89 @@
+---
+title: Statocysts
+description: Route notifications to ten providers with one JavaScript API.
+template: splash
+hero:
+  tagline: The sensory organ for your infrastructure — route every notification with one URL.
+  image:
+    alt: The Statocysts octopus mascot routing one event to multiple provider endpoints.
+    dark: ../../assets/hero-dark.svg
+    light: ../../assets/hero-light.svg
+  actions:
+    - text: Get started
+      link: /statocysts/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/octoplorer/statocysts
+      icon: external
+      variant: minimal
+      attrs:
+        rel: me
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+<p class="home-eyebrow">One API · Ten providers · Two runtimes</p>
+
+## One notification model. Every delivery target.
+
+<p class="home-lede">
+  Address providers with protocol URLs, fan out deliveries in parallel, and inspect every failed target through one consistent API.
+</p>
+
+<div class="home-feature-grid">
+  <CardGrid>
+    <Card title="Route by URL" icon="link">
+      Select a provider and recipient with a target such as <code>slack://…</code> or <code>email://…</code>.
+    </Card>
+    <Card title="Deliver in parallel" icon="random">
+      Attempt every configured target concurrently instead of stopping after the first failure.
+    </Card>
+    <Card title="Inspect every failure" icon="error">
+      Handle one <code>NotificationDeliveryError</code> with details for each unsuccessful target.
+    </Card>
+    <Card title="Run where you need it" icon="window">
+      Use the Node.js entry or a browser entry that excludes server-only providers.
+    </Card>
+  </CardGrid>
+</div>
+
+## From install to delivery
+
+```ts title="notify.ts"
+import { send } from 'statocysts'
+
+await send(process.env.SLACK_TARGET!, {
+  title: 'Deployment complete',
+  body: 'Production is healthy.',
+})
+```
+
+Install with `pnpm add statocysts`, then keep complete target URLs in environment variables or a secret store.
+
+## Explore the documentation
+
+<div class="home-doc-grid">
+  <CardGrid>
+    <LinkCard
+      title="Get started"
+      description="Install the package and send your first notification."
+      href="/statocysts/getting-started/"
+    />
+    <LinkCard
+      title="Understand the core concepts"
+      description="Learn target URLs, notifier reuse, and batch error behavior."
+      href="/statocysts/guide/core-concepts/"
+    />
+    <LinkCard
+      title="Choose a provider"
+      description="Compare protocols, runtimes, and tested target formats."
+      href="/statocysts/providers/"
+    />
+    <LinkCard
+      title="Use the CLI"
+      description="Send and verify notification targets from a terminal."
+      href="/statocysts/reference/cli/"
+    />
+  </CardGrid>
+</div>

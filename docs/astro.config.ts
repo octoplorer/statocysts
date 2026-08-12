@@ -9,6 +9,43 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Statocysts',
+      logo: {
+        src: './src/assets/logo.svg',
+      },
+      customCss: ['./src/styles/custom.css'],
+      lastUpdated: true,
+      head: [
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image',
+            content: 'https://octoplorer.github.io/statocysts/og.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:alt', content: 'Statocysts documentation' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:width', content: '1200' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:height', content: '630' },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'twitter:image',
+            content: 'https://octoplorer.github.io/statocysts/og.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:image:alt', content: 'Statocysts documentation' },
+        },
+      ],
       plugins: [
         starlightThemeRapide(),
         starlightLinksValidator({
@@ -48,16 +85,37 @@ export default defineConfig({
           translations: { 'zh-CN': '通知提供方' },
           items: [
             { slug: 'providers' },
-            { slug: 'providers/slack' },
-            { slug: 'providers/discord' },
-            { slug: 'providers/lark' },
-            { slug: 'providers/qq-bot' },
-            { slug: 'providers/telegram' },
-            { slug: 'providers/bark' },
-            { slug: 'providers/server-chan' },
-            { slug: 'providers/email' },
-            { slug: 'providers/json' },
-            { slug: 'providers/logger' },
+            {
+              label: 'Chat',
+              translations: { 'zh-CN': '即时通讯' },
+              collapsed: true,
+              items: [
+                { slug: 'providers/slack' },
+                { slug: 'providers/discord' },
+                { slug: 'providers/lark' },
+                { slug: 'providers/qq-bot' },
+                { slug: 'providers/telegram' },
+              ],
+            },
+            {
+              label: 'Push',
+              translations: { 'zh-CN': '推送服务' },
+              collapsed: true,
+              items: [
+                { slug: 'providers/bark' },
+                { slug: 'providers/server-chan' },
+              ],
+            },
+            {
+              label: 'Specialized',
+              translations: { 'zh-CN': '专用集成' },
+              collapsed: true,
+              items: [
+                { slug: 'providers/email' },
+                { slug: 'providers/json' },
+                { slug: 'providers/logger' },
+              ],
+            },
           ],
         },
         {
