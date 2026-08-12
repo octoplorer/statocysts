@@ -3,7 +3,7 @@ import defu from 'defu'
 import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
-import { assert, getValidateQuery } from '#/utils'
+import { assert, safeParseQuery } from '#/utils'
 
 interface DiscordOptions {
   fetchOptions?: FetchOptions
@@ -31,7 +31,7 @@ export const discord = defineProvider('discord:', {
     assert(url.username, 'Webhook ID is required')
     assert(url.password, 'Webhook token is required')
 
-    const queryResult = getValidateQuery(url, data => v.safeParse(querySchema, data))
+    const queryResult = safeParseQuery(url, querySchema)
 
     if (!queryResult.success) {
       throw new Error('Invalid discord query')

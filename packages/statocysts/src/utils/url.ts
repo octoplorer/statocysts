@@ -1,11 +1,11 @@
 import { getQuery } from 'ufo'
+import * as v from 'valibot'
 
-export function getValidateQuery<T>(
+export function safeParseQuery<const TSchema extends v.GenericSchema>(
   url: URL | string,
-  parser: (params: unknown) => T,
-): T {
-  const query = getQuery(url.toString())
-  return parser(query)
+  schema: TSchema,
+): v.SafeParseResult<TSchema> {
+  return v.safeParse(schema, getQuery(url.toString()))
 }
 
 export function withoutPathname(input: string): string {

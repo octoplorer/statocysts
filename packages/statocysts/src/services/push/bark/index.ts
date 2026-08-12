@@ -4,7 +4,7 @@ import { withProtocol } from 'ufo'
 import * as v from 'valibot'
 import { defineProvider } from '#/core/provider'
 import { http } from '#/core/transports/http'
-import { assert, getValidateQuery, withoutPathname } from '#/utils'
+import { assert, safeParseQuery, withoutPathname } from '#/utils'
 
 export interface BarkOptions {
   fetchOptions?: FetchOptions
@@ -39,7 +39,7 @@ export const bark = defineProvider('bark:', {
     const deviceKeys = url.pathname.split('/').filter(Boolean)
     assert(deviceKeys.length > 0, 'At least one device key is required')
 
-    const queryResult = getValidateQuery(url, data => v.safeParse(querySchema, data))
+    const queryResult = safeParseQuery(url, querySchema)
 
     if (!queryResult.success) {
       throw new Error('Invalid Bark query parameters')
