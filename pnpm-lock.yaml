@@ -84,8 +84,8 @@ catalogs:
       specifier: ^6.1.7
       version: 6.1.7
     emailjs:
-      specifier: ^5.0.2
-      version: 5.0.2
+      specifier: ^5.0.3
+      version: 5.0.3
     ofetch:
       specifier: ^1.5.1
       version: 1.5.1
@@ -195,7 +195,7 @@ importers:
         version: 6.1.7
       emailjs:
         specifier: catalog:lib
-        version: 5.0.2(typescript@6.0.3)
+        version: 5.0.3(typescript@6.0.3)
       ofetch:
         specifier: catalog:lib
         version: 1.5.1
@@ -2215,8 +2215,8 @@ packages:
   electron-to-chromium@1.5.397:
     resolution: {integrity: sha512-khGTy9U9x02KEtsKM8vx5A62BsRmcOsIgDpWr1ImE32Ax8GxHGPHZf+Eu9H8zOOyHJnB0jTbseyTHbq2XCT8yw==}
 
-  emailjs@5.0.2:
-    resolution: {integrity: sha512-0ihvr8N6WFFgnJRp5aMnmfEuKtIza5V/tHWErQbHzoVb4UJnpqTl/V0hLbfYKIzc6kMA/JcY0L0PAyLW6rOT+A==}
+  emailjs@5.0.3:
+    resolution: {integrity: sha512-Y47oNF5Geurb8GnmST2b+EK8mDLKoDFySxsvZb6YMcNbvdxpjd9FaLQ80p38lUVhq50knveOhkH/c/4afJSFxQ==}
     engines: {node: '>=18'}
     peerDependencies:
       typescript: '>=5.0.0'
@@ -6248,7 +6248,7 @@ snapshots:
 
   electron-to-chromium@1.5.397: {}
 
-  emailjs@5.0.2(typescript@6.0.3):
+  emailjs@5.0.3(typescript@6.0.3):
     optionalDependencies:
       typescript: 6.0.3
 
