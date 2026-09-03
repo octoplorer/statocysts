@@ -38,7 +38,7 @@ catalogs:
     vitest: ^4.1.11
   docs:
     '@astrojs/check': ^0.9.10
-    '@astrojs/starlight': ^0.41.11
+    '@astrojs/starlight': ^0.42.0
     astro: ^7.2.10
     sharp: ^0.35.4
     starlight-links-validator: ^0.25.3
