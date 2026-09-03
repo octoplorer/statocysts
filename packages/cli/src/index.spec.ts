@@ -46,6 +46,47 @@ describe('stato CLI', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('✗ unsupported://target'))
   })
 
+  it('reports a registered URL with invalid provider-specific components', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const code = await run(['verify', '-u', 'slack://webhook/a/b'])
+
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith('✗ slack://webhook/a/b: Webhook URL is invalid')
+  })
+
+  it('reports mixed valid and provider-invalid URLs individually', async () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const code = await run([
+      'verify',
+      '-u',
+      'logger://',
+      '-u',
+      'telegram://bot',
+    ])
+
+    expect(code).toBe(1)
+    expect(logSpy).toHaveBeenCalledWith('✓ logger://')
+    expect(errorSpy).toHaveBeenCalledWith('✗ telegram://bot: Bot token is required')
+  })
+
+  it('does not contact remote services while verifying a remote-auth provider', async () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('fetch should not be called'))
+
+    const code = await run([
+      'verify',
+      '-u',
+      'qqbot://app-id:client-secret@user/open-id',
+    ])
+
+    expect(code).toBe(0)
+    expect(logSpy).toHaveBeenCalledWith('✓ qqbot://app-id:client-secret@user/open-id')
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
   it('reports an invalid URL with a non-zero exit code', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 

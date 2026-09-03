@@ -87,7 +87,8 @@ function getErrorMessage(error: unknown): string {
 }
 
 /**
- * Verify each URL against the same validation semantics as the runtime
+ * Verify each URL against the runtime's local and provider-specific validation
+ * without sending a notification or contacting remote services
  * Returns the process exit code (0 = all valid, 1 = any invalid)
  */
 function verifyUrls(urls: string[]): number {
