@@ -43,7 +43,7 @@ catalogs:
     sharp: ^0.35.4
     starlight-links-validator: ^0.25.3
     starlight-sidebar-topics: ^0.8.0
-    starlight-theme-rapide: ^0.5.2
+    starlight-theme-rapide: ^0.6.0
   lib:
     defu: ^6.1.7
     emailjs: ^5.0.3
