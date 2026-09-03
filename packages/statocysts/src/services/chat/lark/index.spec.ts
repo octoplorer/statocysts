@@ -78,6 +78,18 @@ describe('lark', () => {
     expect(body.sign.length).toBeGreaterThan(0)
   })
 
+  it('does not generate a signature or call transport during validation', () => {
+    const signSpy = vi.spyOn(globalThis.crypto.subtle, 'sign')
+    const nowSpy = vi.spyOn(Date, 'now')
+
+    const validated = lark.validate('lark://my-token:my-secret@webhook')
+
+    expect(validated.send).toBeTypeOf('function')
+    expect(signSpy).not.toHaveBeenCalled()
+    expect(nowSpy).not.toHaveBeenCalled()
+    expect(http.send).not.toHaveBeenCalled()
+  })
+
   it('should use feishu domain when domain=feishu', async () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 

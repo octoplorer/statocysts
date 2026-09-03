@@ -17,8 +17,8 @@ const querySchema = v.object({
  */
 export const logger = defineProvider('logger:', {
   transport: loggerTransport,
-  async prepare(ctx) {
-    const { url, message } = ctx
+  validate(ctx) {
+    const { url } = ctx
 
     const queryResult = v.safeParse(querySchema, {
       level: url.searchParams.get('level') || undefined,
@@ -30,6 +30,13 @@ export const logger = defineProvider('logger:', {
 
     return {
       level: (queryResult.output.level ?? 'info') as LoggerLevel,
+    }
+  },
+  async prepare(ctx) {
+    const { message, validated } = ctx
+
+    return {
+      level: validated.level,
       title: message.title,
       body: message.body,
     }

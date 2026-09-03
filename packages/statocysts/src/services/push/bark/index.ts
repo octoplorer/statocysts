@@ -30,8 +30,8 @@ const querySchema = v.object({
 export const bark = defineProvider('bark:', {
   transport: http,
   defaultOptions: {} as BarkOptions,
-  async prepare(ctx, options) {
-    const { message, url } = ctx
+  validate(ctx) {
+    const { url } = ctx
 
     assert(url.hostname, 'Server URL hostname is required')
     assert(url.pathname, 'Device key is required')
@@ -45,9 +45,16 @@ export const bark = defineProvider('bark:', {
       throw new Error('Invalid Bark query parameters')
     }
 
-    const query = queryResult.output
+    return {
+      deviceKeys,
+      query: queryResult.output,
+      serverUrl: withProtocol(withoutPathname(url.toString()), 'https:'),
+    }
+  },
+  async prepare(ctx, options) {
+    const { message, validated } = ctx
 
-    const requestUrl = new URL(`/push`, withProtocol(withoutPathname(url.toString()), 'https:'))
+    const requestUrl = new URL(`/push`, validated.serverUrl)
 
     const headers = new Headers([
       ['Content-Type', 'application/json'],
@@ -55,7 +62,7 @@ export const bark = defineProvider('bark:', {
 
     const contentData: { markdown: string, title?: string } = message.body ? { title: message.title, markdown: message.body } : { markdown: message.title }
 
-    const body = defu({ device_keys: deviceKeys }, contentData, query)
+    const body = defu({ device_keys: validated.deviceKeys }, contentData, validated.query)
 
     const request = new Request(requestUrl, {
       method: 'POST',

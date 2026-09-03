@@ -174,6 +174,14 @@ describe('qqbot validation', () => {
     vi.clearAllMocks()
   })
 
+  it('does not fetch a token or call transport for a valid target', () => {
+    const validated = qqbot.validate('qqbot://APPID:CLIENTSECRET@user/OPENID')
+
+    expect(validated.send).toBeTypeOf('function')
+    expect(ofetch).not.toHaveBeenCalled()
+    expect(http.send).not.toHaveBeenCalled()
+  })
+
   it('should throw error for invalid hostname', async () => {
     await expect(qqbot.send(
       'qqbot://APPID:CLIENTSECRET@invalid/OPENID',

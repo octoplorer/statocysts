@@ -24,7 +24,7 @@ const querySchema = v.object({
 export const discord = defineProvider('discord:', {
   transport: http,
   defaultOptions: {} as DiscordOptions,
-  async prepare(ctx, options) {
+  validate(ctx) {
     const { url } = ctx
 
     assert(url.hostname === 'webhook', 'Invalid discord URL')
@@ -37,17 +37,25 @@ export const discord = defineProvider('discord:', {
       throw new Error('Invalid discord query')
     }
 
-    const { wait, ...query } = queryResult.output
+    return {
+      webhookId: url.username,
+      webhookToken: url.password,
+      query: queryResult.output,
+    }
+  },
+  async prepare(ctx, options) {
+    const { message, validated } = ctx
+    const { wait, ...query } = validated.query
 
     const headers = new Headers([
       ['Content-Type', 'application/json'],
     ])
 
-    const content = ctx.message.body ? `## ${ctx.message.title}\n\n${ctx.message.body}` : ctx.message.title
+    const content = message.body ? `## ${message.title}\n\n${message.body}` : message.title
 
     const body = defu({ content }, query)
 
-    const requestUrl = new URL(`/api/webhooks/${url.username}/${url.password}`, 'https://discord.com')
+    const requestUrl = new URL(`/api/webhooks/${validated.webhookId}/${validated.webhookToken}`, 'https://discord.com')
 
     if (wait) {
       requestUrl.searchParams.set('wait', 'true')

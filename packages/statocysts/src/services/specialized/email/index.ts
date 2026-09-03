@@ -23,8 +23,8 @@ const queryParamSchema = v.object({
 export const email = defineProvider('email:', {
   transport: smtp,
   defaultOptions: {} as EmailOptions,
-  async prepare(ctx, options) {
-    const { url, message } = ctx
+  validate(ctx, options) {
+    const { url } = ctx
 
     // Parse query parameters (use getAll for multi-value parameters)
     const to = url.searchParams.getAll('to')
@@ -67,8 +67,22 @@ export const email = defineProvider('email:', {
     // Ensure at least one recipient is provided
     assert(to.length > 0, 'At least one recipient email address (to) is required')
 
-    // Build email message
-    const emailSubject = query.subject || message.title
+    return {
+      bcc,
+      cc,
+      fromAddress,
+      host,
+      password,
+      port,
+      query,
+      smtpConfig: options.smtpConfig,
+      to,
+      user,
+    }
+  },
+  async prepare(ctx) {
+    const { message, validated } = ctx
+    const emailSubject = validated.query.subject || message.title
     const text = message.body
       ? `${message.title}\n\n${message.body}`
       : message.title
@@ -76,19 +90,21 @@ export const email = defineProvider('email:', {
     // Build SMTP payload
     const smtpPayload: SmtpPayload = {
       client: {
-        host,
-        port,
+        host: validated.host,
+        port: validated.port,
         // Only include auth if both user and password are provided
-        ...(user && password ? { user, password } : {}),
-        ssl: query.ssl ?? false,
-        tls: query.tls ?? (port === 587),
-        ...options.smtpConfig,
+        ...(validated.user && validated.password
+          ? { user: validated.user, password: validated.password }
+          : {}),
+        ssl: validated.query.ssl ?? false,
+        tls: validated.query.tls ?? (validated.port === 587),
+        ...validated.smtpConfig,
       },
       message: {
-        from: fromAddress,
-        to: to.join(', '), // emailjs accepts comma-separated string
-        cc: cc.length > 0 ? cc.join(', ') : undefined,
-        bcc: bcc.length > 0 ? bcc.join(', ') : undefined,
+        from: validated.fromAddress,
+        to: validated.to.join(', '), // emailjs accepts comma-separated string
+        cc: validated.cc.length > 0 ? validated.cc.join(', ') : undefined,
+        bcc: validated.bcc.length > 0 ? validated.bcc.join(', ') : undefined,
         subject: emailSubject,
         text,
       },

@@ -28,7 +28,7 @@ async function computeSign(timestamp: string, secret: string): Promise<string> {
 export const lark = defineProvider('lark:', {
   transport: http,
   defaultOptions: {} as LarkOptions,
-  async prepare(ctx, options) {
+  validate(ctx, options) {
     const { url } = ctx
 
     assert(url.hostname === 'webhook', 'Invalid lark URL')
@@ -41,19 +41,25 @@ export const lark = defineProvider('lark:', {
     const baseUrl = options.baseUrl
       ?? (domain === 'feishu' ? FEISHU_BASE_URL : LARK_BASE_URL)
 
+    return { baseUrl, secret, token }
+  },
+  async prepare(ctx, options) {
+    const { message, validated } = ctx
+    const { baseUrl, secret, token } = validated
+
     const requestUrl = new URL(`/open-apis/bot/v2/hook/${token}`, baseUrl)
 
     let body: Record<string, unknown>
 
-    if (ctx.message.body) {
+    if (message.body) {
       body = {
         msg_type: 'interactive',
         card: {
           header: {
-            title: { tag: 'plain_text', content: ctx.message.title },
+            title: { tag: 'plain_text', content: message.title },
           },
           elements: [
-            { tag: 'markdown', content: ctx.message.body },
+            { tag: 'markdown', content: message.body },
           ],
         },
       }
@@ -61,7 +67,7 @@ export const lark = defineProvider('lark:', {
     else {
       body = {
         msg_type: 'text',
-        content: { text: ctx.message.title },
+        content: { text: message.title },
       }
     }
 
