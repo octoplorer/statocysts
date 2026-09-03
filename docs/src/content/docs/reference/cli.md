@@ -49,13 +49,13 @@ echo "CPU usage exceeded 90%" | stato -u "$TARGET" -t "High CPU usage"
 stato verify -u <target> [-u <target> ...]
 ```
 
-`verify` confirms that each value is a valid URL using a registered protocol. It does not contact the remote service and does not validate provider-specific credentials or URL components.
+`verify` confirms that each value is a valid URL using a registered protocol and satisfies the provider's local rules for required credentials, path segments, and query values. It does not send a notification or contact the remote service, so it cannot confirm that credentials or recipients exist or that the service is reachable.
 
 ```sh
 stato verify -u "$SLACK_TARGET" -u "$TELEGRAM_TARGET"
 ```
 
-The command exits with `0` when every target passes runtime-level validation and `1` when any target fails.
+The command exits with `0` when every target passes local runtime and provider validation and `1` when any target fails.
 
 ## Options
 

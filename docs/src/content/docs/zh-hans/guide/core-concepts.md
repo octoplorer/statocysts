@@ -44,11 +44,21 @@ await slack.send(target, notification, {
 })
 ```
 
+通知提供方也提供同步的本地校验。该操作不会构造传输 payload 或访问远程服务，而是返回可复用的目标绑定：
+
+```ts
+const validatedSlack = slack.validate(target, {
+  fetchOptions: { timeout: 5000 },
+})
+
+await validatedSlack.send(notification)
+```
+
 需要提供方专属选项时，请直接调用对应提供方。需要统一分发和批量失败报告时，请使用顶层通知运行时 API。
 
 ## 通知器
 
-通知器与一个或多个唯一通知目标绑定，可以重复使用：
+通知器在创建时校验并绑定一个或多个唯一通知目标，之后可以重复使用：
 
 ```ts
 import { createNotifier } from 'statocysts'
@@ -65,4 +75,4 @@ await notifier.send({ title: 'Deployment complete' })
 
 ## 通知运行时
 
-通知运行时注册内置通知提供方、校验目标协议，并导出 `send()` 和 `createNotifier()`。从 `statocysts` 导入会创建 Node.js 运行时；从 `statocysts/browser` 导入会创建浏览器兼容运行时。
+通知运行时注册内置通知提供方、校验目标协议和提供方专属 URL 格式，并导出 `send()` 和 `createNotifier()`。校验只在本地执行；远程凭据、接收者和连通性仅在实际投递时由提供方处理。从 `statocysts` 导入会创建 Node.js 运行时；从 `statocysts/browser` 导入会创建浏览器兼容运行时。

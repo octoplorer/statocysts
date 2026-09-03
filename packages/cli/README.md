@@ -71,7 +71,7 @@ echo "Hello World" | stato -u "slack://webhook/xxx/yyy/zzz" -t "Alert"
 
 ### Verify URL(s)
 
-Verify that notification service URL(s) can be resolved and use a registered protocol, without sending anything:
+Verify that notification service URL(s) can be resolved, use a registered protocol, and satisfy that provider's local URL rules, without sending anything:
 
 ```bash
 stato verify -u "slack://webhook/xxx/yyy/zzz"
@@ -84,7 +84,7 @@ stato verify -u "slack://webhook/xxx/yyy/zzz" -u "unsupported://target"
 # ✗ unsupported://target: Unsupported notification protocol: unsupported:
 ```
 
-The exit code is `0` when every URL is valid and `1` when any URL is invalid.
+The exit code is `0` when every URL is valid and `1` when any URL is invalid. Validation checks required URL components and supported query values, but it does not contact remote services or prove that credentials and recipients exist.
 
 ## Supported Providers
 

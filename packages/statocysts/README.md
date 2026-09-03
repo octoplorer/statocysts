@@ -66,6 +66,8 @@ stato -u "$NOTIFICATION_TARGET" -t "Deployment complete"
 stato verify -u "$NOTIFICATION_TARGET"
 ```
 
+`verify` checks the target URL and provider-specific format locally. It does not send a notification or confirm remote credentials, recipients, or connectivity.
+
 ## Providers
 
 Slack, Discord, Lark/Feishu, QQ Bot, Telegram, Bark, Server Chan, email, HTTP/HTTPS JSON endpoints, and local console logging are included.

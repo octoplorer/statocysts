@@ -23,7 +23,7 @@ function send(
 ): Promise<void>
 ```
 
-Sends one notification through the provider selected by the target protocol. Provider validation and transport failures are reported through `NotificationDeliveryError`.
+Validates the target and sends one notification through the selected provider. Local target/provider validation failures reject with their original error before delivery starts; request preparation and transport failures are reported through `NotificationDeliveryError`.
 
 ## `createNotifier(targets)`
 
@@ -35,7 +35,7 @@ interface Notifier {
 }
 ```
 
-Creates a reusable notifier bound to one or more unique targets. All targets are attempted concurrently on every call.
+Synchronously validates one or more unique targets and creates a reusable notifier bound to their validated provider state. No transport or remote service is contacted during creation. All bound targets are attempted concurrently on every call.
 
 ## `NotificationDeliveryError`
 
@@ -52,7 +52,7 @@ class NotificationDeliveryError extends Error {
 }
 ```
 
-The error is thrown after every target has settled when at least one target failed.
+After all targets have passed creation-time validation, this error is thrown when at least one delivery fails and every target has settled.
 
 ## Provider objects
 
@@ -74,18 +74,28 @@ import {
 } from 'statocysts'
 ```
 
-Every provider exposes its protocol and a `send()` method:
+Every provider exposes its protocol, a synchronous `validate()` method, and a `send()` method:
 
 ```ts
 interface NotificationProvider<Protocol extends string, Options> {
   readonly protocol: Protocol
+  validate: (
+    target: string,
+    options?: Options,
+  ) => ValidatedNotificationTarget
   send: (
     target: string,
     notification: Notification,
     options?: Options,
   ) => Promise<void>
 }
+
+interface ValidatedNotificationTarget {
+  send: (notification: Notification) => Promise<void>
+}
 ```
+
+`validate()` checks the URL, protocol, and local provider-specific rules, then snapshots the merged options in a reusable binding. It does not contact the provider or confirm that credentials and recipients exist. Provider `send()` performs the same validation before preparing and sending its transport payload.
 
 Provider-specific options are described in the [provider reference](/statocysts/providers/).
 

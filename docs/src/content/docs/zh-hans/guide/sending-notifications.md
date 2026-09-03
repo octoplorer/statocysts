@@ -16,7 +16,7 @@ await send(process.env.SLACK_TARGET!, {
 })
 ```
 
-`send()` 会校验目标协议、尝试投递，并在投递失败时抛出 `NotificationDeliveryError`。
+`send()` 会在本地校验目标 URL 和提供方专属格式，然后尝试投递。本地校验错误保持原样；请求准备或传输失败会抛出 `NotificationDeliveryError`。
 
 ## 复用通知器
 
@@ -34,7 +34,7 @@ await operations.send({ title: 'Deployment started' })
 await operations.send({ title: 'Deployment complete' })
 ```
 
-通知目标必须唯一。创建通知器时，通知运行时会拒绝空目标列表、非法 URL、重复的标准化 URL 和不支持的协议。
+通知目标必须唯一。创建通知器时，通知运行时会拒绝空目标列表、非法 URL、重复的标准化 URL、不支持的协议和无效的提供方专属 URL 组成部分。创建过程不会发起远程请求。
 
 ## 处理部分失败
 

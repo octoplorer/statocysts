@@ -16,7 +16,7 @@ await send(process.env.SLACK_TARGET!, {
 })
 ```
 
-`send()` validates the target protocol, attempts delivery, and rejects with a `NotificationDeliveryError` if delivery fails.
+`send()` validates the target URL and provider-specific format locally, then attempts delivery. Local validation errors remain unwrapped; request preparation or transport failures reject with `NotificationDeliveryError`.
 
 ## Reuse a notifier
 
@@ -34,7 +34,7 @@ await operations.send({ title: 'Deployment started' })
 await operations.send({ title: 'Deployment complete' })
 ```
 
-Targets must be unique. The runtime rejects an empty target list, malformed URLs, duplicate normalized URLs, and unsupported protocols when the notifier is created.
+Targets must be unique. The runtime rejects an empty target list, malformed URLs, duplicate normalized URLs, unsupported protocols, and invalid provider-specific URL components when the notifier is created. Creation performs no remote requests.
 
 ## Handle partial failures
 
