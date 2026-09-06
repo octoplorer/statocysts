@@ -22,33 +22,33 @@ allowBuilds:
 
 catalogs:
   build:
-    tsdown: ^0.22.14
+    tsdown: ^0.23.0
   ci:
     publint: ^0.3.24
   cli:
     yargs: ^18.1.0
   dev:
-    '@antfu/eslint-config': ^9.5.0
+    '@antfu/eslint-config': ^9.5.1
     '@antfu/ni': ^30.5.0
     '@types/smtp-server': ^3.5.13
-    '@vitest/coverage-v8': ^4.1.11
-    bumpp: ^12.2.2
-    eslint: ^10.9.1
+    '@vitest/coverage-v8': ^5.0.0
+    bumpp: ^12.3.0
+    eslint: ^10.10.0
     eslint-plugin-format: ^2.0.1
-    lint-staged: ^17.4.1
+    lint-staged: ^17.5.0
     simple-git-hooks: ^2.14.0
-    smtp-server: ^3.19.6
-    taze: ^20.0.2
+    smtp-server: ^3.19.7
+    taze: ^21.1.0
     typescript: ^6.0.3
-    vitest: ^4.1.11
+    vitest: ^5.0.0
   docs:
     '@astrojs/check': ^0.9.10
-    '@astrojs/starlight': ^0.41.11
-    astro: ^7.2.10
+    '@astrojs/starlight': ^0.42.0
+    astro: ^7.3.1
     sharp: ^0.35.4
-    starlight-links-validator: ^0.25.3
-    starlight-sidebar-topics: ^0.8.0
-    starlight-theme-rapide: ^0.5.2
+    starlight-links-validator: ^0.26.0
+    starlight-sidebar-topics: ^0.9.0
+    starlight-theme-rapide: ^0.6.0
   lib:
     defu: ^6.1.7
     emailjs: ^5.0.3
