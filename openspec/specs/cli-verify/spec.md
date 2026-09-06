@@ -8,7 +8,7 @@
 
 ### Requirement: verify 子命令
 
-CLI SHALL 提供 `verify` 子命令，接受一个或多个 `-u/--url` 参数，对每个通知目标执行与运行时 `createNotifier()` 一致的校验（字符串可解析、协议已注册、标准化后不重复），并逐个输出校验结果。
+CLI SHALL 提供 `verify` 子命令，接受一个或多个 `-u/--url` 参数，对每个通知目标执行与运行时 `createNotifier()` 一致的通用校验和提供方专属目标校验，并逐个输出校验结果。校验 MUST NOT 发送通知、调用 transport、获取远程令牌或访问远程服务。
 
 #### Scenario: 校验有效 URL
 
@@ -25,10 +25,20 @@ CLI SHALL 提供 `verify` 子命令，接受一个或多个 `-u/--url` 参数，
 - **WHEN** 任一 URL 不可解析或使用未注册协议
 - **THEN** CLI 输出该 URL 无效的指示及其原因，并最终以非零退出码结束
 
+#### Scenario: 报告提供方专属无效 URL
+
+- **WHEN** URL 可解析且协议已注册，但缺少对应提供方要求的凭据、路径段或包含无效查询参数
+- **THEN** CLI 输出该 URL 无效的指示及对应提供方的原因，并最终以非零退出码结束
+
 #### Scenario: 校验语义与运行时一致
 
-- **WHEN** 用户校验一个运行时 `createNotifier()` 会拒绝的目标
-- **THEN** `verify` 将该目标报告为无效，且不发起任何通知发送
+- **WHEN** 用户校验一个运行时 `createNotifier()` 会因通用或提供方专属规则而拒绝的目标
+- **THEN** `verify` 将该目标报告为无效
+
+#### Scenario: 校验无发送副作用
+
+- **WHEN** 用户校验需要远程认证、签名或网络 transport 才能发送的合法目标
+- **THEN** CLI 只执行本地目标校验，不获取远程令牌、不生成发送时签名且不访问远程服务
 
 #### Scenario: 缺少 URL 参数
 

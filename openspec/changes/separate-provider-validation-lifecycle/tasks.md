@@ -28,5 +28,5 @@
 ## 5. Verification
 
 - [x] 5.1 Run focused core, runtime, provider catalog, built-in provider, and CLI test suites and fix any lifecycle or payload regressions.
-- [ ] 5.2 Run `pnpm typecheck`, `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm docs:check`.
+- [x] 5.2 Run `pnpm typecheck`, `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm docs:check`.
 - [x] 5.3 Run `openspec validate separate-provider-validation-lifecycle --strict` and confirm every changed runtime and CLI scenario is covered.
