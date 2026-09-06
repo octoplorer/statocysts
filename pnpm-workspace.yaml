@@ -1,20 +1,25 @@
-allowBuilds:
-  esbuild: true
-  sharp: true
-  simple-git-hooks: true
 catalogMode: prefer
+
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@types/node@25.9.0'
   - astro@7.2.1
 
-shellEmulator: true
-
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - chokidar@4.0.3
+
+shellEmulator: true
+
 packages:
   - docs
   - packages/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  simple-git-hooks: true
+
 catalogs:
   build:
     tsdown: ^0.22.14
