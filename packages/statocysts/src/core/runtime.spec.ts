@@ -7,7 +7,13 @@ function createProvider(
   protocol: string,
   send: (target: string, notification: Notification) => Promise<void> = vi.fn().mockResolvedValue(undefined),
 ) {
-  return { protocol, send }
+  return {
+    protocol,
+    send,
+    validate: vi.fn((target: string) => ({
+      send: (notification: Notification) => send(target, notification),
+    })),
+  }
 }
 
 function createDeferred() {
@@ -23,6 +29,10 @@ function createDeferred() {
 describe('createNotificationRuntime', () => {
   it('rejects invalid providers and duplicate protocols', () => {
     expect(() => createNotificationRuntime([{} as never])).toThrow(TypeError)
+    expect(() => createNotificationRuntime([{
+      protocol: 'test:',
+      send: vi.fn(),
+    } as never])).toThrow('Notification provider must define validate')
     expect(() => createNotificationRuntime([
       createProvider('test:'),
       createProvider('test:'),
@@ -31,9 +41,13 @@ describe('createNotificationRuntime', () => {
 
   it('creates a notifier and normalizes targets before delivery', async () => {
     const send = vi.fn().mockResolvedValue(undefined)
-    const runtime = createNotificationRuntime([createProvider('test:', send)])
+    const provider = createProvider('test:', send)
+    const runtime = createNotificationRuntime([provider])
     const notifier = runtime.createNotifier(['test://example.com/a/../path'])
     const notification = { title: '  Alert  ', body: '  Body  ' }
+
+    expect(provider.validate).toHaveBeenCalledWith('test://example.com/path')
+    expect(send).not.toHaveBeenCalled()
 
     await expect(notifier.send(notification)).resolves.toBeUndefined()
     expect(send).toHaveBeenCalledWith('test://example.com/path', notification)
@@ -52,18 +66,29 @@ describe('createNotificationRuntime', () => {
     ])).toThrow('Duplicate notification target: test://example.com/path')
   })
 
-  it('defers provider-specific target validation until delivery', async () => {
+  it('rejects provider-specific target validation during notifier creation', () => {
     const cause = new Error('Invalid provider-specific target')
-    const runtime = createNotificationRuntime([
-      createProvider('test:', vi.fn().mockRejectedValue(cause)),
-    ])
-    const notifier = runtime.createNotifier(['test://invalid'])
-
-    const delivery = notifier.send({ title: 'Alert' })
-
-    await expect(delivery).rejects.toMatchObject({
-      failures: [{ target: 'test://invalid', cause }],
+    const provider = createProvider('test:')
+    provider.validate.mockImplementation(() => {
+      throw cause
     })
+    const runtime = createNotificationRuntime([provider])
+
+    expect(() => runtime.createNotifier(['test://invalid'])).toThrow(cause)
+    expect(provider.send).not.toHaveBeenCalled()
+  })
+
+  it('caches and reuses the validated target binding', async () => {
+    const send = vi.fn().mockResolvedValue(undefined)
+    const provider = createProvider('test:', send)
+    const runtime = createNotificationRuntime([provider])
+    const notifier = runtime.createNotifier(['test://target'])
+
+    await notifier.send({ title: 'First' })
+    await notifier.send({ title: 'Second' })
+
+    expect(provider.validate).toHaveBeenCalledOnce()
+    expect(send).toHaveBeenCalledTimes(2)
   })
 
   it('starts all deliveries and waits for every target', async () => {

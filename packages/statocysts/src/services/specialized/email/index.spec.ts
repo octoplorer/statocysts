@@ -131,6 +131,20 @@ describe('email provider', () => {
     expect(message.from).toBe('default@example.com')
   })
 
+  it('applies defaultFrom during validation without calling transport', () => {
+    expect(() => email.validate(
+      'email://smtp.example.com/?to=recipient@example.com',
+    )).toThrow('Sender email address (from) is required')
+
+    const validated = email.validate(
+      'email://smtp.example.com/?to=recipient@example.com',
+      { defaultFrom: 'default@example.com' },
+    )
+
+    expect(validated.send).toBeTypeOf('function')
+    expect(smtp.send).not.toHaveBeenCalled()
+  })
+
   it('should use username as from when from is not specified', async () => {
     vi.mocked(smtp.send).mockResolvedValue(undefined)
 

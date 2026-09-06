@@ -23,7 +23,7 @@ function send(
 ): Promise<void>
 ```
 
-通过通知目标协议选中的提供方发送一条通知。提供方校验和传输失败通过 `NotificationDeliveryError` 报告。
+校验通知目标，并通过协议选中的提供方发送一条通知。本地目标或提供方校验失败会在投递开始前以原始错误拒绝；请求准备和传输失败通过 `NotificationDeliveryError` 报告。
 
 ## `createNotifier(targets)`
 
@@ -35,7 +35,7 @@ interface Notifier {
 }
 ```
 
-创建一个绑定到一个或多个唯一通知目标的可复用通知器。每次调用都会并发尝试所有目标。
+同步校验一个或多个唯一通知目标，并创建绑定到其已校验提供方状态的可复用通知器。创建过程不会调用传输或远程服务。每次调用都会并发尝试所有已绑定目标。
 
 ## `NotificationDeliveryError`
 
@@ -52,7 +52,7 @@ class NotificationDeliveryError extends Error {
 }
 ```
 
-至少一个通知目标失败时，会在所有目标结束后抛出此错误。
+所有目标通过创建时校验后，如果至少一个投递失败，会在全部目标结束后抛出此错误。
 
 ## 通知提供方对象
 
@@ -74,18 +74,28 @@ import {
 } from 'statocysts'
 ```
 
-每个通知提供方都公开协议和 `send()` 方法：
+每个通知提供方都公开协议、同步 `validate()` 方法和 `send()` 方法：
 
 ```ts
 interface NotificationProvider<Protocol extends string, Options> {
   readonly protocol: Protocol
+  validate: (
+    target: string,
+    options?: Options,
+  ) => ValidatedNotificationTarget
   send: (
     target: string,
     notification: Notification,
     options?: Options,
   ) => Promise<void>
 }
+
+interface ValidatedNotificationTarget {
+  send: (notification: Notification) => Promise<void>
+}
 ```
+
+`validate()` 会检查 URL、协议和提供方专属本地规则，并将合并后的选项保存在可复用绑定中。它不会访问通知提供方，也不会确认凭据和接收者是否真实存在。提供方 `send()` 会先执行相同校验，再准备并发送传输 payload。
 
 提供方专属选项请参阅[通知提供方参考](/statocysts/zh-hans/providers/)。
 

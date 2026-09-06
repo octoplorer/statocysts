@@ -25,10 +25,8 @@ export const telegram = defineProvider('telegram:', {
   defaultOptions: {
     apiBaseUrl: 'https://api.telegram.org',
   } as TelegramOptions,
-  async prepare(_, options) {
-    const { url } = this
-
-    // Validate URL format
+  validate(ctx) {
+    const { url } = ctx
     assert(url.hostname === 'bot', `Invalid telegram URL: ${url.toString()}`)
     assert(url.username, 'Bot token is required')
 
@@ -42,8 +40,6 @@ export const telegram = defineProvider('telegram:', {
       throw new Error('Invalid telegram query')
     }
 
-    const query = queryResult.output
-
     // Bot token is in the username and password fields, because token contains `:` character
     const botToken = `${url.username}:${url.password}`
 
@@ -54,6 +50,17 @@ export const telegram = defineProvider('telegram:', {
       ? chatPart.split(':', 2)
       : [chatPart, undefined]
 
+    return {
+      botToken,
+      chatId,
+      messageThreadId,
+      query: queryResult.output,
+    }
+  },
+  async prepare(ctx, options) {
+    const { message, validated } = ctx
+    const { botToken, chatId, messageThreadId, query } = validated
+
     // Build API URL
     const requestUrl = new URL(`/bot${botToken}/sendMessage`, options.apiBaseUrl)
 
@@ -63,7 +70,7 @@ export const telegram = defineProvider('telegram:', {
 
     // Build message text based on parse_mode
     let text: string
-    if (this.message.body) {
+    if (message.body) {
       // Title as h1, body as content
       const parseMode = query.parse_mode
       let titleFormatted: string
@@ -71,19 +78,19 @@ export const telegram = defineProvider('telegram:', {
 
       if (parseMode === 'HTML') {
         // Escape title and body to prevent breaking HTML tags
-        titleFormatted = `<b>${escapeHtml(this.message.title)}</b>`
-        bodyFormatted = escapeHtml(this.message.body)
+        titleFormatted = `<b>${escapeHtml(message.title)}</b>`
+        bodyFormatted = escapeHtml(message.body)
       }
       else if (parseMode === 'MarkdownV2') {
         // MarkdownV2 requires escaping special characters in title and body
-        const escapedTitle = escapeMarkdown(this.message.title)
+        const escapedTitle = escapeMarkdown(message.title)
         titleFormatted = `*${escapedTitle}*`
-        bodyFormatted = escapeMarkdown(this.message.body)
+        bodyFormatted = escapeMarkdown(message.body)
       }
       else {
         // Markdown or default - escape special chars to prevent parse errors
-        titleFormatted = `*${escapeMarkdown(this.message.title)}*`
-        bodyFormatted = escapeMarkdown(this.message.body)
+        titleFormatted = `*${escapeMarkdown(message.title)}*`
+        bodyFormatted = escapeMarkdown(message.body)
       }
 
       text = `${titleFormatted}\n\n${bodyFormatted}`
@@ -92,13 +99,13 @@ export const telegram = defineProvider('telegram:', {
       // No body, title is the main content
       // Need to escape special characters in MarkdownV2/HTML mode
       if (query.parse_mode === 'MarkdownV2') {
-        text = escapeMarkdown(this.message.title)
+        text = escapeMarkdown(message.title)
       }
       else if (query.parse_mode === 'HTML') {
-        text = escapeHtml(this.message.title)
+        text = escapeHtml(message.title)
       }
       else {
-        text = this.message.title
+        text = message.title
       }
     }
 

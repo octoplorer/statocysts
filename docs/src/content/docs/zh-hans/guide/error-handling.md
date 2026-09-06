@@ -12,7 +12,8 @@ Statocysts 将通知目标设置错误与异步投递失败分开处理。
 - 通知目标列表为空；
 - 通知目标不是字符串或合法 URL；
 - 标准化后的通知目标重复；
-- 通知目标使用不受支持的协议。
+- 通知目标使用不受支持的协议；
+- 通知目标缺少提供方要求的凭据或路径段，或者包含不支持的查询值。
 
 ```ts
 import { createNotifier } from 'statocysts'
@@ -26,11 +27,11 @@ catch (error) {
 }
 ```
 
-提供方专属 URL 组件通常会在开始投递时校验，而不是在创建通知器时校验。CLI 的 `verify` 命令也采用相同的通知运行时校验边界。
+提供方专属目标校验是同步且仅在本地执行的。创建通知器不会构造传输 payload、获取远程令牌、生成发送时签名或访问通知提供方。这些设置错误会直接抛出，而不会包装成 `NotificationDeliveryError`。CLI 的 `verify` 命令采用相同边界。
 
 ## 投递失败
 
-一个或多个通知提供方失败时，顶层 `send()` 和通知器的 `.send()` 会抛出 `NotificationDeliveryError`：
+目标校验成功后，如果一个或多个投递在请求准备或传输阶段失败，顶层 `send()` 和通知器的 `.send()` 会抛出 `NotificationDeliveryError`：
 
 ```ts
 import { NotificationDeliveryError, send } from 'statocysts'

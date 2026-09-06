@@ -10,11 +10,13 @@ Start by identifying whether the failure happens while creating a notifier or wh
 
 ## Classify the failure
 
-| When it fails                                    | Typical cause                                                     | Error shape                          |
-| ------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------ |
-| `createNotifier()` returns                       | Empty list, malformed URL, duplicate target, unsupported protocol | Synchronous `TypeError`              |
-| Top-level `send()` or notifier `.send()` rejects | Provider validation or transport failure                          | `NotificationDeliveryError`          |
-| Named provider `.send()` rejects                 | Provider validation or transport failure                          | Original provider or transport error |
+| When it fails                                                          | Typical cause                                                                         | Error shape                          |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------ |
+| `createNotifier()` returns                                             | Empty list, malformed/duplicate target, unsupported protocol, invalid provider format | Synchronous target/provider error    |
+| Top-level `send()` rejects before delivery                             | The same local target/provider validation errors as `createNotifier()`                | Original target/provider error       |
+| Top-level `send()` or notifier `.send()` rejects after delivery starts | Request preparation or transport failure                                              | `NotificationDeliveryError`          |
+| Named provider `validate()` throws                                     | Malformed target or invalid provider format                                           | Original target/provider error       |
+| Named provider `.send()` rejects                                       | Provider validation, preparation, or transport failure                                | Original provider or transport error |
 
 A named provider call is useful for isolating one integration because it preserves the original error:
 
@@ -38,14 +40,15 @@ Check these conditions first:
 2. Its protocol matches a built-in provider, including the trailing colon after parsing.
 3. Every target in `createNotifier()` is unique after URL normalization.
 4. At least one target is supplied.
+5. Provider-required credentials, path segments, and query values are present and locally valid.
 
-Use the CLI for runtime-level validation without contacting the provider:
+Use the CLI for local runtime and provider validation without contacting the provider:
 
 ```sh
 stato verify -u "$NOTIFICATION_TARGET"
 ```
 
-`verify` does not validate provider-specific path segments, credentials, recipients, or remote connectivity.
+`verify` validates the provider-specific shape and required presence of path segments, credentials, and recipients. It does not prove those values exist remotely or test connectivity.
 
 ## Inspect batch failures safely
 
@@ -75,7 +78,7 @@ Avoid logging `failure.target`. It can contain webhook tokens, bot credentials, 
 
 ## Provider URL validation
 
-If runtime validation passes but delivery fails immediately, compare the target with its provider reference page. Common issues include:
+If runtime validation fails, compare the target with its provider reference page. Local validation catches common issues such as:
 
 - missing webhook path segments;
 - credentials placed in the wrong URL component;
@@ -135,7 +138,7 @@ Email is available only from the Node.js entry. Verify:
 ## A repeatable diagnostic sequence
 
 1. Reproduce with one target and a dedicated test recipient.
-2. Run `stato verify` to isolate runtime-level URL errors.
+2. Run `stato verify` to isolate local runtime and provider URL errors.
 3. Call the named provider directly to expose the original cause.
 4. Add a finite timeout and inspect the provider response locally.
 5. Compare the target shape with the provider reference.

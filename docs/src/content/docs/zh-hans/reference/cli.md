@@ -49,13 +49,13 @@ echo "CPU usage exceeded 90%" | stato -u "$TARGET" -t "High CPU usage"
 stato verify -u <target> [-u <target> ...]
 ```
 
-`verify` 会确认每个值都是使用已注册协议的合法 URL。它不会访问远程服务，也不会校验提供方专属凭据或 URL 组件。
+`verify` 会确认每个值都是使用已注册协议的合法 URL，并满足提供方对必填凭据、路径段和查询值的本地规则。它不会发送通知或访问远程服务，因此无法确认凭据、接收者是否真实存在，也无法确认服务是否可访问。
 
 ```sh
 stato verify -u "$SLACK_TARGET" -u "$TELEGRAM_TARGET"
 ```
 
-全部目标通过通知运行时校验时，命令以 `0` 退出；任一目标失败时以 `1` 退出。
+全部目标通过通知运行时和提供方的本地校验时，命令以 `0` 退出；任一目标失败时以 `1` 退出。
 
 ## 选项
 

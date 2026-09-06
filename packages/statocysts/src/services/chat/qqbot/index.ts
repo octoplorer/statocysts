@@ -59,9 +59,8 @@ export const qqbot = defineProvider('qqbot:', {
   defaultOptions: {
     apiBaseUrl: 'https://api.bot.qq.com',
   } as QQBotOptions,
-  async prepare(_, options) {
-    const { url } = this
-
+  validate(ctx, options) {
+    const { url } = ctx
     // Validate hostname (chat type)
     const chatType = url.hostname
     assert(
@@ -71,56 +70,64 @@ export const qqbot = defineProvider('qqbot:', {
     assert(url.username, 'App ID is required')
     assert(url.password, 'Client secret is required')
 
-    const appId = url.username
-    const clientSecret = url.password
-
     // Extract openid from pathname
     const pathSegments = url.pathname.split('/').filter(Boolean)
     assert(pathSegments.length === 1, 'OpenID is required in pathname')
-    const openid = decodeURIComponent(pathSegments[0])
 
-    // Get access token
-    const accessToken = await getAccessToken(appId, clientSecret, options.apiBaseUrl!)
+    return {
+      apiBaseUrl: options.apiBaseUrl!,
+      appId: url.username,
+      chatType: chatType as 'group' | 'user',
+      clientSecret: url.password,
+      eventId: url.searchParams.get('event_id'),
+      msgId: url.searchParams.get('msg_id'),
+      msgSeq: url.searchParams.get('msg_seq'),
+      openid: decodeURIComponent(pathSegments[0]),
+    }
+  },
+  async prepare(ctx, options) {
+    const { message, validated } = ctx
+    const accessToken = await getAccessToken(
+      validated.appId,
+      validated.clientSecret,
+      validated.apiBaseUrl,
+    )
 
     // Build message body
     let body: Record<string, unknown>
 
-    if (this.message.body) {
+    if (message.body) {
       body = {
         msg_type: 2,
         markdown: {
-          content: `# ${this.message.title}\n\n${this.message.body}`,
+          content: `# ${message.title}\n\n${message.body}`,
         },
       }
     }
     else {
       body = {
         msg_type: 0,
-        content: this.message.title,
+        content: message.title,
       }
     }
 
     // Extract reply-related params from query string
-    const msgId = url.searchParams.get('msg_id')
-    const msgSeq = url.searchParams.get('msg_seq')
-    const eventId = url.searchParams.get('event_id')
-
-    if (msgId) {
-      body.msg_id = msgId
+    if (validated.msgId) {
+      body.msg_id = validated.msgId
     }
-    if (msgSeq) {
-      body.msg_seq = Number.parseInt(msgSeq, 10)
+    if (validated.msgSeq) {
+      body.msg_seq = Number.parseInt(validated.msgSeq, 10)
     }
-    if (eventId) {
-      body.event_id = eventId
+    if (validated.eventId) {
+      body.event_id = validated.eventId
     }
 
     // Build API URL
-    const apiPath = chatType === 'user'
-      ? `/v2/users/${openid}/messages`
-      : `/v2/groups/${openid}/messages`
+    const apiPath = validated.chatType === 'user'
+      ? `/v2/users/${validated.openid}/messages`
+      : `/v2/groups/${validated.openid}/messages`
 
-    const requestUrl = new URL(apiPath, options.apiBaseUrl)
+    const requestUrl = new URL(apiPath, validated.apiBaseUrl)
 
     const headers = new Headers([
       ['Content-Type', 'application/json'],

@@ -12,7 +12,8 @@ Statocysts separates target setup errors from asynchronous delivery failures.
 - the target list is empty;
 - a target is not a string or valid URL;
 - normalized targets are duplicated;
-- a target uses an unsupported protocol.
+- a target uses an unsupported protocol;
+- a target is missing provider-required credentials or path segments, or contains unsupported query values.
 
 ```ts
 import { createNotifier } from 'statocysts'
@@ -26,11 +27,11 @@ catch (error) {
 }
 ```
 
-Provider-specific URL components are generally validated when delivery starts, not when the notifier is created. The CLI `verify` command follows the same runtime-level boundary.
+Provider-specific target validation is synchronous and local. Creating a notifier does not build a transport payload, fetch a remote token, generate a send-time signature, or contact the provider. These setup errors are thrown directly rather than wrapped in `NotificationDeliveryError`. The CLI `verify` command uses the same boundary.
 
 ## Delivery failures
 
-Top-level `send()` and notifier `.send()` reject with `NotificationDeliveryError` when one or more providers fail:
+After target validation succeeds, top-level `send()` and notifier `.send()` reject with `NotificationDeliveryError` when one or more deliveries fail during request preparation or transport:
 
 ```ts
 import { NotificationDeliveryError, send } from 'statocysts'

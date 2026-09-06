@@ -14,6 +14,12 @@ describe('json provider', () => {
     vi.clearAllMocks()
   })
 
+  it('accepts targets in the validation lifecycle without building requests', () => {
+    expect(json.validate('json://api.example.com/webhook').send).toBeTypeOf('function')
+    expect(jsons.validate('jsons://api.example.com/webhook').send).toBeTypeOf('function')
+    expect(http.send).not.toHaveBeenCalled()
+  })
+
   it('should build a basic request without query parameters', async () => {
     vi.mocked(http.send).mockResolvedValue(undefined)
 

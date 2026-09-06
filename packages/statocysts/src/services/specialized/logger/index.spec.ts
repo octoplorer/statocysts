@@ -65,6 +65,14 @@ describe('logger provider', () => {
     expect(infoSpy).not.toHaveBeenCalled()
   })
 
+  it('validates the level synchronously without outputting anything', () => {
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {})
+
+    expect(() => logger.validate('logger://?level=verbose')).toThrow('Invalid logger query parameters')
+    expect(logger.validate('logger://?level=warn').send).toBeTypeOf('function')
+    expect(infoSpy).not.toHaveBeenCalled()
+  })
+
   it('resolves to undefined after outputting', async () => {
     vi.spyOn(console, 'info').mockImplementation(() => {})
 

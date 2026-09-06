@@ -44,11 +44,21 @@ await slack.send(target, notification, {
 })
 ```
 
+Providers also expose synchronous local validation. It returns a reusable target binding without building a transport payload or contacting the service:
+
+```ts
+const validatedSlack = slack.validate(target, {
+  fetchOptions: { timeout: 5000 },
+})
+
+await validatedSlack.send(notification)
+```
+
 Call a provider directly when you need provider-specific options. Use the top-level runtime APIs for uniform routing and batch failure reporting.
 
 ## Notifier
 
-A notifier is bound to one or more unique targets and can be reused:
+A notifier validates and binds one or more unique targets when it is created, then can be reused:
 
 ```ts
 import { createNotifier } from 'statocysts'
@@ -65,4 +75,4 @@ Each send attempts all targets concurrently. A failed target does not prevent th
 
 ## Notification runtime
 
-The notification runtime registers the built-in providers, validates target protocols, and exposes `send()` and `createNotifier()`. Importing from `statocysts` creates the Node.js runtime; importing from `statocysts/browser` creates the browser-compatible runtime.
+The notification runtime registers the built-in providers, validates target protocols and provider-specific URL formats, and exposes `send()` and `createNotifier()`. Validation is local: remote credentials, recipients, and connectivity are checked only when the provider handles an actual delivery. Importing from `statocysts` creates the Node.js runtime; importing from `statocysts/browser` creates the browser-compatible runtime.

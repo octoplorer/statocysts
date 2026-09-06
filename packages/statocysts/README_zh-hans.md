@@ -66,6 +66,8 @@ stato -u "$NOTIFICATION_TARGET" -t "Deployment complete"
 stato verify -u "$NOTIFICATION_TARGET"
 ```
 
+`verify` 会在本地检查通知目标 URL 和提供方专属格式，但不会发送通知，也不会确认远程凭据、接收者或连通性。
+
 ## 通知提供方
 
 内置 Slack、Discord、飞书/Lark、QQ 机器人、Telegram、Bark、Server 酱、邮件、HTTP/HTTPS JSON 端点和本地控制台日志。

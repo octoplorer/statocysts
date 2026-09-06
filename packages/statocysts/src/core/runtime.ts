@@ -3,12 +3,17 @@ import { assertNotification, NotificationDeliveryError } from './notification'
 
 interface RuntimeProvider {
   readonly protocol: string
+  validate: (target: string) => RuntimeValidatedTarget
   send: (target: string, notification: Notification) => Promise<void>
+}
+
+interface RuntimeValidatedTarget {
+  send: (notification: Notification) => Promise<void>
 }
 
 interface BoundTarget {
   target: string
-  provider: RuntimeProvider
+  validated: RuntimeValidatedTarget
 }
 
 export interface NotificationRuntime {
@@ -27,6 +32,9 @@ function assertRuntimeProvider(value: unknown): asserts value is RuntimeProvider
   }
   if (typeof provider.send !== 'function') {
     throw new TypeError('Notification provider must define send')
+  }
+  if (typeof provider.validate !== 'function') {
+    throw new TypeError('Notification provider must define validate')
   }
 }
 
@@ -76,7 +84,10 @@ export function createNotificationRuntime(
         throw new TypeError(`Unsupported notification protocol: ${normalized.protocol}`)
       }
 
-      return { target: normalized.target, provider }
+      return {
+        target: normalized.target,
+        validated: provider.validate(normalized.target),
+      }
     })
 
     return {
@@ -84,8 +95,8 @@ export function createNotificationRuntime(
         assertNotification(notification)
 
         const results = await Promise.allSettled(
-          boundTargets.map(({ provider, target }) => Promise.resolve().then(
-            () => provider.send(target, notification),
+          boundTargets.map(({ validated }) => Promise.resolve().then(
+            () => validated.send(notification),
           )),
         )
 
