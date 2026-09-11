@@ -2,7 +2,7 @@
   "name": "@statocysts/monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@12.3.4",
+  "packageManager": "pnpm@12.4.1",
   "license": "MIT",
   "scripts": {
     "up": "nlx taze",
